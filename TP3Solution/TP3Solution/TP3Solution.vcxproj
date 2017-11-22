@@ -95,6 +95,11 @@
   <ItemGroup>
     <ClInclude Include="Game.h" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\StructuresDonnees\StructuresDonnees.vcxproj">
+      <Project>{e6658864-e28b-414a-9bdd-c44ab745d40d}</Project>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

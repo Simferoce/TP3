@@ -1,6 +1,5 @@
-#include <vld.h>
 #include "Game.h"
-
+#include <vld.h>
 int main()
 {
 	Game game;

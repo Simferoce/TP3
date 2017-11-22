@@ -20,7 +20,7 @@ private:
 	void getInputs();
 	void update();
 	void draw();
-
+	
 	RenderWindow mainWin;
 	View view;
 	Event event;
