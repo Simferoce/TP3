@@ -23,7 +23,7 @@
     <ProjectGuid>{524662F7-6287-426F-8D14-7CB34E3D721B}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>TestStructureQueue</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.15063.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
     <ProjectSubType>NativeUnitTestProject</ProjectSubType>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />

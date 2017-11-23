@@ -115,8 +115,8 @@ namespace StructuresDonnees
 				delete elementToDelete;
 				elementToDelete = temp;
 			}
-				avantDebut->apres = apresFin;
-				apresFin->avant = avantDebut;
+			avantDebut->apres = apresFin;
+			apresFin->avant = avantDebut;
 			sz = 0;
 		}
 		void insert(const iterator& position, T &&value)
@@ -224,8 +224,6 @@ namespace StructuresDonnees
 		}
 		void unique()
 		{
-			//TO DO
-
 			for(auto iter = begin();  iter != end(); ++iter)
 			{
 				if(iter.pos->avant != avantDebut && *(iter.pos->avant->value) == *iter)
