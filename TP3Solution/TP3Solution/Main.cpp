@@ -4,10 +4,6 @@
 
 int main()
 {
-	StructuresDonnees::list<int> test;
-	test.push_back(1);
-	test.push_back(1);
-	test.unique();
 	Game game;
 	return game.run();
 }

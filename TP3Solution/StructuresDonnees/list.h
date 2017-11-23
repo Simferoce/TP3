@@ -19,7 +19,8 @@ namespace StructuresDonnees
 		Box* avantDebut;
 		size_t sz;
 	public:
-		class iterator
+		class iterator :
+			public std::iterator<T,T>
 		{
 			friend list;
 			Box* pos;
@@ -224,15 +225,16 @@ namespace StructuresDonnees
 		void unique()
 		{
 			//TO DO
-			list<T> uniqueList;
-			while(!is_empty())
+
+			for(auto iter = begin();  iter != end(); ++iter)
 			{
-				T value = front();
-				pop_front();
-				if (!uniqueList.contains(value))
-					uniqueList.push_back(T(front()));
+				if(iter.pos->avant != avantDebut && *(iter.pos->avant->value) == *iter)
+				{
+					auto iter2 = --iter;
+					++iter;
+					erase(iter2);
+				}
 			}
-			swap(uniqueList);
 		}
 		iterator begin() const
 		{

@@ -545,6 +545,19 @@ namespace TestStructuresDonnees
 			test.push_back(0);
 			test.push_back(0);
 			test.unique();
+			Assert::IsTrue(test.size() == 1);
+			Assert::IsTrue(test.front() == 0);
+			Assert::IsTrue(test.back() == 0);
+		}
+		TEST_METHOD(unique_unique_2)
+		{
+			StructuresDonnees::list<int> test;
+			test.push_back(0);
+			test.push_back(1);
+			test.unique();
+			Assert::IsTrue(test.size() == 2);
+			Assert::IsTrue(test.front() == 0);
+			Assert::IsTrue(test.back() == 1);
 		}
 	};
 }
