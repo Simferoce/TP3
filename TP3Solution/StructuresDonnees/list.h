@@ -230,9 +230,7 @@ namespace StructuresDonnees
 			{
 				if(iter.pos->avant != avantDebut && *(iter.pos->avant->value) == *iter)
 				{
-					auto iter2 = --iter;
-					++iter;
-					erase(iter2);
+					erase(iter.pos->avant);
 				}
 			}
 		}
