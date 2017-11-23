@@ -1,51 +1,34 @@
 #pragma once
-#include <exception>
 #include <iterator>
 namespace StructuresDonnees
 {
-	class EmptyList
-		: public std::exception
-	{
-	public:
-		EmptyList() : std::exception() {}
-		EmptyList(char const* message) : std::exception(message) {}
-	};
 	template< class T>
 	class list
 	{
-		class NoValueBox
-		{
-		public:
-			NoValueBox* avant;
-			NoValueBox* apres;
-			NoValueBox(NoValueBox* avant = nullptr, NoValueBox* apres = nullptr) : avant{ avant }, apres{ apres } {}
-			virtual ~NoValueBox(){};
-		};
 		class Box
-			: public NoValueBox
 		{
 		public:
-			T value;
-			Box(T value = {}, NoValueBox* avant = nullptr, NoValueBox* apres = nullptr) : NoValueBox(avant,apres), value{ value } {}
+			Box* avant;
+			Box* apres;
+			T* value;
+			Box(T& value, Box* avant = nullptr, Box* apres = nullptr): value { &value }, avant{ avant }, apres{ apres } {}
+			Box(T* value = nullptr, Box* avant = nullptr, Box* apres = nullptr) :value{ value }, avant{ avant }, apres{apres} {}
 		};
 		using size_t = unsigned long int;
-		NoValueBox* apresFin;
-		NoValueBox* avantDebut;
+		Box* apresFin;
+		Box* avantDebut;
 		size_t sz;
 	public:
 		class iterator
 		{
 			friend list;
-		private:
-			NoValueBox* pos;
+			Box* pos;
 		public:
-			iterator(NoValueBox* pos = nullptr) : pos{pos} {}
+			iterator(Box* pos = nullptr) : pos{pos} {}
 			~iterator() = default;
-			T operator*()
+			T& operator*()
 			{
-				if(auto posAsBox = dynamic_cast<Box*>(pos))
-					return posAsBox->value;
-				throw std::out_of_range("Déréférence un itérateur pointant sur une zone qui ne contient pas de données concrètes");
+				return *(pos->value);
 			}
 			bool operator!=(const iterator& other)
 			{
@@ -76,16 +59,13 @@ namespace StructuresDonnees
 		class reverse_iterator
 		{
 			friend list;
-		private:
-			NoValueBox* pos;
+			Box* pos;
 		public:
-			reverse_iterator(NoValueBox* pos = nullptr) : pos{ pos } {}
+			reverse_iterator(Box* pos = nullptr) : pos{ pos } {}
 			~reverse_iterator() = default;
-			T operator*()
+			T& operator*()
 			{
-				if(auto posAsBox = dynamic_cast<Box*>(pos))
-					return posAsBox->value;
-				throw std::out_of_range("Déréférence un itérateur pointant sur une zone qui ne contient pas de données concrètes");
+					return *(pos->value);
 			}
 			bool operator!=(const reverse_iterator& other)
 			{
@@ -113,7 +93,7 @@ namespace StructuresDonnees
 				this = *other;
 			}
 		};
-		list() : apresFin{ new NoValueBox() }, avantDebut{ new NoValueBox() }, sz{ 0 }
+		list() : apresFin{ new Box() }, avantDebut{ new Box() }, sz{ 0 }
 		{
 			apresFin->avant = avantDebut;
 			avantDebut->apres = apresFin;
@@ -126,10 +106,11 @@ namespace StructuresDonnees
 		}
 		void clear()
 		{
-			NoValueBox* elementToDelete = avantDebut->apres;
+			Box* elementToDelete = avantDebut->apres;
 			for (int i = 0; i < size(); i++)
 			{
-				NoValueBox* temp = elementToDelete->apres;
+				Box* temp = elementToDelete->apres;
+				delete elementToDelete->value;
 				delete elementToDelete;
 				elementToDelete = temp;
 			}
@@ -137,19 +118,21 @@ namespace StructuresDonnees
 				apresFin->avant = avantDebut;
 			sz = 0;
 		}
-		void insert(const iterator& position, T value)
+		void insert(const iterator& position, T &&value)
 		{
-			NoValueBox* temp = position.pos->avant;
+			Box* temp = position.pos->avant;
+			temp->apres = position.pos->avant = new Box(*(new T(value)), temp, position.pos);
+			sz++;
+		}
+		void insert(const iterator& position, T &value)
+		{
+			Box* temp = position.pos->avant;
 			temp->apres = position.pos->avant = new Box(value, temp, position.pos);
 			sz++;
 		}
 		T erase(iterator position)
 		{
-			if (is_empty())
-				throw EmptyList("Tentative de suppression d'un élément dans une liste vide.");
-			if (!dynamic_cast<Box*>(position.pos))
-				throw std::out_of_range("Suppression d'un element invalide.");
-			T value = reinterpret_cast<Box*>(position.pos)->value;
+			T value = *(position.pos->value);
 			position.pos->avant->apres = position.pos->apres;
 			position.pos->apres->avant = position.pos->avant;
 			delete position.pos;
@@ -157,13 +140,25 @@ namespace StructuresDonnees
 			sz--;
 			return value;
 		}
-		void push_back(T value)
+		void push_back( T &value)
 		{
 			insert(end(),value);
 		}
-		void push_front(T value)
+		void push_front( T &value)
 		{
 			insert(begin(), value);
+		}
+		void push_back(T &&value)
+		{
+			Box* temp = apresFin->avant;
+			temp->apres = apresFin->avant = new Box(*(new T(value)), temp, apresFin);
+			sz++;
+		}
+		void push_front(T &&value)
+		{
+			Box* temp = avantDebut->apres;
+			temp->avant = avantDebut->apres = new Box(*(new T(value)), avantDebut, temp);
+			sz++;
 		}
 		T pop_back()
 		{
@@ -183,21 +178,63 @@ namespace StructuresDonnees
 		}
 		T front() const
 		{
-			if (auto firstBox = dynamic_cast<Box*>(avantDebut->apres))
-				return firstBox->value;
-			throw EmptyList("Essaie d'accéder au première élément d'une liste vide.");
+				return *(avantDebut->apres->value);
 		}
 		T back() const
 		{
-			if (auto lastBox = dynamic_cast<Box*>(apresFin->avant))
-				return lastBox->value;
-			throw EmptyList("Essaie d'accéder au dernier élément d'une liste vide.");
+	
+				return *(apresFin->avant->value);
+		
 		}
 		void swap(list<T>& other) noexcept
 		{
 			std::swap(avantDebut, other.avantDebut);
 			std::swap(apresFin, other.apresFin);
 			std::swap(sz, other.sz);
+		}
+		void splice(list<T>& other, iterator position)
+		{
+			position.pos->avant->apres = other.avantDebut->apres;
+			other.avantDebut->apres->avant = position.pos->avant;
+			position.pos->avant = other.apresFin->avant;
+			other.apresFin->avant->apres = position.pos;
+			sz += other.size();
+			other.sz = 0;
+			other.avantDebut->apres = other.apresFin;
+			other.apresFin->avant = other.avantDebut;
+		}
+		void reverse()
+		{
+			Box* elementToChange = avantDebut;
+			for(int i = 0; i < sz + 2; i++)
+			{
+				Box* temp = elementToChange->apres;
+				std::swap(elementToChange->avant, elementToChange->apres);
+				elementToChange = temp;
+			}
+			std::swap(avantDebut, apresFin);
+		}
+		bool contains(const T& value)
+		{
+			for(auto iter=begin(); iter != end(); ++iter)
+			{
+				if (*iter == value)
+					return true;
+			}
+			return false;
+		}
+		void unique()
+		{
+			//TO DO
+			list<T> uniqueList;
+			list<Box*> toDelete;
+			for(auto iter= begin(); iter != end(); ++iter)
+			{
+				if (!uniqueList.contains(*iter))
+					uniqueList.push_back(*iter);
+				else
+					toDelete.push_back(iter.pos);
+			}
 		}
 		iterator begin() const
 		{

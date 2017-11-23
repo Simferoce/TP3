@@ -21,30 +21,6 @@ namespace TestStructuresDonnees
 			StructuresDonnees::list<int> test;
 			Assert::IsTrue(test.is_empty());
 		}
-		TEST_METHOD(front)
-		{
-			StructuresDonnees::list<std::string> test;
-			try
-			{
-				auto assignationVariable = test.front();
-				Assert::IsFalse(true);
-			}
-			catch (StructuresDonnees::EmptyList e)
-			{
-			}
-		}
-		TEST_METHOD(back)
-		{
-			StructuresDonnees::list<std::string> test;
-			try
-			{
-				auto assignationVariable = test.back();
-				Assert::IsFalse(true);
-			}
-			catch (StructuresDonnees::EmptyList e)
-			{
-			}
-		}
 		TEST_METHOD(push_back)
 		{
 			StructuresDonnees::list<int> test;
@@ -56,32 +32,6 @@ namespace TestStructuresDonnees
 			StructuresDonnees::list<int> test;
 			test.push_front(1);
 			Assert::IsTrue(test.size() == 1);
-		}
-		TEST_METHOD(pop_back)
-		{
-			StructuresDonnees::list<std::string> test;
-			try
-			{
-				test.pop_back();
-				Assert::IsTrue(false);
-			}
-			catch (StructuresDonnees::EmptyList e)
-			{
-				Assert::IsTrue(true);
-			}
-		}
-		TEST_METHOD(pop_front)
-		{
-			StructuresDonnees::list<std::string> test;
-			try
-			{
-				test.pop_front();
-				Assert::IsTrue(false);
-			}
-			catch (StructuresDonnees::EmptyList e)
-			{
-				Assert::IsTrue(true);
-			}
 		}
 		TEST_METHOD(iteratorBegin)
 		{
@@ -103,32 +53,6 @@ namespace TestStructuresDonnees
 			StructuresDonnees::list<std::string> test;
 			Assert::IsTrue(test.rend() == test.rbegin());
 		}
-		TEST_METHOD(iteratorDereferencement)
-		{
-			StructuresDonnees::list<std::string> test;
-			try
-			{
-				*test.end();
-				Assert::IsTrue(false);
-			}
-			catch (std::out_of_range e)
-			{
-				Assert::IsTrue(true);
-			}
-		}
-		TEST_METHOD(r_iteratorDereferencement)
-		{
-			StructuresDonnees::list<std::string> test;
-			try
-			{
-				*test.rend();
-				Assert::IsTrue(false);
-			}
-			catch (std::out_of_range e)
-			{
-				Assert::IsTrue(true);
-			}
-		}
 		TEST_METHOD(iteratorInegality)
 		{
 			StructuresDonnees::list<std::string> test;
@@ -138,66 +62,6 @@ namespace TestStructuresDonnees
 		{
 			StructuresDonnees::list<std::string> test;
 			Assert::IsFalse(test.rbegin() != test.rend());
-		}
-		TEST_METHOD(iteratorIncrementation)
-		{
-			StructuresDonnees::list<std::string> test;
-			auto test2 = test.begin();
-			++test2;
-			try
-			{
-				*test2;
-				Assert::IsTrue(false);
-			}
-			catch(std::out_of_range e)
-			{
-				Assert::IsTrue(true);
-			}
-		}
-		TEST_METHOD(r_iteratorIncrementation)
-		{
-			StructuresDonnees::list<std::string> test;
-			auto test2 = test.rbegin();
-			++test2;
-			try
-			{
-				*test2;
-				Assert::IsTrue(false);
-			}
-			catch (std::out_of_range e)
-			{
-				Assert::IsTrue(true);
-			}
-		}
-		TEST_METHOD(iteratorDecrementation)
-		{
-			StructuresDonnees::list<std::string> test;
-			auto test2 = test.begin();
-			--test2;
-			try
-			{
-				*test2;
-				Assert::IsTrue(false);
-			}
-			catch (std::out_of_range e)
-			{
-				Assert::IsTrue(true);
-			}
-		}
-		TEST_METHOD(r_iteratorDecrementation)
-		{
-			StructuresDonnees::list<std::string> test;
-			auto test2 = test.rbegin();
-			--test2;
-			try
-			{
-				*test2;
-				Assert::IsTrue(false);
-			}
-			catch (std::out_of_range e)
-			{
-				Assert::IsTrue(true);
-			}
 		}
 		TEST_METHOD(iteratorAssignation)
 		{
@@ -237,19 +101,6 @@ namespace TestStructuresDonnees
 			test.insert(test.end(), 1);
 			Assert::IsTrue(test.back() == 1);
 		}
-		TEST_METHOD(erase)
-		{
-			StructuresDonnees::list<int> test;
-			try
-			{
-				test.erase(test.begin());
-				Assert::IsTrue(false);
-			}
-			catch(StructuresDonnees::EmptyList e)
-			{
-				Assert::IsTrue(true);
-			}
-		}
 		TEST_METHOD(clear)
 		{
 			StructuresDonnees::list<int> test;
@@ -263,6 +114,17 @@ namespace TestStructuresDonnees
 			test.swap(test2);
 			Assert::IsTrue(test2.is_empty());
 			Assert::IsTrue(test.is_empty());
+		}
+		TEST_METHOD(reverse)
+		{
+			StructuresDonnees::list<int> test;
+			test.reverse();
+			Assert::IsTrue(test.is_empty());
+		}
+		TEST_METHOD(contains)
+		{
+			StructuresDonnees::list<int> test;
+			Assert::IsFalse(test.contains(0));
 		}
 	};
 	TEST_CLASS(OneElementList)
@@ -341,38 +203,6 @@ namespace TestStructuresDonnees
 			++test2;
 			Assert::IsFalse(test2 != test.rend());
 		}
-		TEST_METHOD(iteratorDecrementation_1)
-		{
-			StructuresDonnees::list<std::string> test;
-			test.push_back("First");
-			auto test2 = test.begin();
-			--test2;
-			try
-			{
-				*test2;
-				Assert::IsTrue(false);
-			}
-			catch (std::out_of_range e)
-			{
-				Assert::IsTrue(true);
-			}
-		}
-		TEST_METHOD(r_iteratorDecrementation_1)
-		{
-			StructuresDonnees::list<std::string> test;
-			test.push_back("First");
-			auto test2 = test.rbegin();
-			--test2;
-			try
-			{
-				*test2;
-				Assert::IsTrue(false);
-			}
-			catch (std::out_of_range e)
-			{
-				Assert::IsTrue(true);
-			}
-		}
 		TEST_METHOD(iteratorDereferencement_1)
 		{
 			StructuresDonnees::list<std::string> test;
@@ -414,7 +244,7 @@ namespace TestStructuresDonnees
 			test.erase(test.begin());
 			Assert::IsTrue(test.is_empty());
 		}
-		TEST_METHOD(swap)
+		TEST_METHOD(swap_1)
 		{
 			StructuresDonnees::list<int> test;
 			test.push_back(1);
@@ -422,6 +252,35 @@ namespace TestStructuresDonnees
 			test.swap(test2);
 			Assert::IsTrue(test2.size() == 1);
 			Assert::IsTrue(test.is_empty());
+		}
+		TEST_METHOD(splice_1)
+		{
+			StructuresDonnees::list<int> test;
+			test.push_back(1);
+			StructuresDonnees::list<int> test2;
+			test2.splice(test,test2.begin());
+			Assert::IsTrue(test2.size() == 1);
+			Assert::IsTrue(test2.front() == 1);
+		}
+		TEST_METHOD(reverse_1)
+		{
+			StructuresDonnees::list<int> test;
+			test.push_back(1);
+			test.reverse();
+			Assert::IsTrue(test.front() == 1);
+			Assert::IsTrue(test.back() == 1);
+		}
+		TEST_METHOD(contains_1)
+		{
+			StructuresDonnees::list<int> test;
+			test.push_back(0);
+			Assert::IsTrue(test.contains(0));
+		}
+		TEST_METHOD(contains_false_1)
+		{
+			StructuresDonnees::list<int> test;
+			test.push_back(0);
+			Assert::IsFalse(test.contains(1));
 		}
 	};
 	TEST_CLASS(TwoElementsList)
@@ -594,13 +453,13 @@ namespace TestStructuresDonnees
 			Assert::IsTrue(test.size() == 1);
 			Assert::IsTrue(test.front() == 1);
 		}
-		TEST_METHOD(clear)
+		TEST_METHOD(clear_2)
 		{
 			StructuresDonnees::list<int> test;
 			test.clear();
 			Assert::IsTrue(test.is_empty());
 		}
-		TEST_METHOD(swap)
+		TEST_METHOD(swap_2)
 		{
 			StructuresDonnees::list<int> test;
 			test.push_back(1);
@@ -613,6 +472,83 @@ namespace TestStructuresDonnees
 			Assert::IsTrue(test2.back() == 2);
 			Assert::IsTrue(test.size() == 1);
 			Assert::IsTrue(test.front() == 3);
+		}
+		TEST_METHOD(splice_2)
+		{
+			StructuresDonnees::list<int> test;
+			test.push_back(1);
+			test.push_back(2);
+			StructuresDonnees::list<int> test2;
+			test2.splice(test, test2.begin());
+			Assert::IsTrue(test2.size() == 2);
+			Assert::IsTrue(test2.front() == 1);
+			Assert::IsTrue(test2.back() == 2);
+		}
+		TEST_METHOD(splice_WithOneBegin_2)
+		{
+			StructuresDonnees::list<int> test;
+			test.push_back(1);
+			test.push_back(2);
+			StructuresDonnees::list<int> test2;
+			test2.push_back(3);
+			test.splice(test2, test.begin());
+			Assert::IsTrue(test.size() == 3);
+			Assert::IsTrue(test.front() == 3);
+			Assert::IsTrue(test.back() == 2);
+		}
+		TEST_METHOD(splice_WithOneBetween_2)
+		{
+			StructuresDonnees::list<int> test;
+			test.push_back(1);
+			test.push_back(2);
+			StructuresDonnees::list<int> test2;
+			test2.push_back(3);
+			test.splice(test2, ++test.begin());
+			Assert::IsTrue(test.size() == 3);
+			Assert::IsTrue(test.front() == 1);
+			Assert::IsTrue(test.back() == 2);
+		}
+		TEST_METHOD(splice_WithOneEnd_2)
+		{
+			StructuresDonnees::list<int> test;
+			test.push_back(1);
+			test.push_back(2);
+			StructuresDonnees::list<int> test2;
+			test2.push_back(3);
+			test.splice(test2, test.end());
+			Assert::IsTrue(test.size() == 3);
+			Assert::IsTrue(test.front() == 1);
+			Assert::IsTrue(test.back() == 3);
+		}
+		TEST_METHOD(reverse_2)
+		{
+			StructuresDonnees::list<int> test;
+			test.push_back(1);
+			test.push_back(2);
+			test.reverse();
+			Assert::IsTrue(test.front() == 2);
+			Assert::IsTrue(test.back() == 1);
+		}
+		TEST_METHOD(contains_2)
+		{
+			StructuresDonnees::list<int> test;
+			test.push_back(0);
+			test.push_back(1);
+			Assert::IsTrue(test.contains(0));
+		}
+		TEST_METHOD(contains_false_2)
+		{
+			StructuresDonnees::list<int> test;
+			test.push_back(0);
+			test.push_back(-1);
+			Assert::IsFalse(test.contains(1));
+		}
+		TEST_METHOD(unique_2)
+		{
+			StructuresDonnees::list<int> test;
+			test.push_back(0);
+			test.push_back(0);
+			test.unique();
 		}
 	};
 }
