@@ -157,16 +157,14 @@ namespace TestStructuresDonnees
 		{
 			StructuresDonnees::list<int> test;
 			test.push_back(1);
-			int test2 = test.pop_back();
-			Assert::IsTrue(test2 == 1);
+			test.pop_back();
 			Assert::IsTrue(test.is_empty());
 		}
 		TEST_METHOD(pop_front_1)
 		{
 			StructuresDonnees::list<int> test;
 			test.push_back(1);
-			int test2 = test.pop_front();
-			Assert::IsTrue(test2 == 1);
+			test.pop_front();
 			Assert::IsTrue(test.is_empty());
 		}
 		TEST_METHOD(push_back_1)
@@ -338,8 +336,7 @@ namespace TestStructuresDonnees
 			StructuresDonnees::list<int> test;
 			test.push_back(1);
 			test.push_back(2);
-			auto test2 = test.pop_back();
-			Assert::IsTrue(test2 == 2);
+			test.pop_back();
 			Assert::IsTrue(test.size() == 1);
 		}
 		TEST_METHOD(pop_front_2)
@@ -347,8 +344,7 @@ namespace TestStructuresDonnees
 			StructuresDonnees::list<int> test;
 			test.push_back(1);
 			test.push_back(2);
-			auto test2 = test.pop_front();
-			Assert::IsTrue(test2 == 1);
+			test.pop_front();
 			Assert::IsTrue(test.size() == 1);
 		}
 		TEST_METHOD(iteratorDereferencement_2)

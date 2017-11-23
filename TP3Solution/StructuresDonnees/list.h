@@ -130,15 +130,13 @@ namespace StructuresDonnees
 			temp->apres = position.pos->avant = new Box(value, temp, position.pos);
 			sz++;
 		}
-		T erase(iterator position)
+		void erase(iterator position)
 		{
-			T value = *(position.pos->value);
 			position.pos->avant->apres = position.pos->apres;
 			position.pos->apres->avant = position.pos->avant;
+			delete position.pos->value;
 			delete position.pos;
-			position.pos = nullptr;
 			sz--;
-			return value;
 		}
 		void push_back( T &value)
 		{
@@ -160,11 +158,11 @@ namespace StructuresDonnees
 			temp->avant = avantDebut->apres = new Box(*(new T(value)), avantDebut, temp);
 			sz++;
 		}
-		T pop_back()
+		void pop_back()
 		{
 			return erase(--end());
 		}
-		T pop_front()
+		void pop_front()
 		{
 			return erase(begin());
 		}
@@ -176,11 +174,11 @@ namespace StructuresDonnees
 		{
 			return sz;
 		}
-		T front() const
+		T& front() const
 		{
 				return *(avantDebut->apres->value);
 		}
-		T back() const
+		T& back() const
 		{
 	
 				return *(apresFin->avant->value);
@@ -227,14 +225,14 @@ namespace StructuresDonnees
 		{
 			//TO DO
 			list<T> uniqueList;
-			list<Box*> toDelete;
-			for(auto iter= begin(); iter != end(); ++iter)
+			while(!is_empty())
 			{
-				if (!uniqueList.contains(*iter))
-					uniqueList.push_back(*iter);
-				else
-					toDelete.push_back(iter.pos);
+				T value = front();
+				pop_front();
+				if (!uniqueList.contains(value))
+					uniqueList.push_back(T(front()));
 			}
+			swap(uniqueList);
 		}
 		iterator begin() const
 		{
