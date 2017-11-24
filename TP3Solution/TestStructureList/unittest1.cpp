@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "CppUnitTest.h"
-#include "../StructuresDonnees/list.h"
+#include "../StructuresDonnees/list.hpp"
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
 namespace TestStructuresDonnees
@@ -125,6 +125,12 @@ namespace TestStructuresDonnees
 		{
 			StructuresDonnees::list<int> test;
 			Assert::IsFalse(test.contains(0));
+		}
+		TEST_METHOD(assign)
+		{
+			StructuresDonnees::list<std::string> test;
+			test.assign(1, "Allo");
+			Assert::IsTrue(test.size() == 1);
 		}
 	};
 	TEST_CLASS(OneElementList)
@@ -279,6 +285,13 @@ namespace TestStructuresDonnees
 			StructuresDonnees::list<int> test;
 			test.push_back(0);
 			Assert::IsFalse(test.contains(1));
+		}
+		TEST_METHOD(remove_1)
+		{
+			StructuresDonnees::list<int> test;
+			test.push_back(0);
+			test.remove(0);
+			Assert::IsTrue(test.is_empty());
 		}
 	};
 	TEST_CLASS(TwoElementsList)
@@ -480,7 +493,7 @@ namespace TestStructuresDonnees
 			Assert::IsTrue(test2.front() == 1);
 			Assert::IsTrue(test2.back() == 2);
 		}
-		TEST_METHOD(splice_WithOneBegin_2)
+		TEST_METHOD(splice_withOneBegin_2)
 		{
 			StructuresDonnees::list<int> test;
 			test.push_back(1);
@@ -492,7 +505,7 @@ namespace TestStructuresDonnees
 			Assert::IsTrue(test.front() == 3);
 			Assert::IsTrue(test.back() == 2);
 		}
-		TEST_METHOD(splice_WithOneBetween_2)
+		TEST_METHOD(splice_withOneBetween_2)
 		{
 			StructuresDonnees::list<int> test;
 			test.push_back(1);
@@ -504,7 +517,7 @@ namespace TestStructuresDonnees
 			Assert::IsTrue(test.front() == 1);
 			Assert::IsTrue(test.back() == 2);
 		}
-		TEST_METHOD(splice_WithOneEnd_2)
+		TEST_METHOD(splice_withOneEnd_2)
 		{
 			StructuresDonnees::list<int> test;
 			test.push_back(1);
@@ -558,6 +571,38 @@ namespace TestStructuresDonnees
 			Assert::IsTrue(test.size() == 2);
 			Assert::IsTrue(test.front() == 0);
 			Assert::IsTrue(test.back() == 1);
+		}
+		TEST_METHOD(remove_oneElement_2)
+		{
+			StructuresDonnees::list<int> test;
+			test.push_back(0);
+			test.push_back(1);
+			test.remove(0);
+			Assert::IsTrue(test.size() == 1);
+		}
+		TEST_METHOD(remove_twoElement_2)
+		{
+			StructuresDonnees::list<int> test;
+			test.push_back(0);
+			test.push_back(0);
+			test.remove(0);
+			Assert::IsTrue(test.is_empty());
+		}
+
+	};
+	TEST_CLASS(MoreThanTwoElementsList)
+	{
+		TEST_METHOD(reverse_more2)
+		{
+			StructuresDonnees::list<int> test;
+			test.push_back(1);
+			test.push_back(2);
+			test.push_back(3);
+			test.push_back(4);
+			test.push_back(5);
+			test.push_back(6);
+			test.reverse();
+			Assert::IsFalse(true);
 		}
 	};
 }

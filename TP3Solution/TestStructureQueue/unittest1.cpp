@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "CppUnitTest.h"
-#include "../StructuresDonnees/queue.h"
+#include "../StructuresDonnees/queue.hpp"
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
 namespace TestStructureQueue
