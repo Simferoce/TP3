@@ -602,7 +602,41 @@ namespace TestStructuresDonnees
 			test.push_back(5);
 			test.push_back(6);
 			test.reverse();
-			Assert::IsFalse(true);
+			int i = 6;
+			for(auto iter = test.begin(); iter != test.end(); ++iter)
+				Assert::IsTrue(*iter == i--);
+		}
+		TEST_METHOD(unique_more2)
+		{
+			StructuresDonnees::list<int> test;
+			test.push_back(0);
+			test.push_back(3);
+			test.push_back(3);
+			test.push_back(2);
+			test.push_back(1);
+			test.push_back(1);
+			test.push_back(1);
+			test.push_back(2);
+			test.unique();
+			Assert::IsTrue(test.size() == 5);
+			Assert::IsTrue(test.front() == 0);
+			Assert::IsTrue(test.back() == 2);
+		}
+		TEST_METHOD(remove_more2)
+		{
+			StructuresDonnees::list<int> test;
+			test.push_back(0);
+			test.push_back(3);
+			test.push_back(3);
+			test.push_back(2);
+			test.push_back(1);
+			test.push_back(1);
+			test.push_back(1);
+			test.push_back(2);
+			test.remove(2);
+			Assert::IsTrue(test.size() == 6);
+			Assert::IsTrue(test.front() == 0);
+			Assert::IsTrue(test.back() == 1);
 		}
 	};
 }

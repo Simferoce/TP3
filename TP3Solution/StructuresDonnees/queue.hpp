@@ -3,59 +3,58 @@
 namespace StructuresDonnees
 {
 	template <class T>
-	class CircularQueue
+	class Queue
 	{
-		struct Box
-		{
-			T value;
-			Box* next;
-			Box(const T& value, Box* next) :value(value), next(next) {}
-		};
-		CircularQueue(const CircularQueue&) = delete;
-		Box *last;
+		T* tab;
 		size_t sz;
+		size_t cap;
+		size_t zero;
 	public:
-		CircularQueue() : last(nullptr), sz(0)
+		Queue() : tab{ new T[1] }, sz{0}, cap{1}, zero{0}
 		{
-		};
-		~CircularQueue() 
-		{
-			Box* temp = last;
-			if (last != nullptr)
-			{
-				for (auto iter = last->next; iter != last;)
-				{
-					temp = iter;
-					iter = iter->next;
-					delete temp;
-				}
-			}
 		}
-		CircularQueue& operator=(const CircularQueue<T>& other)
+		~Queue() 
 		{
-			Box* i = other.last;
-			if (i != nullptr)
-				do
-				{
-					push(i->next->value);
-					i = i->next;
-				} while (i != other.last);
-				return *this;
+			delete[] tab;
+		}
+		Queue(const Queue& other)
+		{
+			tab = new T[other.cap];
+			cap = other.cap;
+			sz = other.sz;
+			zero = 0;
+			for (int i = 0; i < other.sz; i++)
+				tab[i] = other.tab[zero + i % cap];
+		}
+		Queue& operator=(const Queue<T>& other)
+		{
+			delete[] tab;
+			tab = new T[other.cap];
+			cap = other.cap;
+			sz = other.sz;
+			zero = 0;
+			for (int i = 0; i < other.sz; i++)
+				tab[i] = other.tab[zero + i % cap];
+			return *this;
+		}
+		T& operator[](const size_t& index)
+		{
+			return tab[zero + index % cap];
 		}
 		T& front() {
-			return last->next->value;
+			return tab[zero];
 		}
 		T& back()
 		{
-			return last->value;
+			return tab[(zero + sz - 1) % cap];
 		}
 		const T& front() const
 		{
-			return last->next->value;
+			return tab[(zero + sz - 1) % cap];
 		}
 		const T& back() const
 		{
-			return last->value;
+			return tab[zero];;
 		}
 		bool empty() const
 		{
@@ -67,34 +66,31 @@ namespace StructuresDonnees
 		};
 		void push(const T& value)
 		{
-			if (last != nullptr)
+			if(cap == sz)
 			{
-				last = last->next = new Box(value, last->next);
+				T* temp = new T[cap*2];
+				for (int i = 0; i < sz; i++)
+					temp[i] = tab[i + zero%cap];
+				delete[] tab;
+				tab = temp;
+				cap = 2 * cap;
+				zero = 0;
 			}
-			else
-			{
-				last = new Box(value, nullptr);
-				last->next = last;
-			}
+			tab[(zero + sz) % cap] = value;
 			sz++;
 		}
 		void pop()
 		{
-			if (last != nullptr)
-			{
-				Box* temp = last->next;
-				last->next = last->next->next;
-				if (temp == last)
-					last = nullptr;
-				delete temp;
-				temp = nullptr;
-				sz--;
-			}
-		};
-		void swap(CircularQueue& other) noexcept
+
+			zero = (zero + 1) % cap;
+			sz--;
+		}
+		void swap(Queue& other) noexcept
 		{
-			std::swap(last, other.last);
+			std::swap(tab, other.tab);
 			std::swap(sz, other.sz);
-		};
+			std::swap(cap, other.cap);
+			std::swap(zero, other.zero);
+		}
 	};
 }

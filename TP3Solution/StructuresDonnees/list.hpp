@@ -186,13 +186,10 @@ namespace StructuresDonnees
 				Box* temp = elementToChange;
 				std::swap(elementToChange->avant, elementToChange->apres);
 				elementToChange = temp->avant;
-				if(temp == &apresFin)
-				{
-					int i = 0;
-					++i;
-				}
 			}
+			std::swap(apresFin.apres->avant, avantDebut.avant->apres);
 			std::swap(apresFin, avantDebut);
+
 		}
 		bool contains(const T& value)
 		{
