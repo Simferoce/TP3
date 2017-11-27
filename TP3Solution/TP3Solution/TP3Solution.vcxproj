@@ -91,9 +91,13 @@
   <ItemGroup>
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="Main.cpp" />
+    <ClCompile Include="SceneNiveau.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game.h" />
+    <ClInclude Include="Scene.h" />
+    <ClInclude Include="SceneMenu.h" />
+    <ClInclude Include="SceneNiveau.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\StructuresDonnees\StructuresDonnees.vcxproj">
