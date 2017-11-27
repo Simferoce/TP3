@@ -1,5 +1,8 @@
 #include "Game.h"
 #include "Joueur.h"
+#include "Scene.h"
+#include "SceneMenu.h"
+#include "SceneNiveau.h"
 
 Game::Game()
 {
@@ -25,14 +28,49 @@ int Game::run()
 	{
 		return EXIT_FAILURE;
 	}
-	while (mainWin.isOpen())
-	{
-		getInputs();
-		update();
-		draw();
-	}
+	//deux enums et un pointeur de scene pour faire la manipulation de scène
+	Scene::scenes selecteurDeScene = Scene::scenes::Niveau1;
+	Scene::scenes sceneEnRetour;
+	Scene* sceneActive = nullptr; //Pointeur de la super-classe, peut pointer sur n'imprte quelle scène
 
-	return EXIT_SUCCESS;
+	while (true)
+	{
+		//Seule condition de sortie de toute l'app
+		if (selecteurDeScene == Scene::scenes::Fin)
+		{
+			return EXIT_SUCCESS;
+		}
+		else
+		{
+			//Vous allez ajouter d'autre scènes, alors elles devront
+			//être ajoutées ici
+			switch (selecteurDeScene)
+			{
+			/*case Scene::scenes::Menu:
+				sceneActive = new SceneMenu();
+				break;*/
+			case Scene::scenes::Niveau1:
+				sceneActive = new SceneNiveau();
+				break;
+			}
+
+			if (sceneActive->init(&mainWin))
+			{
+				sceneEnRetour = sceneActive->run();
+				//À la fin d'une scène, s'il y a des sauvegardes à faire
+				//C'est aussi possible de les faire là.
+			}
+			else
+			{
+				//cleap-up à faire pour s'assurer  de ne pas avoir de leak
+				//(malgré l'échec)
+				return EXIT_FAILURE;
+			}
+		}
+		selecteurDeScene = sceneEnRetour;
+		delete sceneActive;
+		sceneActive = nullptr;
+	}
 }
 
 bool Game::init()
