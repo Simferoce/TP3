@@ -1,5 +1,6 @@
 #pragma once
 #include "Scene.h"
+#include "Joueur.h"
 
 class SceneNiveau : public Scene
 {
@@ -19,5 +20,6 @@ private:
 	Sprite ecranNiveau;
 	//Le type de police utilisée
 	Font font;
-
+	Joueur* joueur;
+	std::map<Keyboard::Key, bool> inputKeys;
 };

@@ -6,7 +6,7 @@ SceneNiveau::SceneNiveau()
 }
 SceneNiveau::~SceneNiveau()
 {
-
+	delete joueur;
 }
 
 Scene::scenes SceneNiveau::run()
@@ -22,8 +22,9 @@ Scene::scenes SceneNiveau::run()
 void SceneNiveau::draw()
 {
 	mainWin->clear();
-
 	mainWin->draw(ecranNiveau);
+	mainWin->draw(*joueur);
+	
 	mainWin->display();
 }
 
@@ -39,15 +40,24 @@ void SceneNiveau::getInputs()
 			isRunning = false;
 			transitionVersScene = scenes::Niveau1;
 		}
+		else if(event.type == Event::KeyPressed)
+		{
+			inputKeys[event.key.code] = true;
+		}
+		else if (event.type == Event::KeyReleased)
+		{
+			inputKeys[event.key.code] = false;
+		}
 	}
 }
 bool SceneNiveau::init(RenderWindow * const window)
 {
 	mainWin = window;
-
+	if (!Joueur::initTexture())
+		return false;
 	if (!ecranNiveauT.loadFromFile("Ressources\\Background\\Niveau.jpg"))
 		return false;	
-
+	joueur = new Joueur();
 	ecranNiveau.setTexture(ecranNiveauT);
 	ecranNiveau.setOrigin(0, 0);
 
