@@ -15,13 +15,14 @@ namespace StructuresDonnees
 			Box(T* value = nullptr, Box* avant = nullptr, Box* apres = nullptr) :value{ value }, avant{ avant }, apres{apres} {}
 		};
 		using size_t = unsigned long int;
-		Box* apresFin;
-		Box* avantDebut;
+		Box apresFin;
+		Box avantDebut;
 		size_t sz;
 	public:
 		class iterator :
 			public std::iterator<T,T>
 		{
+		protected:
 			friend list;
 			Box* pos;
 		public:
@@ -58,20 +59,10 @@ namespace StructuresDonnees
 			}
 		};
 		class reverse_iterator
+			: public iterator
 		{
-			friend list;
-			Box* pos;
 		public:
-			reverse_iterator(Box* pos = nullptr) : pos{ pos } {}
-			~reverse_iterator() = default;
-			T& operator*()
-			{
-					return *(pos->value);
-			}
-			bool operator!=(const reverse_iterator& other)
-			{
-				return !(other.pos->apres == pos->apres && other.pos->avant == pos->avant);
-			}
+			reverse_iterator(Box* pos = nullptr) :iterator(pos) {}
 			reverse_iterator operator++()
 			{
 				return pos=pos->avant;
@@ -80,34 +71,19 @@ namespace StructuresDonnees
 			{
 				return pos=pos->apres;
 			}
-			reverse_iterator* operator=(const reverse_iterator& other)
-			{
-				pos = other.pos;
-				return this;
-			}
-			bool operator==(const reverse_iterator& other) const
-			{
-				return pos == other.pos;
-			}
-			reverse_iterator(const reverse_iterator& other)
-			{
-				this = *other;
-			}
 		};
-		list() : apresFin{ new Box() }, avantDebut{ new Box() }, sz{ 0 }
+		list() : apresFin{ Box() }, avantDebut{ Box() }, sz{ 0 }
 		{
-			apresFin->avant = avantDebut;
-			avantDebut->apres = apresFin;
+			apresFin.avant = &avantDebut;
+			avantDebut.apres = &apresFin;
 		}
 		~list()
 		{
 			clear();
-			delete avantDebut;
-			delete apresFin;
 		}
 		void clear()
 		{
-			Box* elementToDelete = avantDebut->apres;
+			Box* elementToDelete = avantDebut.apres;
 			for (int i = 0; i < size(); i++)
 			{
 				Box* temp = elementToDelete->apres;
@@ -115,17 +91,17 @@ namespace StructuresDonnees
 				delete elementToDelete;
 				elementToDelete = temp;
 			}
-				avantDebut->apres = apresFin;
-				apresFin->avant = avantDebut;
+			avantDebut.apres = &apresFin;
+			apresFin.avant = &avantDebut;
 			sz = 0;
 		}
-		void insert(const iterator& position, T &&value)
+		void insert(const iterator& position, const T &&value)
 		{
 			Box* temp = position.pos->avant;
 			temp->apres = position.pos->avant = new Box(*(new T(value)), temp, position.pos);
 			sz++;
 		}
-		void insert(const iterator& position, T &value)
+		void insert(const iterator& position, const T &value)
 		{
 			Box* temp = position.pos->avant;
 			temp->apres = position.pos->avant = new Box(value, temp, position.pos);
@@ -139,24 +115,24 @@ namespace StructuresDonnees
 			delete position.pos;
 			sz--;
 		}
-		void push_back( T &value)
+		void push_back(T &value)
 		{
 			insert(end(),value);
 		}
-		void push_front( T &value)
+		void push_front(T &value)
 		{
 			insert(begin(), value);
 		}
 		void push_back(T &&value)
 		{
-			Box* temp = apresFin->avant;
-			temp->apres = apresFin->avant = new Box(*(new T(value)), temp, apresFin);
+			Box* temp = apresFin.avant;
+			temp->apres = apresFin.avant = new Box(*(new T(value)), temp, &apresFin);
 			sz++;
 		}
 		void push_front(T &&value)
 		{
-			Box* temp = avantDebut->apres;
-			temp->avant = avantDebut->apres = new Box(*(new T(value)), avantDebut, temp);
+			Box* temp = avantDebut.apres;
+			temp->avant = avantDebut.apres = new Box(*(new T(value)), &avantDebut, temp);
 			sz++;
 		}
 		void pop_back()
@@ -177,12 +153,12 @@ namespace StructuresDonnees
 		}
 		T& front() const
 		{
-				return *(avantDebut->apres->value);
+				return *(avantDebut.apres->value);
 		}
 		T& back() const
 		{
 	
-				return *(apresFin->avant->value);
+				return *(apresFin.avant->value);
 		
 		}
 		void swap(list<T>& other) noexcept
@@ -191,27 +167,29 @@ namespace StructuresDonnees
 			std::swap(apresFin, other.apresFin);
 			std::swap(sz, other.sz);
 		}
-		void splice(list<T>& other, iterator position)
+		void splice(list<T>& other, const iterator& position)
 		{
-			position.pos->avant->apres = other.avantDebut->apres;
-			other.avantDebut->apres->avant = position.pos->avant;
-			position.pos->avant = other.apresFin->avant;
-			other.apresFin->avant->apres = position.pos;
+			position.pos->avant->apres = other.avantDebut.apres;
+			other.avantDebut.apres->avant = position.pos->avant;
+			position.pos->avant = other.apresFin.avant;
+			other.apresFin.avant->apres = position.pos;
 			sz += other.size();
 			other.sz = 0;
-			other.avantDebut->apres = other.apresFin;
-			other.apresFin->avant = other.avantDebut;
+			other.avantDebut.apres = &other.apresFin;
+			other.apresFin.avant = &other.avantDebut;
 		}
 		void reverse()
 		{
-			Box* elementToChange = avantDebut;
-			for(int i = 0; i < sz + 2; i++)
+			Box* elementToChange = &avantDebut;
+			for(int i = 0; i < sz+2; i++)
 			{
-				Box* temp = elementToChange->apres;
+				Box* temp = elementToChange;
 				std::swap(elementToChange->avant, elementToChange->apres);
-				elementToChange = temp;
+				elementToChange = temp->avant;
 			}
-			std::swap(avantDebut, apresFin);
+			std::swap(apresFin.apres->avant, avantDebut.avant->apres);
+			std::swap(apresFin, avantDebut);
+
 		}
 		bool contains(const T& value)
 		{
@@ -224,31 +202,65 @@ namespace StructuresDonnees
 		}
 		void unique()
 		{
-			//TO DO
-
 			for(auto iter = begin();  iter != end(); ++iter)
 			{
-				if(iter.pos->avant != avantDebut && *(iter.pos->avant->value) == *iter)
+				if(iter.pos->avant != &avantDebut && *(iter.pos->avant->value) == *iter)
 				{
 					erase(iter.pos->avant);
 				}
 			}
 		}
-		iterator begin() const
+		void remove(const T& value)
 		{
-			return iterator(avantDebut->apres);
+			for (auto iter = begin(); iter != end();)
+			{
+				if (*iter == value)
+				{
+					++iter;
+					erase(iter.pos->avant);
+				}
+				else
+				{
+					++iter;
+				}	
+			}
 		}
-		iterator end() const
+		void assign(const size_t numberOfElement, const T& value)
 		{
-			return iterator(apresFin);
+			clear();
+			for(int i = 0; i < numberOfElement; i++)
+				push_back(value);
 		}
-		reverse_iterator rbegin() const
+		void assign(const size_t numberOfElement, T&& value)
 		{
-			return reverse_iterator(apresFin->avant);
+			clear();
+			for (int i = 0; i < numberOfElement; i++)
+			{
+				Box* temp = apresFin.avant;
+				temp->apres = apresFin.avant = new Box(*(new T(value)), temp, &apresFin);
+				sz++;
+			}
 		}
-		reverse_iterator rend() const
+		void assign(const iterator& first, const iterator& last)
 		{
-			return reverse_iterator(avantDebut);
+			for (auto iter = first; iter != last; ++iter)
+				push_back(new T(*iter));
+		}
+		iterator begin() 
+		{
+			return iterator(avantDebut.apres);
+		}
+		iterator end() 
+		{
+			return iterator(&apresFin);
+		}
+		reverse_iterator rbegin() 
+		{
+			return reverse_iterator(apresFin.avant);
+		}
+		reverse_iterator rend()
+		{
+			return reverse_iterator(&avantDebut);
 		}
 	};
 }
