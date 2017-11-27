@@ -2,6 +2,7 @@
 
 #include <SFML/Graphics.hpp>
 #include "Game.h"
+#include "Joueur.h"
 
 using namespace sf;
 
@@ -20,7 +21,6 @@ private:
 	void getInputs();
 	void update();
 	void draw();
-	
 	RenderWindow mainWin;
 	View view;
 	Event event;

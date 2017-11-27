@@ -1,4 +1,5 @@
 #include "Game.h"
+#include "Joueur.h"
 
 Game::Game()
 {
@@ -24,7 +25,6 @@ int Game::run()
 	{
 		return EXIT_FAILURE;
 	}
-
 	while (mainWin.isOpen())
 	{
 		getInputs();
@@ -37,6 +37,10 @@ int Game::run()
 
 bool Game::init()
 {
+	if (!ArmeBase::initTexture())
+		return false;
+	if (!Joueur::initTexture())
+		return false;
 	return true;
 }
 
