@@ -2,57 +2,57 @@
 namespace StructuresDonnees
 {
 	template <class T>
-	struct Boite
-	{
-		T valeur;
-		Boite* next;
-		Boite(T valeur, Boite* next = nullptr) : valeur(valeur), next(next) {};
-		~Boite() {};
-	};
-	template <class T>
 	class stack
-	{
+	{	
+		struct Boite
+		{
+			T valeur;
+			Boite* next;
+			Boite(T valeur, Boite* next = nullptr) : valeur(valeur), next(next) {};
+			~Boite() {};
+		};
 		using size_t = unsigned long;
-		Boite<T>* top_element;
+		Boite* top_element;
+		size_t sz = 0;
 	public:
 		stack() : top_element(nullptr) {};
 		~stack()
 		{
-			for (Boite<T>* i = top_element; i != nullptr;)
+			for (Boite* i = top_element; i != nullptr;)
 			{
-				Boite<T>* temp = i->next;
+				Boite* temp = i->next;
 				delete i;
 				i = temp;
 			}
 		};
 		void push(T valeur)
 		{
-			top_element = new Boite<T>(valeur, top_element);
+			top_element = new Boite(valeur, top_element);
+			sz++;
 		}
-		T pop()
+		void pop()
 		{
-			T valeur = top->valeur;
-			Boite<T>* next = top->next;
+			Boite* next = top_element->next;
 			delete top_element;
-			top = next;
-			return valeur;
+			top_element = next;
+			sz--;
 		}
 		size_t size() const
 		{
-			size_t size = 0;
-			for (Boite<T>* element; element != nullptr; element->next)
-			{
-				size++;
-			}
-			return size;
+			return sz;
 		}
-		Boite<T>* top()
+		T& top()
 		{
-			return top_element;
+			return top_element->valeur;
 		}
 		bool is_empty()
 		{
 			return top_element == nullptr;
+		}
+		void swap(stack<T>& other) noexcept
+		{
+			std::swap(other.top_element, top_element);
+			std::swap(other.sz, sz);
 		}
 	};
 }

@@ -11,7 +11,6 @@ namespace StructuresDonnees
 			Box* avant;
 			Box* apres;
 			T* value;
-			Box(T& value, Box* avant = nullptr, Box* apres = nullptr): value { &value }, avant{ avant }, apres{ apres } {}
 			Box(T* value = nullptr, Box* avant = nullptr, Box* apres = nullptr) :value{ value }, avant{ avant }, apres{apres} {}
 		};
 		using size_t = unsigned long int;
@@ -95,16 +94,16 @@ namespace StructuresDonnees
 			apresFin.avant = &avantDebut;
 			sz = 0;
 		}
-		void insert(const iterator& position, const T &&value)
+		void insert(const iterator& position, T &&value)
 		{
 			Box* temp = position.pos->avant;
-			temp->apres = position.pos->avant = new Box(*(new T(value)), temp, position.pos);
+			temp->apres = position.pos->avant = new Box(new T(value), temp, position.pos);
 			sz++;
 		}
 		void insert(const iterator& position, const T &value)
 		{
 			Box* temp = position.pos->avant;
-			temp->apres = position.pos->avant = new Box(value, temp, position.pos);
+			temp->apres = position.pos->avant = new Box(new T(value), temp, position.pos);
 			sz++;
 		}
 		void erase(iterator position)
@@ -125,15 +124,11 @@ namespace StructuresDonnees
 		}
 		void push_back(T &&value)
 		{
-			Box* temp = apresFin.avant;
-			temp->apres = apresFin.avant = new Box(*(new T(value)), temp, &apresFin);
-			sz++;
+			insert(end(), value);
 		}
 		void push_front(T &&value)
 		{
-			Box* temp = avantDebut.apres;
-			temp->avant = avantDebut.apres = new Box(*(new T(value)), &avantDebut, temp);
-			sz++;
+			insert(begin(), value);
 		}
 		void pop_back()
 		{
@@ -157,9 +152,7 @@ namespace StructuresDonnees
 		}
 		T& back() const
 		{
-	
 				return *(apresFin.avant->value);
-		
 		}
 		void swap(list<T>& other) noexcept
 		{
@@ -189,7 +182,6 @@ namespace StructuresDonnees
 			}
 			std::swap(apresFin.apres->avant, avantDebut.avant->apres);
 			std::swap(apresFin, avantDebut);
-
 		}
 		bool contains(const T& value)
 		{
@@ -236,9 +228,7 @@ namespace StructuresDonnees
 			clear();
 			for (int i = 0; i < numberOfElement; i++)
 			{
-				Box* temp = apresFin.avant;
-				temp->apres = apresFin.avant = new Box(*(new T(value)), temp, &apresFin);
-				sz++;
+				insert(end(),value);
 			}
 		}
 		void assign(const iterator& first, const iterator& last)
