@@ -14,7 +14,7 @@
     <ProjectGuid>{e31a6685-8300-4a2f-ace2-e1437fcccbb2}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>TP3SolutionTest</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.15063.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
