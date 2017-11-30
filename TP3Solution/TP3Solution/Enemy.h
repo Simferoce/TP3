@@ -2,7 +2,7 @@
 #include "Personnage.hpp"
 #include "IObservateur.h"
 #include "ArmeBase.h"
-
+class SceneNiveau;
 class Enemy :
 	public Personnage, public IObservateur
 {
@@ -11,5 +11,6 @@ public:
 	Enemy(sf::Texture& texture, const sf::IntRect& rectTexture, int pointsDeVie, Arme* armeEquipe, float vitesse, float modificateurVitesseRecul, TypeWeapon projectiletype);
 	~Enemy();
 	void notifier(Sujet* sujet) override;
+	virtual void Update(const SceneNiveau& game) = 0;
 };
 

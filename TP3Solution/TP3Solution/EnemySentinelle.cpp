@@ -22,10 +22,10 @@ EnemySentinelle::~EnemySentinelle()
 {
 }
 
-void EnemySentinelle::Move(int bitMask, sf::FloatRect bounds)
+void EnemySentinelle::Update(const SceneNiveau& game)
 {
-	
 }
+
 
 bool EnemySentinelle::initTexture()
 {
