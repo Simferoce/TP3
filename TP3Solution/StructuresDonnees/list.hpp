@@ -18,8 +18,7 @@ namespace StructuresDonnees
 		Box avantDebut;
 		size_t sz;
 	public:
-		class iterator :
-			public std::iterator<T,T>
+		class iterator
 		{
 		protected:
 			friend list;

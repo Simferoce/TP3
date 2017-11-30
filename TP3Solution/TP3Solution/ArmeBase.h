@@ -11,8 +11,7 @@ class ArmeBase :
 	static const sf::Time delaiEntreLesTirsDeBase;
 public:
 	static bool initTexture();
-	StructuresDonnees::list<Projectile*>* Tire(sf::Vector2f origineDuTir, ProjectileType type, float angle) override;
-	Arme* clone() const override;
+	StructuresDonnees::list<Projectile*>* Tire(sf::Vector2f origineDuTir, TypeWeapon type, float angle) override;
 	ArmeBase();
 	~ArmeBase();
 };

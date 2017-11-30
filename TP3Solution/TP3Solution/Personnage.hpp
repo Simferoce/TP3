@@ -1,6 +1,6 @@
 #pragma once
 #include <SFML/Graphics/Sprite.hpp>
-#include "ProjectileType.h"
+#include "TypeWeapon.h"
 #include "../StructuresDonnees/list.hpp"
 #include "Bonus.h"
 #include <SFML/System/Time.hpp>
@@ -8,6 +8,8 @@
 #include <SFML/Graphics/Texture.hpp>
 #include "Projectile.hpp"
 #include "Arme.hpp"
+#include "../StructuresDonnees/stack.hpp"
+#include "Bouclier.hpp"
 
 class Personnage
 	: public sf::Sprite
@@ -20,14 +22,16 @@ protected:
 	sf::Clock clock;
 	float vitesse;
 	float modificateurVitesseRecul;
-	ProjectileType projectiletype;
+	TypeWeapon projectiletype;
 	StructuresDonnees::list<Bonus> bonus;
+	StructuresDonnees::stack<Bouclier*> boucliers;
 public:
-	Personnage(sf::Texture& texture, int pointsDeVie, Arme* armeEquipe, float vitesse, float modificateurVitesseRecul, ProjectileType projectiletype)
+	Personnage(sf::Texture& texture, const sf::IntRect& rectTexture, int pointsDeVie, Arme* armeEquipe, float vitesse, float modificateurVitesseRecul, TypeWeapon projectiletype)
 		: pointsDeVie{pointsDeVie}, armeEquipe{armeEquipe}, vitesse{vitesse},modificateurVitesseRecul{modificateurVitesseRecul}
 		, projectiletype{projectiletype}
 	{
 		setTexture(texture);
+		setTextureRect(rectTexture);
 	}
 	virtual ~Personnage()
 	{
@@ -44,7 +48,7 @@ public:
 	virtual StructuresDonnees::list<Projectile*>* Fire()
 	{
 		dernierTir = clock.getElapsedTime();
-		return armeEquipe->Tire(getPosition(), ProjectileType::Player, 0);
+		return armeEquipe->Tire(getPosition(), projectiletype, 0);
 	}	
 	/// <summary>
 	/// Moves the player..
@@ -98,5 +102,30 @@ public:
 			setPosition(bounds.left, getPosition().y);
 		if (getPosition().x + getLocalBounds().width > bounds.left + bounds.width)
 			setPosition(bounds.left + bounds.width - getLocalBounds().width, getPosition().y);
+	}
+	virtual void RecoitDommage(TypeWeapon type, int dommage)
+	{
+		if(boucliers.top()->GetTypeBouclier() == type)
+		{
+			int dommageRestant = dommage;
+			while(pointsDeVie > 0 && dommageRestant > 0)
+			{
+				if(!boucliers.is_empty())
+				{
+					dommageRestant = boucliers.top()->RecoitDommage(type, dommage);
+					if (boucliers.top()->Detruit())
+						boucliers.pop();
+				}
+				else
+				{
+					pointsDeVie -= dommageRestant;
+					dommageRestant = 0;
+				}
+			}
+		}
+		else
+		{
+			pointsDeVie -= dommage;
+		}
 	}
 };

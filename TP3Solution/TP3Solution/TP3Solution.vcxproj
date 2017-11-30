@@ -102,6 +102,7 @@
     <ClInclude Include="Arme.hpp" />
     <ClInclude Include="ArmeBase.h" />
     <ClInclude Include="Bonus.h" />
+    <ClInclude Include="Bouclier.hpp" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="IObservateur.h" />
     <ClInclude Include="IObservateurJoueur.h" />
@@ -109,7 +110,7 @@
     <ClInclude Include="Personnage.hpp" />
     <ClInclude Include="Projectile.hpp" />
     <ClInclude Include="ProjectileBase.h" />
-    <ClInclude Include="ProjectileType.h" />
+    <ClInclude Include="TypeWeapon.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="SceneMenu.h" />
     <ClInclude Include="SceneNiveau.h" />

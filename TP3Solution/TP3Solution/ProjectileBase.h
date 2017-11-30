@@ -10,7 +10,7 @@ class ProjectileBase :
 	static sf::Texture texture;
 public:
 	static bool initTexture();
-	ProjectileBase(ProjectileType type, sf::Vector2f pos, float angle);
+	ProjectileBase(TypeWeapon type, sf::Vector2f pos, float angle);
 	~ProjectileBase();
 };
 

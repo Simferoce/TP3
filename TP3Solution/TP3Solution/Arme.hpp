@@ -13,12 +13,11 @@ public:
 	{
 		setTexture(texture);
 	}
-	virtual Arme* clone() const = 0;
 	virtual ~Arme()
 	{
 		
 	}
-	virtual StructuresDonnees::list<Projectile*>* Tire(sf::Vector2f origineDuTir, ProjectileType type, float angle) = 0;
+	virtual StructuresDonnees::list<Projectile*>* Tire(sf::Vector2f origineDuTir, TypeWeapon type, float angle) = 0;
 	sf::Time GetTempsEntreTir() const
 	{
 		return tempsEntreTir;

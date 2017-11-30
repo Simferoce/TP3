@@ -10,14 +10,10 @@ bool ArmeBase::initTexture()
 		return false;
 	return true;
 }
-Arme* ArmeBase::clone() const
-{
-	return new ArmeBase(*this);
-}
-StructuresDonnees::list<Projectile*>* ArmeBase::Tire(sf::Vector2f origineDuTir, ProjectileType type, float angle)
+StructuresDonnees::list<Projectile*>* ArmeBase::Tire(sf::Vector2f origineDuTir, TypeWeapon type, float angle)
 {
 	StructuresDonnees::list<Projectile*>* projectiles = new StructuresDonnees::list<Projectile*>;
-	projectiles->push_back(new ProjectileBase(ProjectileType::Player, origineDuTir, angle));
+	projectiles->push_back(new ProjectileBase(type, origineDuTir, angle));
 	return projectiles;
 }
 

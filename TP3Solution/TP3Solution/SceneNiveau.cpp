@@ -75,19 +75,20 @@ bool SceneNiveau::init(RenderWindow * const window)
 }
 void SceneNiveau::update()
 {
+
 	int bitsMask = 0;
 	if (inputKeys[Keyboard::W]) bitsMask += 1;
 	if (inputKeys[Keyboard::A]) bitsMask += 2;
 	if (inputKeys[Keyboard::S]) bitsMask += 4;
 	if (inputKeys[Keyboard::D]) bitsMask += 8;
 	joueur->Move(bitsMask,FloatRect(Vector2f(0,0),(Vector2f)mainWin->getSize()));
-	if(inputKeys[Keyboard::Space] && joueur->CanFire())
+	if (inputKeys[Keyboard::Space] && joueur->CanFire())
 	{
 		StructuresDonnees::list<Projectile*>* projectilesTemp = joueur->Fire();
 		projectiles.splice(*projectilesTemp, projectiles.begin());
 		delete projectilesTemp;
 	}
-	for(Projectile* projectile : projectiles)
+	for (Projectile* projectile : projectiles)
 		projectile->Update();
 }
 

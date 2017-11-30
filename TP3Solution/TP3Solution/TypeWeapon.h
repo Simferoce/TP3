@@ -1,5 +1,5 @@
 #pragma once
-enum ProjectileType
+enum TypeWeapon
 {
 	EnemyGreen,
 	EnemyRed,
