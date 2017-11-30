@@ -47,3 +47,11 @@ Joueur::~Joueur()
 {
 	
 }
+
+void Joueur::notifier(Sujet* sujet)
+{
+	
+}
+
+
+
