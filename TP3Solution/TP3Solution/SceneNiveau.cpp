@@ -92,6 +92,8 @@ void SceneNiveau::update()
 		projectiles.splice(*projectilesTemp, projectiles.begin());
 		delete projectilesTemp;
 	}
+	if (inputKeys[Keyboard::E]) joueur->nextWeapon();
+	if (inputKeys[Keyboard::Q]) joueur->previousWeapon();
 	for (Projectile* projectile : projectiles)
 		projectile->Update();
 }

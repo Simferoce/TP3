@@ -8,6 +8,7 @@ class ArmeBase :
 {
 	static sf::Texture texture;
 	static const std::string texturePath;
+	static const int munition;
 	static const sf::Time delaiEntreLesTirsDeBase;
 public:
 	static bool initTexture();
