@@ -1,4 +1,5 @@
 #include "SceneNiveau.h"
+#include "ProjectileBase.h"
 
 SceneNiveau::SceneNiveau() 
 {
@@ -6,6 +7,11 @@ SceneNiveau::SceneNiveau()
 }
 SceneNiveau::~SceneNiveau()
 {
+	for (Projectile* projectile : projectiles)
+	{
+		delete projectile;
+	}
+	projectiles.clear();
 	delete joueur;
 }
 
@@ -24,7 +30,8 @@ void SceneNiveau::draw()
 	mainWin->clear();
 	mainWin->draw(ecranNiveau);
 	mainWin->draw(*joueur);
-	
+	for (Projectile* projectile : projectiles)
+		mainWin->draw(*projectile);
 	mainWin->display();
 }
 
@@ -38,7 +45,7 @@ void SceneNiveau::getInputs()
 			//Attention, ici simplement fermer la fenêtre ne mettrait pas nécessairement 
 			//fin à l'application
 			isRunning = false;
-			transitionVersScene = scenes::Niveau1;
+			transitionVersScene = scenes::Fin;
 		}
 		else if(event.type == Event::KeyPressed)
 		{
@@ -53,10 +60,14 @@ void SceneNiveau::getInputs()
 bool SceneNiveau::init(RenderWindow * const window)
 {
 	mainWin = window;
-	if (!Joueur::initTexture())
-		return false;
 	if (!ecranNiveauT.loadFromFile("Ressources\\Background\\Niveau.jpg"))
 		return false;	
+	if (!ArmeBase::initTexture())
+		return false;
+	if (!Joueur::initTexture())
+		return false;
+	if (!ProjectileBase::initTexture())
+		return false;
 	joueur = new Joueur();
 	ecranNiveau.setTexture(ecranNiveauT);
 	ecranNiveau.setOrigin(0, 0);
@@ -65,7 +76,20 @@ bool SceneNiveau::init(RenderWindow * const window)
 }
 void SceneNiveau::update()
 {
-	
+	int bitsMask = 0;
+	if (inputKeys[Keyboard::W]) bitsMask += 1;
+	if (inputKeys[Keyboard::A]) bitsMask += 2;
+	if (inputKeys[Keyboard::S]) bitsMask += 4;
+	if (inputKeys[Keyboard::D]) bitsMask += 8;
+	joueur->Move(bitsMask,FloatRect(Vector2f(0,0),(Vector2f)mainWin->getSize()));
+	if(inputKeys[Keyboard::Space] && joueur->CanFire())
+	{
+		StructuresDonnees::list<Projectile*>* projectilesTemp = joueur->Fire();
+		projectiles.splice(*projectilesTemp, projectiles.begin());
+		delete projectilesTemp;
+	}
+	for(Projectile* projectile : projectiles)
+		projectile->Update();
 }
 
 

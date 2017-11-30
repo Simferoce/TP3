@@ -52,6 +52,9 @@ int Game::run()
 			case Scene::scenes::Niveau1:
 				sceneActive = new SceneNiveau();
 				break;
+			case Scene::scenes::Fin:
+				mainWin.close();
+				break;
 			}
 
 			if (sceneActive->init(&mainWin))
@@ -75,10 +78,7 @@ int Game::run()
 
 bool Game::init()
 {
-	if (!ArmeBase::initTexture())
-		return false;
-	if (!Joueur::initTexture())
-		return false;
+
 	return true;
 }
 

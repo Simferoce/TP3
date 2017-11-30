@@ -2,9 +2,9 @@
 #include <SFML/Graphics/Texture.hpp>
 const std::string Joueur::texturePath = "Gem.png";
 sf::Texture Joueur::texture = sf::Texture();
-const float Joueur::vitesseDeBase = 0.0f;
+const float Joueur::vitesseDeBase = 3.0f;
 const int Joueur::pointsVieDeBase = 0;
-const float Joueur::modificateurVitesseReculDebase = -1.0f;
+const float Joueur::modificateurVitesseReculDebase = 0.7f;
 const ProjectileType Joueur::projectileTypeDeBase = ProjectileType::Player;
 
 bool Joueur::initTexture()
@@ -14,12 +14,12 @@ bool Joueur::initTexture()
 	return true;
 }
 
-Joueur::Joueur() : Personnage(texture, pointsVieDeBase, armeDefaut, vitesseDeBase,modificateurVitesseReculDebase,projectileTypeDeBase)
+Joueur::Joueur() : Personnage(texture, pointsVieDeBase, GetArmeDefaut(), vitesseDeBase,modificateurVitesseReculDebase,projectileTypeDeBase)
 {
 
 }
 
 Joueur::~Joueur()
 {
-	delete armeDefaut;
+	
 }

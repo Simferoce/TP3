@@ -1,4 +1,5 @@
 #include "ArmeBase.h"
+#include "ProjectileBase.h"
 
 const std::string ArmeBase::texturePath = "Gem.png";
 sf::Texture ArmeBase::texture = sf::Texture();
@@ -9,10 +10,14 @@ bool ArmeBase::initTexture()
 		return false;
 	return true;
 }
-
-StructuresDonnees::list<Projectile*> ArmeBase::Tire()
+Arme* ArmeBase::clone() const
 {
-	StructuresDonnees::list<Projectile*> projectiles;
+	return new ArmeBase(*this);
+}
+StructuresDonnees::list<Projectile*>* ArmeBase::Tire(sf::Vector2f origineDuTir, ProjectileType type, float angle)
+{
+	StructuresDonnees::list<Projectile*>* projectiles = new StructuresDonnees::list<Projectile*>;
+	projectiles->push_back(new ProjectileBase(ProjectileType::Player, origineDuTir, angle));
 	return projectiles;
 }
 

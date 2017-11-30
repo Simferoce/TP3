@@ -1,5 +1,6 @@
 #pragma once
 #include <array>
+#include <assert.h>
 namespace StructuresDonnees
 {
 	template <class T>
@@ -64,7 +65,7 @@ namespace StructuresDonnees
 		{
 			return sz;
 		};
-		void push(const T& value)
+		void push_back(const T& value)
 		{
 			if(cap == sz)
 			{
@@ -79,10 +80,30 @@ namespace StructuresDonnees
 			tab[(zero + sz) % cap] = value;
 			sz++;
 		}
-		void pop()
+		void push_front(const T& value)
 		{
-
+			if (cap == sz)
+			{
+				T* temp = new T[cap * 2];
+				for (int i = 0; i < sz; i++)
+					temp[i] = tab[(i + zero)%cap];
+				delete[] tab;
+				tab = temp;
+				cap = 2 * cap;
+				zero = 0;
+			}
+			tab[zero = zero == 0 ? cap - 1 : zero - 1] = value;
+			sz++;
+		}
+		void pop_front()
+		{
+			assert(sz != 0);
 			zero = (zero + 1) % cap;
+			sz--;
+		}
+		void pop_back()
+		{
+			assert(sz != 0);
 			sz--;
 		}
 		void swap(Queue& other) noexcept

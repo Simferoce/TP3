@@ -21,5 +21,6 @@ private:
 	//Le type de police utilisée
 	Font font;
 	Joueur* joueur;
+	StructuresDonnees::list<Projectile*> projectiles;
 	std::map<Keyboard::Key, bool> inputKeys;
 };

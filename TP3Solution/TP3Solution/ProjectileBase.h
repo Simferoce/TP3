@@ -1,5 +1,5 @@
 #pragma once
-#include "Projectile.h"
+#include "Projectile.hpp"
 #include <string>
 
 class ProjectileBase :
@@ -10,7 +10,7 @@ class ProjectileBase :
 	static sf::Texture texture;
 public:
 	static bool initTexture();
-	ProjectileBase(ProjectileType type);
+	ProjectileBase(ProjectileType type, sf::Vector2f pos, float angle);
 	~ProjectileBase();
 };
 

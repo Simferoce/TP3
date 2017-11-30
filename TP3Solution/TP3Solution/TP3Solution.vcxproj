@@ -97,13 +97,13 @@
     <ClCompile Include="SceneNiveau.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Arme.h" />
+    <ClInclude Include="Arme.hpp" />
     <ClInclude Include="ArmeBase.h" />
     <ClInclude Include="Bonus.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="Joueur.h" />
-    <ClInclude Include="Personnage.h" />
-    <ClInclude Include="Projectile.h" />
+    <ClInclude Include="Personnage.hpp" />
+    <ClInclude Include="Projectile.hpp" />
     <ClInclude Include="ProjectileBase.h" />
     <ClInclude Include="ProjectileType.h" />
     <ClInclude Include="Scene.h" />

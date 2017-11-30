@@ -1,5 +1,5 @@
 #pragma once
-#include "Personnage.h"
+#include "Personnage.hpp"
 #include <string>
 #include "ArmeBase.h"
 
@@ -12,7 +12,10 @@ class Joueur :
 	static const float vitesseDeBase;
 	static const float modificateurVitesseReculDebase;
 	static const ProjectileType projectileTypeDeBase;
-	Arme* armeDefaut = new ArmeBase();
+	static Arme* GetArmeDefaut()
+	{
+		return new ArmeBase();
+	}
 public:
 	static bool initTexture();
 	Joueur();

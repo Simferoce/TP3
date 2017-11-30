@@ -3,7 +3,7 @@
 
 const std::string ProjectileBase::texturePath = "Gem.png";
 sf::Texture ProjectileBase::texture = sf::Texture();
-const float ProjectileBase::vitesseDeBase = 0.0f;
+const float ProjectileBase::vitesseDeBase = 8.0f;
 bool ProjectileBase::initTexture()
 {
 	if (!texture.loadFromFile(texturePath))
@@ -11,7 +11,7 @@ bool ProjectileBase::initTexture()
 	return true;
 }
 
-ProjectileBase::ProjectileBase(ProjectileType type) : Projectile(texture, type, vitesseDeBase)
+ProjectileBase::ProjectileBase(ProjectileType type, sf::Vector2f pos, float angle) : Projectile(texture, type, vitesseDeBase, pos, angle)
 {
 }
 

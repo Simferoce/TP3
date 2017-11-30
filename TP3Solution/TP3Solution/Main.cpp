@@ -5,9 +5,9 @@
 int main()
 {
 	StructuresDonnees::Queue<int> test;
-	test.push(1);
-	test.push(2);
-	test.pop();
+	test.push_back(1);
+	test.push_back(2);
+	test.pop_front();
 	Game game;
 	return game.run();
 }
