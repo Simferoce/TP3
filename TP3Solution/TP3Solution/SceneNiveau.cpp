@@ -42,7 +42,6 @@ void SceneNiveau::getInputs()
 		//x sur la fenêtre
 		if (event.type == Event::Closed)
 		{
-			//Attention, ici simplement fermer la fenêtre ne mettrait pas nécessairement 
 			//fin à l'application
 			isRunning = false;
 			transitionVersScene = scenes::Fin;
