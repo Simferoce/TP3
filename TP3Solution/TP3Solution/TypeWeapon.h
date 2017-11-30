@@ -2,8 +2,8 @@
 enum TypeWeapon
 {
 	EnemyGreen,
-	EnemyRed,
 	EnemyYellow,
+	EnemyRed,
 	Player,
 	NUMProjectile
 };
