@@ -18,23 +18,45 @@ namespace StructuresDonnees
 		Box avantDebut;
 		size_t sz;
 	public:
-		class iterator
+		class iterator : public std::iterator<std::bidirectional_iterator_tag, T>
 		{
 		protected:
 			friend list;
 			Box* pos;
 		public:
+			iterator(Box* x = nullptr) :pos(x) {}
+			iterator(const iterator& mit) : pos(mit.pos) {}
+			iterator& operator++() { pos = pos->apres; return *this; }
+			iterator operator++(int) { iterator tmp(*this); operator++(); return tmp; }
+			iterator& operator--() { pos = pos->avant; return *this; }
+			iterator operator--(int) { iterator tmp(*this); operator++(); return tmp; }
+			bool operator==(const iterator& rhs) const { return pos == rhs.pos; }
+			bool operator!=(const iterator& rhs) const { return pos != rhs.pos; }
+			T& operator*() { return *(pos->value); }
+			/*
 			iterator(Box* pos = nullptr) : pos{pos} {}
 			~iterator() = default;
 			T& operator*()
 			{
 				return *(pos->value);
 			}
-			bool operator!=(const iterator& other)
+			T& operator->()
 			{
-				return !(other.pos->apres == pos->apres && other.pos->avant == pos->avant);
+				return *(pos->value);
+			}
+			bool operator!=(const iterator& other) const
+			{
+				return pos != other.pos;
+			}
+			bool operator==(const iterator& other) const
+			{
+				return pos == other.pos;
 			}
 			iterator operator++()
+			{
+				return pos = pos->apres;
+			}
+			iterator operator++(int)
 			{
 				return pos = pos->apres;
 			}
@@ -47,14 +69,14 @@ namespace StructuresDonnees
 				pos = other.pos;
 				return this;
 			}
-			bool operator==(const iterator& other) const
+			bool operator=(const iterator& other) const
 			{
 				return pos == other.pos;
 			}
 			iterator(const iterator& other)
 			{
 				*this = other;
-			}
+			}*/
 		};
 		class reverse_iterator
 			: public iterator
@@ -70,6 +92,7 @@ namespace StructuresDonnees
 				return pos=pos->apres;
 			}
 		};
+
 		list() : apresFin{ Box() }, avantDebut{ Box() }, sz{ 0 }
 		{
 			apresFin.avant = &avantDebut;

@@ -4,6 +4,7 @@
 const std::string ArmeBase::texturePath = "Gem.png";
 sf::Texture ArmeBase::texture = sf::Texture();
 const sf::Time ArmeBase::delaiEntreLesTirsDeBase= sf::milliseconds(100);
+const int ArmeBase::munition = -1;
 bool ArmeBase::initTexture()
 {
 	if(!texture.loadFromFile(texturePath))
@@ -17,7 +18,7 @@ StructuresDonnees::list<Projectile*>* ArmeBase::Tire(sf::Vector2f origineDuTir, 
 	return projectiles;
 }
 
-ArmeBase::ArmeBase() : Arme(texture, delaiEntreLesTirsDeBase)
+ArmeBase::ArmeBase() : Arme(texture, delaiEntreLesTirsDeBase, munition)
 {
 }
 

@@ -10,7 +10,8 @@
 #include "Arme.hpp"
 #include "../StructuresDonnees/stack.hpp"
 #include "Bouclier.hpp"
-
+#include "ArmeBase.h"
+#include <algorithm>
 class Personnage
 	: public sf::Sprite
 {
@@ -24,6 +25,7 @@ protected:
 	float modificateurVitesseRecul;
 	TypeWeapon projectiletype;
 	StructuresDonnees::list<Bonus> bonus;
+	StructuresDonnees::list<Arme*> armes;
 	StructuresDonnees::stack<Bouclier*> boucliers;
 public:
 	Personnage(sf::Texture& texture, const sf::IntRect& rectTexture, int pointsDeVie, Arme* armeEquipe, float vitesse, float modificateurVitesseRecul, TypeWeapon projectiletype)
@@ -32,10 +34,14 @@ public:
 	{
 		setTexture(texture);
 		setTextureRect(rectTexture);
+		armes.push_back(armeEquipe);
 	}
 	virtual ~Personnage()
 	{
-		delete armeEquipe;
+		for (Arme* arme : armes)
+		{
+			delete arme;
+		}
 	}
 	bool CanFire() const
 	{
@@ -127,5 +133,17 @@ public:
 		{
 			pointsDeVie -= dommage;
 		}
+	}
+	void nextWeapon()
+	{
+		auto iter = std::find(armes.begin(), armes.end(), armeEquipe);
+		if (iter != armes.end() && ++iter != armes.end())
+			armeEquipe = *iter;
+	}
+	void previousWeapon()
+	{
+		auto iter = std::find(armes.rbegin(), armes.rend(), armeEquipe);
+		if (iter != armes.end() && ++iter != armes.end())
+			armeEquipe = *iter;
 	}
 };

@@ -8,8 +8,9 @@ class Arme
 {
 protected:
 	sf::Time tempsEntreTir;
+	int munition;
 public:
-	Arme(sf::Texture& texture, sf::Time tempsEntreTir) : Bonus(texture), tempsEntreTir{tempsEntreTir}
+	Arme(sf::Texture& texture, sf::Time tempsEntreTir, int munition) : Bonus(texture), tempsEntreTir{tempsEntreTir}, munition{munition}
 	{
 		setTexture(texture);
 	}
