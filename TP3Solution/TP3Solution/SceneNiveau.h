@@ -1,6 +1,8 @@
 #pragma once
 #include "Scene.h"
 #include "Joueur.h"
+#include "Enemy.h"
+#include "EnemySentinelle.h"
 
 class SceneNiveau : public Scene
 {
@@ -21,6 +23,7 @@ private:
 	//Le type de police utilisée
 	Font font;
 	Joueur* joueur;
+	Enemy* enemyTest;
 	StructuresDonnees::list<Projectile*> projectiles;
 	std::map<Keyboard::Key, bool> inputKeys;
 };

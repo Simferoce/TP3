@@ -90,8 +90,9 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="ArmeBase.cpp" />
+    <ClCompile Include="Enemy.cpp" />
+    <ClCompile Include="EnemySentinelle.cpp" />
     <ClCompile Include="Game.cpp" />
-    <ClCompile Include="IObservateurJoueur.cpp" />
     <ClCompile Include="Joueur.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="ProjectileBase.cpp" />
@@ -103,9 +104,10 @@
     <ClInclude Include="ArmeBase.h" />
     <ClInclude Include="Bonus.h" />
     <ClInclude Include="Bouclier.hpp" />
+    <ClInclude Include="Enemy.h" />
+    <ClInclude Include="EnemySentinelle.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="IObservateur.h" />
-    <ClInclude Include="IObservateurJoueur.h" />
     <ClInclude Include="Joueur.h" />
     <ClInclude Include="Personnage.hpp" />
     <ClInclude Include="Projectile.hpp" />

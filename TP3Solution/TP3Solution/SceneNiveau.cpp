@@ -32,6 +32,7 @@ void SceneNiveau::draw()
 	mainWin->draw(*joueur);
 	for (Projectile* projectile : projectiles)
 		mainWin->draw(*projectile);
+	mainWin->draw(*enemyTest);
 	mainWin->display();
 }
 
@@ -59,6 +60,7 @@ void SceneNiveau::getInputs()
 bool SceneNiveau::init(RenderWindow * const window)
 {
 	mainWin = window;
+	enemyTest = new EnemySentinelle();
 	if (!ecranNiveauT.loadFromFile("Ressources\\Background\\Niveau.jpg"))
 		return false;	
 	if (!ArmeBase::initTexture())
@@ -66,6 +68,8 @@ bool SceneNiveau::init(RenderWindow * const window)
 	if (!Joueur::initTexture())
 		return false;
 	if (!ProjectileBase::initTexture())
+		return false;
+	if (!EnemySentinelle::initTexture())
 		return false;
 	joueur = new Joueur();
 	ecranNiveau.setTexture(ecranNiveauT);
