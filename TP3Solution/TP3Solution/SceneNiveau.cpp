@@ -13,6 +13,7 @@ SceneNiveau::~SceneNiveau()
 	}
 	projectiles.clear();
 	delete joueur;
+	delete enemyTest;
 }
 
 Scene::scenes SceneNiveau::run()
@@ -60,7 +61,6 @@ void SceneNiveau::getInputs()
 bool SceneNiveau::init(RenderWindow * const window)
 {
 	mainWin = window;
-	enemyTest = new EnemySentinelle();
 	if (!ecranNiveauT.loadFromFile("Ressources\\Background\\Niveau.jpg"))
 		return false;	
 	if (!ArmeBase::initTexture())
@@ -71,6 +71,8 @@ bool SceneNiveau::init(RenderWindow * const window)
 		return false;
 	if (!EnemySentinelle::initTexture())
 		return false;
+	enemyTest = new EnemySentinelle();
+	enemyTest->setPosition(400, 0);
 	joueur = new Joueur();
 	ecranNiveau.setTexture(ecranNiveauT);
 	ecranNiveau.setOrigin(0, 0);

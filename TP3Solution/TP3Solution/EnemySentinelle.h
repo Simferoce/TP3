@@ -1,10 +1,11 @@
 #pragma once
 #include "Enemy.h"
+
 class EnemySentinelle :
 	public Enemy
 {
-	static sf::Texture texture; // Texture de l'ennemi
-	static const std::string texturePath; // Texture de l'ennemi
+	static sf::Texture texture;
+	static const std::string texturePath;
 	static const int pointsVieDeBase;
 	static const float vitesseDeBase;
 	static const float modificateurVitesseReculDebase;
@@ -23,6 +24,6 @@ public:
 	static bool initTexture();
 	EnemySentinelle();
 	~EnemySentinelle();
-	void virtual Move(int bitMask, sf::FloatRect bounds) override;
+	virtual void Update(const SceneNiveau& game) override;
 };
 
