@@ -34,6 +34,7 @@ public:
 	{
 		setTexture(texture);
 		setTextureRect(rectTexture);
+		setOrigin(getGlobalBounds().width / 2, getGlobalBounds().height / 2);
 		armes.push_back(armeEquipe);
 	}
 	virtual ~Personnage()
@@ -100,14 +101,14 @@ public:
 		default:
 			break;
 		}
-		if (getPosition().y < bounds.top) 
-			setPosition(getPosition().x, bounds.top);
-		if (getPosition().y + getLocalBounds().height > bounds.top + bounds.height) 
-			setPosition(getPosition().x, bounds.top + bounds.height - getLocalBounds().height);
-		if (getPosition().x < bounds.left) 
-			setPosition(bounds.left, getPosition().y);
-		if (getPosition().x + getLocalBounds().width > bounds.left + bounds.width)
-			setPosition(bounds.left + bounds.width - getLocalBounds().width, getPosition().y);
+		if (getPosition().y < bounds.top + getGlobalBounds().height / 2)
+			setPosition(getPosition().x, bounds.top + getGlobalBounds().height / 2);
+		if (getPosition().y + getLocalBounds().height/2 > bounds.top + bounds.height) 
+			setPosition(getPosition().x, bounds.top + bounds.height - getLocalBounds().height/2);
+		if (getPosition().x < bounds.left + getGlobalBounds().width/2) 
+			setPosition(bounds.left + getGlobalBounds().width / 2, getPosition().y);
+		if (getPosition().x + getLocalBounds().width/2 > bounds.left + bounds.width)
+			setPosition(bounds.left + bounds.width - getLocalBounds().width/2, getPosition().y);
 	}
 	virtual void RecoitDommage(TypeWeapon type, int dommage)
 	{

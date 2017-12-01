@@ -39,6 +39,7 @@ void SceneNiveau::draw()
 
 void SceneNiveau::getInputs()
 {
+	srand(NULL);
 	while (mainWin->pollEvent(event))
 	{
 		//x sur la fenêtre
@@ -72,8 +73,9 @@ bool SceneNiveau::init(RenderWindow * const window)
 	if (!EnemySentinelle::initTexture())
 		return false;
 	enemyTest = new EnemySentinelle();
-	enemyTest->setPosition(400, 0);
+	enemyTest->setPosition(mainWin->getSize().x/2, mainWin->getSize().y / 2);
 	joueur = new Joueur();
+	joueur->setPosition(32, mainWin->getSize().y / 2);
 	ecranNiveau.setTexture(ecranNiveauT);
 	ecranNiveau.setOrigin(0, 0);
 
