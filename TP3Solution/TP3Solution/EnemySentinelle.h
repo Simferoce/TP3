@@ -11,7 +11,6 @@ class EnemySentinelle :
 	static const int pointsVieDeBase;
 	static const float vitesseDeBase;
 	static const float modificateurVitesseReculDebase;
-	static const TypeWeapon projectileTypeDeBase;
 	static const int nbreAnimation = 8;
 	static const sf::IntRect textureRectBase[nbreAnimation];
 	static const int animationDeBase;
@@ -22,6 +21,7 @@ class EnemySentinelle :
 	{
 		return new ArmeBase();
 	}
+	static TypeWeapon genererTypeArmeEnemy();
 public:
 	static bool initTexture();
 	EnemySentinelle();

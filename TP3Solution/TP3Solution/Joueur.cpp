@@ -2,7 +2,7 @@
 #include <SFML/Graphics/Texture.hpp>
 const std::string Joueur::texturePath = "Ressources/Sprites/Joueur/Joueur_32x16.png";
 sf::Texture Joueur::texture = sf::Texture();
-const float Joueur::vitesseDeBase = 3.0f;
+const float Joueur::vitesseDeBase = 12.0f; // 3 avant
 const int Joueur::pointsVieDeBase = 0;
 const float Joueur::modificateurVitesseReculDebase = 0.7f;
 const TypeWeapon Joueur::projectileTypeDeBase = TypeWeapon::Player;
@@ -40,7 +40,7 @@ void Joueur::Move(int bitMask, sf::FloatRect bounds)
 
 Joueur::Joueur() : Personnage(texture, textureRectBase[animationDeBase], pointsVieDeBase, GetArmeDefaut(), vitesseDeBase,modificateurVitesseReculDebase, projectileTypeDeBase)
 {
-
+	setOrigin(getGlobalBounds().width / 2, getGlobalBounds().height / 2);
 }
 
 Joueur::~Joueur()

@@ -10,9 +10,12 @@ protected:
 	sf::Time tempsEntreTir;
 	int munition;
 public:
-	Arme(sf::Texture& texture, sf::Time tempsEntreTir, int munition) : Bonus(texture), tempsEntreTir{tempsEntreTir}, munition{munition}
+	Arme(sf::Texture& texture, sf::Time tempsEntreTir, int munition , Vector2f pos = Vector2f(0, 0) ) : Bonus(texture , pos), tempsEntreTir{tempsEntreTir}, munition{munition}
 	{
 		setTexture(texture);
+		setPosition(pos);
+		setOrigin(getGlobalBounds().width / 2, getGlobalBounds().height / 2);
+
 	}
 	virtual ~Arme()
 	{

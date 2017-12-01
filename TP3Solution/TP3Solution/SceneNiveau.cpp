@@ -18,6 +18,7 @@ SceneNiveau::~SceneNiveau()
 	}
 	enemies.clear();
 	delete joueur;
+
 }
 
 Scene::scenes SceneNiveau::run()
@@ -37,6 +38,7 @@ void SceneNiveau::draw()
 	mainWin->draw(*joueur);
 	for (Projectile* projectile : projectiles)
 		mainWin->draw(*projectile);
+
 	for (Enemy* enemy : enemies)
 		mainWin->draw(*enemy);
 	mainWin->display();
@@ -59,6 +61,7 @@ const Joueur & SceneNiveau::GetPlayer() const
 
 void SceneNiveau::getInputs()
 {
+	srand(NULL);
 	while (mainWin->pollEvent(event))
 	{
 		//x sur la fenêtre
@@ -94,6 +97,7 @@ bool SceneNiveau::init(RenderWindow * const window)
 	enemies.push_back(new EnemySentinelle());
 	enemies.front()->setPosition(400, 400);
 	joueur = new Joueur();
+	joueur->setPosition(32, mainWin->getSize().y / 2);
 	ecranNiveau.setTexture(ecranNiveauT);
 	ecranNiveau.setOrigin(0, 0);
 

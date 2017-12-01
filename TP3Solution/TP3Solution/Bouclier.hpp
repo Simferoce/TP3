@@ -9,14 +9,17 @@ protected:
 	int ptsVie;
 	TypeWeapon type;
 public:
-	Bouclier::Bouclier(sf::Texture& texture, int ptsVie, TypeWeapon type) : Bonus(texture), ptsVie{ ptsVie }, type{ type }
+	Bouclier::Bouclier(sf::Texture& texture, int ptsVie, TypeWeapon type, Vector2f pos) : Bonus(texture, pos), ptsVie{ ptsVie }, type{ type }
 	{
+		setTexture(texture);
 		if (type == TypeWeapon::EnemyGreen)
 			setColor(sf::Color::Green);
 		else if (type == TypeWeapon::EnemyRed)
 			setColor(sf::Color::Red);
 		else if (type == TypeWeapon::EnemyYellow)
 			setColor(sf::Color::Yellow);
+		setPosition(pos);
+		setOrigin(getGlobalBounds().width / 2, getGlobalBounds().height / 2);
 	}
 	TypeWeapon GetTypeBouclier() const { return type; };
 	virtual ~Bouclier(){};	
