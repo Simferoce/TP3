@@ -5,5 +5,6 @@ enum TypeWeapon
 	EnemyYellow,
 	EnemyRed,
 	Player,
+	Laser,
 	NUMProjectile
 };

@@ -3,16 +3,21 @@
 #include <SFML/Graphics/Texture.hpp>
 #include "Sujet.h"
 
+using namespace sf;
+
 class Bonus
-	: public sf::Sprite, public Sujet
+	: public Sprite, public Sujet
 {
 public:
 	bool isPickedUp = false;
 	bool isDestroyed = false;
 	bool isActive = false;
-	Bonus(sf::Texture& texture )
+
+	Bonus(Texture& texture, Vector2f pos )
 	{
 		setTexture(texture);
+		setPosition(pos);
+		setOrigin(getGlobalBounds().width / 2, getGlobalBounds().height / 2);
 	}	
 	/// <summary>
 	/// Détermine si le bonus est actif
@@ -22,7 +27,6 @@ public:
 	/// </returns>
 	bool IsActive() 
 	{
-		notifierTousLesObservateurs();
 		return isActive;
 	}
 	/// <summary>
@@ -33,7 +37,6 @@ public:
 	/// </returns>
 	bool IsDestroyed()
 	{
-		notifierTousLesObservateurs();
 		return isDestroyed;
 	}
 	/// <summary>
@@ -44,8 +47,28 @@ public:
 	/// </returns>
 	bool IsPickedUp()
 	{
-		notifierTousLesObservateurs();
 		return isPickedUp;
+	}	
+	/// <summary>
+	/// Active le bonus
+	/// </summary>
+	void SetActive()
+	{
+		isActive = true;
+	}
+	/// <summary>
+	/// Détruire le bonus
+	/// </summary>
+	void SetDestroyed()
+	{
+		isDestroyed = true;
+	}
+	/// <summary>
+	/// Le bonus est pris par le joueur
+	/// </summary>
+	void SetIsPickedUp()
+	{
+		isPickedUp = true;
 	}
 
 };
