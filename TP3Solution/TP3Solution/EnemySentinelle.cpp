@@ -1,5 +1,6 @@
 #include "EnemySentinelle.h"
 #include "Joueur.h"
+#include "ProjectileBase.h"
 
 
 const std::string EnemySentinelle::texturePath = "Ressources\\Sprites\\Enemy\\Regulier\\Sentinelle\\sentinelle_16x16.png";
@@ -22,8 +23,17 @@ EnemySentinelle::~EnemySentinelle()
 {
 }
 
-void EnemySentinelle::Update(const SceneNiveau& game)
+Enemy::ElementToAdd EnemySentinelle::Update(const INiveau& game)
 {
+	bool fire = CanFire();
+	ElementToAdd elementToAdd(fire);
+	if(fire)
+	{
+		StructuresDonnees::list<Projectile*>* temp = armeEquipe->Tire(getPosition(), TypeWeapon::EnemyGreen, 180);
+		elementToAdd.projectiles.splice(*temp, elementToAdd.projectiles.begin());
+		delete temp;
+	}
+	return elementToAdd;
 }
 
 

@@ -12,8 +12,12 @@ SceneNiveau::~SceneNiveau()
 		delete projectile;
 	}
 	projectiles.clear();
+	for (Enemy* enemy : enemies)
+	{
+		delete enemy;
+	}
+	enemies.clear();
 	delete joueur;
-	delete enemyTest;
 }
 
 Scene::scenes SceneNiveau::run()
@@ -33,8 +37,24 @@ void SceneNiveau::draw()
 	mainWin->draw(*joueur);
 	for (Projectile* projectile : projectiles)
 		mainWin->draw(*projectile);
-	mainWin->draw(*enemyTest);
+	for (Enemy* enemy : enemies)
+		mainWin->draw(*enemy);
 	mainWin->display();
+}
+
+const StructuresDonnees::list<Projectile*>& SceneNiveau::GetAllProjectiles() const
+{
+	return projectiles;
+}
+
+const StructuresDonnees::list<Enemy*>& SceneNiveau::GetAllEnemies() const
+{
+	return enemies;
+}
+
+const Joueur & SceneNiveau::GetPlayer() const
+{
+	return *joueur;
 }
 
 void SceneNiveau::getInputs()
@@ -71,8 +91,8 @@ bool SceneNiveau::init(RenderWindow * const window)
 		return false;
 	if (!EnemySentinelle::initTexture())
 		return false;
-	enemyTest = new EnemySentinelle();
-	enemyTest->setPosition(400, 0);
+	enemies.push_back(new EnemySentinelle());
+	enemies.front()->setPosition(400, 400);
 	joueur = new Joueur();
 	ecranNiveau.setTexture(ecranNiveauT);
 	ecranNiveau.setOrigin(0, 0);
@@ -96,6 +116,12 @@ void SceneNiveau::update()
 	}
 	if (inputKeys[Keyboard::E]) joueur->nextWeapon();
 	if (inputKeys[Keyboard::Q]) joueur->previousWeapon();
+	for(Enemy* enemy : enemies)
+	{
+		Enemy::ElementToAdd elementToAdd = enemy->Update(*this);
+		if (elementToAdd.hasElementToAdd)
+			projectiles.splice(elementToAdd.projectiles, projectiles.begin());
+	}
 	for (Projectile* projectile : projectiles)
 		projectile->Update();
 }

@@ -1,6 +1,8 @@
 #pragma once
 #include "Enemy.h"
 
+class SceneNiveau;
+
 class EnemySentinelle :
 	public Enemy
 {
@@ -24,6 +26,6 @@ public:
 	static bool initTexture();
 	EnemySentinelle();
 	~EnemySentinelle();
-	virtual void Update(const SceneNiveau& game) override;
+	virtual ElementToAdd Update(const INiveau& game) override;
 };
 

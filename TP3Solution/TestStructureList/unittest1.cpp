@@ -121,11 +121,7 @@ namespace TestStructuresDonnees
 			test.reverse();
 			Assert::IsTrue(test.is_empty());
 		}
-		TEST_METHOD(contains)
-		{
-			StructuresDonnees::list<int> test;
-			Assert::IsFalse(test.contains(0));
-		}
+
 		TEST_METHOD(assign)
 		{
 			StructuresDonnees::list<std::string> test;
@@ -273,18 +269,6 @@ namespace TestStructuresDonnees
 			test.reverse();
 			Assert::IsTrue(test.front() == 1);
 			Assert::IsTrue(test.back() == 1);
-		}
-		TEST_METHOD(contains_1)
-		{
-			StructuresDonnees::list<int> test;
-			test.push_back(0);
-			Assert::IsTrue(test.contains(0));
-		}
-		TEST_METHOD(contains_false_1)
-		{
-			StructuresDonnees::list<int> test;
-			test.push_back(0);
-			Assert::IsFalse(test.contains(1));
 		}
 		TEST_METHOD(remove_1)
 		{
@@ -537,20 +521,6 @@ namespace TestStructuresDonnees
 			test.reverse();
 			Assert::IsTrue(test.front() == 2);
 			Assert::IsTrue(test.back() == 1);
-		}
-		TEST_METHOD(contains_2)
-		{
-			StructuresDonnees::list<int> test;
-			test.push_back(0);
-			test.push_back(1);
-			Assert::IsTrue(test.contains(0));
-		}
-		TEST_METHOD(contains_false_2)
-		{
-			StructuresDonnees::list<int> test;
-			test.push_back(0);
-			test.push_back(-1);
-			Assert::IsFalse(test.contains(1));
 		}
 		TEST_METHOD(unique_2)
 		{

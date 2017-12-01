@@ -25,6 +25,6 @@ public:
 	}
 	virtual void Update()
 	{
-		move(cos(getRotation() * (180 /3.14)) * vitesse, sin(getRotation() * (180 / 3.14)) * vitesse);
+		move(cos(getRotation() * (3.1415926 / 180)) * vitesse, sin(getRotation() * (3.1415926 / 180)) * vitesse);
 	}
 };

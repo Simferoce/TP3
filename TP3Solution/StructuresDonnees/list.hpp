@@ -33,64 +33,16 @@ namespace StructuresDonnees
 			bool operator==(const iterator& rhs) const { return pos == rhs.pos; }
 			bool operator!=(const iterator& rhs) const { return pos != rhs.pos; }
 			T& operator*() { return *(pos->value); }
-			/*
-			iterator(Box* pos = nullptr) : pos{pos} {}
-			~iterator() = default;
-			T& operator*()
-			{
-				return *(pos->value);
-			}
-			T& operator->()
-			{
-				return *(pos->value);
-			}
-			bool operator!=(const iterator& other) const
-			{
-				return pos != other.pos;
-			}
-			bool operator==(const iterator& other) const
-			{
-				return pos == other.pos;
-			}
-			iterator operator++()
-			{
-				return pos = pos->apres;
-			}
-			iterator operator++(int)
-			{
-				return pos = pos->apres;
-			}
-			iterator operator--()
-			{
-				return pos = pos->avant;
-			}
-			iterator* operator=(const iterator& other)
-			{
-				pos = other.pos;
-				return this;
-			}
-			bool operator=(const iterator& other) const
-			{
-				return pos == other.pos;
-			}
-			iterator(const iterator& other)
-			{
-				*this = other;
-			}*/
 		};
 		class reverse_iterator
 			: public iterator
 		{
 		public:
 			reverse_iterator(Box* pos = nullptr) :iterator(pos) {}
-			reverse_iterator operator++()
-			{
-				return pos=pos->avant;
-			}
-			reverse_iterator operator--()
-			{
-				return pos=pos->apres;
-			}
+			reverse_iterator operator++(){ return pos=pos->avant; }
+			reverse_iterator operator++(int) { reverse_iterator tmp(*this); operator++(); return tmp; }
+			reverse_iterator operator--(){ return pos=pos->apres; }
+			reverse_iterator operator--(int) { reverse_iterator tmp(*this); operator++(); return tmp; }
 		};
 
 		list() : apresFin{ Box() }, avantDebut{ Box() }, sz{ 0 }
@@ -205,15 +157,6 @@ namespace StructuresDonnees
 			std::swap(apresFin.apres->avant, avantDebut.avant->apres);
 			std::swap(apresFin, avantDebut);
 		}
-		bool contains(const T& value)
-		{
-			for(auto iter=begin(); iter != end(); ++iter)
-			{
-				if (*iter == value)
-					return true;
-			}
-			return false;
-		}
 		void unique()
 		{
 			for(auto iter = begin();  iter != end(); ++iter)
@@ -256,7 +199,7 @@ namespace StructuresDonnees
 		void assign(const iterator& first, const iterator& last)
 		{
 			for (auto iter = first; iter != last; ++iter)
-				push_back(new T(*iter));
+				push_back(T(*iter));
 		}
 		iterator begin() 
 		{

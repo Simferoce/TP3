@@ -107,6 +107,7 @@
     <ClInclude Include="Enemy.h" />
     <ClInclude Include="EnemySentinelle.h" />
     <ClInclude Include="Game.h" />
+    <ClInclude Include="INiveau.h" />
     <ClInclude Include="IObservateur.h" />
     <ClInclude Include="Joueur.h" />
     <ClInclude Include="Personnage.hpp" />
