@@ -3,7 +3,7 @@
 const std::string Joueur::texturePath = "Ressources/Sprites/Joueur/Joueur_32x16.png";
 sf::Texture Joueur::texture = sf::Texture();
 const float Joueur::vitesseDeBase = 12.0f; // 3 avant
-const int Joueur::pointsVieDeBase = 0;
+const int Joueur::pointsVieDeBase = 100;
 const float Joueur::modificateurVitesseReculDebase = 0.7f;
 const TypeWeapon Joueur::projectileTypeDeBase = TypeWeapon::Player;
 const sf::IntRect Joueur::textureRectBase[nbreAnimation] = { sf::IntRect(0,0,32,16), sf::IntRect(32,0,32,16),

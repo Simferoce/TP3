@@ -23,14 +23,25 @@ protected:
 	sf::Clock clock;
 	float vitesse;
 	float modificateurVitesseRecul;
-	TypeWeapon projectiletype;
+	TypeWeapon type;
 	StructuresDonnees::list<Bonus> bonus;
 	StructuresDonnees::list<Arme*> armes;
 	StructuresDonnees::stack<Bouclier*> boucliers;
+	void RepositionnerDansLimite(FloatRect bounds)
+	{
+		if (getPosition().y < bounds.top + getGlobalBounds().height / 2)
+			setPosition(getPosition().x, bounds.top + getGlobalBounds().height / 2);
+		if (getPosition().y + getLocalBounds().height / 2 > bounds.top + bounds.height)
+			setPosition(getPosition().x, bounds.top + bounds.height - getLocalBounds().height / 2);
+		if (getPosition().x < bounds.left + getGlobalBounds().width / 2)
+			setPosition(bounds.left + getGlobalBounds().width / 2, getPosition().y);
+		if (getPosition().x + getLocalBounds().width / 2 > bounds.left + bounds.width)
+			setPosition(bounds.left + bounds.width - getLocalBounds().width / 2, getPosition().y);
+	}
 public:
 	Personnage(sf::Texture& texture, const sf::IntRect& rectTexture, int pointsDeVie, Arme* armeEquipe, float vitesse, float modificateurVitesseRecul, TypeWeapon projectiletype)
 		: pointsDeVie{pointsDeVie}, armeEquipe{armeEquipe}, vitesse{vitesse},modificateurVitesseRecul{modificateurVitesseRecul}
-		, projectiletype{projectiletype}
+		, type{projectiletype}
 	{
 		setTexture(texture);
 		setTextureRect(rectTexture);
@@ -55,7 +66,7 @@ public:
 	virtual StructuresDonnees::list<Projectile*>* Fire()
 	{
 		dernierTir = clock.getElapsedTime();
-		return armeEquipe->Tire(getPosition(), projectiletype, 0);
+		return armeEquipe->Tire(getPosition(), type, 0);
 	}	
 	/// <summary>
 	/// Moves the player..
@@ -101,38 +112,59 @@ public:
 		default:
 			break;
 		}
-		if (getPosition().y < bounds.top + getGlobalBounds().height / 2)
-			setPosition(getPosition().x, bounds.top + getGlobalBounds().height / 2);
-		if (getPosition().y + getLocalBounds().height/2 > bounds.top + bounds.height) 
-			setPosition(getPosition().x, bounds.top + bounds.height - getLocalBounds().height/2);
-		if (getPosition().x < bounds.left + getGlobalBounds().width/2) 
-			setPosition(bounds.left + getGlobalBounds().width / 2, getPosition().y);
-		if (getPosition().x + getLocalBounds().width/2 > bounds.left + bounds.width)
-			setPosition(bounds.left + bounds.width - getLocalBounds().width/2, getPosition().y);
+		RepositionnerDansLimite(bounds);
+	}
+	virtual void Move(Direction direction, sf::FloatRect bounds)
+	{
+		Move(direction, vitesse, bounds);
+	}
+	virtual void Move(Direction direction, float distance, sf::FloatRect bounds)
+	{
+		switch (direction)
+		{
+		case Droite:
+			move(distance, 0);
+			break;
+		case Gauche:
+			move(-distance, 0);
+			break;
+		case Haut:
+			move(0, -distance);
+			break;
+		case Bas:
+			move(0, distance);
+			break;
+		default:
+			break;
+		}
+		RepositionnerDansLimite(bounds);
 	}
 	virtual void RecoitDommage(TypeWeapon type, int dommage)
 	{
-		if(boucliers.top()->GetTypeBouclier() == type)
+		if(type != this->type)
 		{
-			int dommageRestant = dommage;
-			while(pointsDeVie > 0 && dommageRestant > 0)
+			if (!boucliers.is_empty() && boucliers.top()->GetTypeBouclier() == type)
 			{
-				if(!boucliers.is_empty())
+				int dommageRestant = dommage;
+				while (pointsDeVie > 0 && dommageRestant > 0)
 				{
-					dommageRestant = boucliers.top()->RecoitDommage(type, dommage);
-					if (boucliers.top()->Detruit())
-						boucliers.pop();
-				}
-				else
-				{
-					pointsDeVie -= dommageRestant;
-					dommageRestant = 0;
+					if (!boucliers.is_empty())
+					{
+						dommageRestant = boucliers.top()->RecoitDommage(type, dommage);
+						if (boucliers.top()->Detruit())
+							boucliers.pop();
+					}
+					else
+					{
+						pointsDeVie -= dommageRestant;
+						dommageRestant = 0;
+					}
 				}
 			}
-		}
-		else
-		{
-			pointsDeVie -= dommage;
+			else
+			{
+				pointsDeVie -= dommage;
+			}
 		}
 	}
 	void nextWeapon()
@@ -146,5 +178,25 @@ public:
 		auto iter = std::find(armes.rbegin(), armes.rend(), armeEquipe);
 		if (iter != armes.end() && ++iter != armes.end())
 			armeEquipe = *iter;
+	}
+	void SetType(TypeWeapon type)
+	{
+		type = type;
+	}
+	TypeWeapon GetType()
+	{
+		return type;
+	}
+	int GetVie()
+	{
+		return pointsDeVie;
+	}
+	float GetVitesse()
+	{
+		return vitesse;
+	}
+	float GetVitesseRecule()
+	{
+		return vitesse*modificateurVitesseRecul;
 	}
 };

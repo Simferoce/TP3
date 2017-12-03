@@ -26,4 +26,8 @@ public:
 	{
 		return tempsEntreTir;
 	}
+	void SetTempsEntreTir(sf::Time tempsEntreTir) 
+	{
+		this->tempsEntreTir = tempsEntreTir;
+	}
 };

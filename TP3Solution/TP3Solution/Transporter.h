@@ -1,9 +1,6 @@
 #pragma once
 #include "Enemy.h"
-
-class SceneNiveau;
-
-class EnemySentinelle :
+class Transporter :
 	public Enemy
 {
 	static sf::Texture texture;
@@ -17,25 +14,20 @@ class EnemySentinelle :
 	static const int animationDeBase;
 	sf::Clock animationHorloge = sf::Clock();
 	static const sf::Time tempAnimation;
-	static Arme* GetArmeDefaut()
-	{
-		Arme* arme = new ArmeBase();
-		arme->SetTempsEntreTir(sf::milliseconds(1000));
-		return arme;
-	}
 	static TypeWeapon genererTypeArmeEnemy();
+	static const sf::Time tempsEntreEnemies;
+	sf::Clock enemiesSpawnClock;
+	sf::Time tempsDernierSpawnEnemies = sf::milliseconds(0);
 	int animateur = animationDeBase;
 	float distanceDeplacementHautBasParcourue = 0.0f;
 	Direction sensDeplacementHautBas = Haut;
 public:
-	void SetDirection(Direction direction);
 	static bool initTexture();
-	EnemySentinelle();
-	~EnemySentinelle();
+	Transporter();
+	~Transporter();
 	virtual ElementToAdd Update(const INiveau& game) override;
 	virtual void Move(Direction direction, float distance, sf::FloatRect bounds) override { Personnage::Move(direction, distance, bounds); };
 	virtual void Move(int bitMasks, sf::FloatRect bounds) override { Personnage::Move(bitMasks, bounds); };
 	virtual void Move(Direction direction, sf::FloatRect bounds) override { Personnage::Move(direction, bounds); };
-
+	virtual Enemy* FabriqueEnemy();
 };
-

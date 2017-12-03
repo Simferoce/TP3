@@ -6,6 +6,7 @@ class ProjectileBase :
 	public Projectile
 {
 	static const std::string texturePath;
+	static const int dommageDeBase;
 	static const float vitesseDeBase;
 	static sf::Texture texture;
 public:

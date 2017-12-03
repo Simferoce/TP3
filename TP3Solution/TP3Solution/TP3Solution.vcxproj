@@ -98,6 +98,7 @@
     <ClCompile Include="ProjectileBase.cpp" />
     <ClCompile Include="SceneNiveau.cpp" />
     <ClCompile Include="Sujet.cpp" />
+    <ClCompile Include="Transporter.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Arme.hpp" />
@@ -113,6 +114,7 @@
     <ClInclude Include="Personnage.hpp" />
     <ClInclude Include="Projectile.hpp" />
     <ClInclude Include="ProjectileBase.h" />
+    <ClInclude Include="Transporter.h" />
     <ClInclude Include="TypeWeapon.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="SceneMenu.h" />
