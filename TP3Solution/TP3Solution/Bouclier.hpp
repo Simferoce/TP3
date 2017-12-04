@@ -1,17 +1,19 @@
 #pragma once
 #include "Bonus.h"
 #include "TypeWeapon.h"
-
+#include <SFML/Graphics/Texture.hpp>
 class Bouclier :
 	public Bonus
 {
+private:
+	static Texture textureActive;
+	static const std::string texturePathActive;
 protected:
 	int ptsVie;
 	TypeWeapon type;
 public:
-	Bouclier::Bouclier(sf::Texture& texture, int ptsVie, TypeWeapon type, Vector2f pos) : Bonus(texture, pos), ptsVie{ ptsVie }, type{ type }
+	Bouclier::Bouclier(int ptsVie, TypeWeapon type, Vector2f pos) : Bonus(textureActive, pos), ptsVie{ ptsVie }, type{ type }
 	{
-		setTexture(texture);
 		if (type == TypeWeapon::EnemyGreen)
 			setColor(sf::Color::Green);
 		else if (type == TypeWeapon::EnemyRed)
@@ -19,6 +21,7 @@ public:
 		else if (type == TypeWeapon::EnemyYellow)
 			setColor(sf::Color::Yellow);
 		setPosition(pos);
+		setTexture(textureActive);
 		setOrigin(getGlobalBounds().width / 2, getGlobalBounds().height / 2);
 	}
 	TypeWeapon GetTypeBouclier() const { return type; };
@@ -33,8 +36,14 @@ public:
 	{
 		if (this->type == type)
 			ptsVie -= dommage;
-		return ptsVie < 0 ? ptsVie * -1 : ptsVie;
+		return ptsVie < 0 ? ptsVie : 0;
 	};
 	bool Detruit() const { return ptsVie <= 0; };
+	static bool initTexture()
+	{
+		if (!textureActive.loadFromFile(texturePathActive))
+			return false;
+		return true;
+	}
 };
 

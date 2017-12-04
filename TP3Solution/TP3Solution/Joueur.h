@@ -3,6 +3,7 @@
 #include "IObservateur.h"
 #include <string>
 #include "ArmeBase.h"
+#include "ArmeChargee.h"
 
 class Joueur :
 	public Personnage, public IObservateur 
@@ -27,6 +28,7 @@ class Joueur :
 public:
 	static bool initTexture();
 	virtual void Move(int bitMask, sf::FloatRect bounds) override;
+	virtual ElementToAdd Collisionner(const Personnage& other) override;
 	Joueur();
 	~Joueur();
 	void notifier(Sujet* sujet) override;

@@ -1,9 +1,6 @@
 #pragma once
 #include "Enemy.h"
-
-class SceneNiveau;
-
-class EnemySentinelle :
+class Kamikaze :
 	public Enemy
 {
 	static sf::Texture texture;
@@ -15,27 +12,20 @@ class EnemySentinelle :
 	static const int nbreAnimation = 8;
 	static const sf::IntRect textureRectBase[nbreAnimation];
 	static const int animationDeBase;
-	static Arme* GetArmeDefaut()
-	{
-		Arme* arme = new ArmeBase();
-		arme->SetTempsEntreTir(sf::milliseconds(1000));
-		return arme;
-	}
-	static TypeWeapon genererTypeArmeEnemy();
 	static const int tempAnimation;
+	static TypeWeapon genererTypeArmeEnemy();
 	int animateur = 0;
 	int animationSens = 1;
-	float distanceDeplacementHautBasParcourue = 0.0f;
-	Direction sensDeplacementHautBas = Haut;
+	Vector2f direction = Vector2f(-vitesseDeBase,0);
 public:
-	void SetDirection(Direction direction);
 	static bool initTexture();
-	EnemySentinelle();
-	~EnemySentinelle();
+	Kamikaze();
+	~Kamikaze();
 	virtual ElementToAdd Update(const INiveau& game) override;
 	virtual void Move(Direction direction, float distance, sf::FloatRect bounds) override { Personnage::Move(direction, distance, bounds); };
 	virtual void Move(int bitMasks, sf::FloatRect bounds) override { Personnage::Move(bitMasks, bounds); };
 	virtual void Move(Direction direction, sf::FloatRect bounds) override { Personnage::Move(direction, bounds); };
-
+	virtual void Move(const Vector2f vectorDistance, const sf::FloatRect bounds);
+	virtual Personnage::ElementToAdd Collisionner(const Personnage& other) override;
 };
 

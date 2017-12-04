@@ -1,6 +1,7 @@
 #pragma once
 #include "TypeWeapon.h"
 #include <SFML/Graphics/Sprite.hpp>
+#include <SFML/Graphics/RenderWindow.hpp>
 class Projectile
 	: public sf::Sprite
 {
@@ -28,11 +29,15 @@ public:
 	{
 		move(cos(getRotation() * (3.1415926 / 180)) * vitesse, sin(getRotation() * (3.1415926 / 180)) * vitesse);
 	}
+	virtual void Draw(sf::RenderWindow& window)
+	{
+		window.draw(*this);
+	}
 	TypeWeapon GetType()
 	{
 		return type;
 	}
-	int GetDommage()
+	virtual int GetDommage()
 	{
 		return dommage;
 	}

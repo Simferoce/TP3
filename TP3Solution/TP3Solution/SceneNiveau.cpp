@@ -1,6 +1,8 @@
 #include "SceneNiveau.h"
 #include "ProjectileBase.h"
 #include "Transporter.h"
+#include "Kamikaze.h"
+#include "ProjectileCharge.h"
 
 const float SceneNiveau::vitesseDeBaseBackground = 5.0f;
 SceneNiveau::SceneNiveau() 
@@ -39,12 +41,13 @@ void SceneNiveau::draw()
 	mainWin->clear();
 	mainWin->draw(ecranNiveau);
 	mainWin->draw(ecranNiveau2);
-	mainWin->draw(*joueur);
+	joueur->Draw(*mainWin);
 	for (Projectile* projectile : projectiles)
-		mainWin->draw(*projectile);
-
+		projectile->Draw(*mainWin);
 	for (Enemy* enemy : enemies)
-		mainWin->draw(*enemy);
+		enemy->Draw(*mainWin);
+	for (int i = 0; i < nbreEnemyNext; i++)
+		mainWin->draw(nextEnemy[i]);
 	mainWin->draw(vieJoueur);
 	mainWin->display();
 }
@@ -71,6 +74,7 @@ const FloatRect SceneNiveau::GetBounds() const
 
 void SceneNiveau::getInputs()
 {
+	spaceReleased = false;
 	srand(NULL);
 	while (mainWin->pollEvent(event))
 	{
@@ -87,6 +91,8 @@ void SceneNiveau::getInputs()
 		}
 		else if (event.type == Event::KeyReleased)
 		{
+			if (event.key.code == Keyboard::Space)
+				spaceReleased = true;
 			inputKeys[event.key.code] = false;
 		}
 	}
@@ -104,15 +110,28 @@ bool SceneNiveau::init(RenderWindow * const window)
 		return false;
 	if (!ProjectileBase::initTexture())
 		return false;
+	if (!ProjectileCharge::initTexture())
+		return false;
 	if (!EnemySentinelle::initTexture())
 		return false;
 	if (!Transporter::initTexture())
 		return false;
+	if (!Kamikaze::initTexture())
+		return false;
+	if (!Bouclier::initTexture())
+		return false;
 	Enemy* initEnemy = new EnemySentinelle();
 	initEnemy->setPosition(400, 400);
-	enemiesQueue.push_back(EnemiesHolder(initEnemy, sf::milliseconds(1000)));
+	Enemy* initEnemy2 = new Transporter();
+	initEnemy2->setPosition(400, 400);
+	Enemy* initEnemy3 = new Kamikaze();
+	initEnemy3->setPosition(400, 400);
+	enemiesQueue.push_back(EnemiesHolder(initEnemy, sf::milliseconds(2000)));
+	enemiesQueue.push_back(EnemiesHolder(initEnemy2, sf::milliseconds(2000)));
+	enemiesQueue.push_back(EnemiesHolder(initEnemy3, sf::milliseconds(2000)));
 	joueur = new Joueur();
 	joueur->setPosition(32, mainWin->getSize().y / 2);
+	joueur->AjouterArme(new ArmeChargee());
 	vieJoueur.setFont(font);
 	vieJoueur.setString("Vie joueur: " + std::to_string(joueur->GetVie()));
 	vieJoueur.setPosition(0, 0);
@@ -121,6 +140,16 @@ bool SceneNiveau::init(RenderWindow * const window)
 	ecranNiveau2.setTexture(ecranNiveauT);
 	ecranNiveau2.setOrigin(0, 0);
 	ecranNiveau2.setPosition(ecranNiveau.getGlobalBounds().width, 0);
+	for(int j = 0; j < nbreEnemyNext; j++)
+	{
+		nextEnemy.push_back(Sprite());
+	}
+	for(int i = 0; i < enemiesQueue.size() && i < nbreEnemyNext; ++i)
+	{
+		nextEnemy[i].setTexture(*enemiesQueue[i].enemyInWaiting->getTexture());
+		nextEnemy[i].setTextureRect(enemiesQueue[i].enemyInWaiting->getTextureRect());
+		nextEnemy[i].setPosition(posXNextEnemy + i*distanceNextEnemy, posYNextEnemy);
+	}
 	return true;
 }
 void SceneNiveau::update()
@@ -131,26 +160,16 @@ void SceneNiveau::update()
 	if (inputKeys[Keyboard::S]) bitsMask += 4;
 	if (inputKeys[Keyboard::D]) bitsMask += 8;
 	joueur->Move(bitsMask,FloatRect(Vector2f(0,0),(Vector2f)mainWin->getSize()));
-	if(bitsMask == 8 || bitsMask == 9 || bitsMask == 12)
-	{
-		ecranNiveau.move(-(vitesseDeBaseBackground + joueur->GetVitesse()), 0);
-		ecranNiveau2.move(-(vitesseDeBaseBackground + joueur->GetVitesse()), 0);
-	}
-	else if (bitsMask == 2 || bitsMask == 3 || bitsMask == 6)
-	{
-		ecranNiveau.move(-(joueur->GetVitesseRecule() - vitesseDeBaseBackground), 0);
-		ecranNiveau2.move(-(joueur->GetVitesseRecule() - vitesseDeBaseBackground), 0);
-	}
-	else
-	{
-		ecranNiveau.move(-vitesseDeBaseBackground, 0);
-		ecranNiveau2.move(-vitesseDeBaseBackground, 0);
-	}
+	ecranNiveau.move(-vitesseDeBaseBackground, 0);
+	ecranNiveau2.move(-vitesseDeBaseBackground, 0);
 	if (ecranNiveau.getPosition().x + ecranNiveau.getGlobalBounds().width < 0)
 		ecranNiveau.setPosition(ecranNiveau.getGlobalBounds().width, 0);
 	if (ecranNiveau2.getPosition().x + ecranNiveau2.getGlobalBounds().width < 0)
 		ecranNiveau2.setPosition(ecranNiveau2.getGlobalBounds().width, 0);
-	if (inputKeys[Keyboard::Space] && joueur->CanFire())
+	if (inputKeys[Keyboard::Space])
+		joueur->chargerArme();
+	if (((joueur->GetArmeType() != Arme::ArmeType::Charger && inputKeys[Keyboard::Space])
+		|| (joueur->GetArmeType() == Arme::ArmeType::Charger && spaceReleased)) && joueur->CanFire())
 	{
 		StructuresDonnees::list<Projectile*>* projectilesTemp = joueur->Fire();
 		projectiles.splice(*projectilesTemp, projectiles.begin());
@@ -161,12 +180,22 @@ void SceneNiveau::update()
 	if(!enemiesQueue.empty() && enemiesSpawnClock.getElapsedTime() - enemiesQueue.front().timeToWait > lastEnemySpawn)
 	{
 		enemies.push_back(enemiesQueue.front().enemyInWaiting);
-		enemiesQueue.pop_back();
+		enemiesQueue.pop_front();
+		Texture texture = Texture();
+		texture.create(16, 16);
+		nextEnemy.front().setTexture(texture);
+		nextEnemy.pop_front();
+		for (int i = 0; i < enemiesQueue.size() && i < nbreEnemyNext; ++i)
+		{
+			nextEnemy[i].setTexture(*enemiesQueue[i].enemyInWaiting->getTexture());
+			nextEnemy[i].setTextureRect(enemiesQueue[i].enemyInWaiting->getTextureRect());
+			nextEnemy[i].setPosition(posXNextEnemy + i*distanceNextEnemy, posYNextEnemy);
+		}
 		lastEnemySpawn = enemiesSpawnClock.getElapsedTime();
 	}
 	for (auto iter = enemies.begin(); iter != enemies.end();)
 	{
-		Enemy::ElementToAdd elementToAdd = (*iter)->Update(*this);
+		Personnage::ElementToAdd elementToAdd = (*iter)->Update(*this);
 		if (elementToAdd.hasElementToAdd)
 		{
 			if (!elementToAdd.projectiles.is_empty())
@@ -188,6 +217,11 @@ void SceneNiveau::update()
 			{
 				++iterP;
 			}
+		}
+		if(joueur->getGlobalBounds().intersects((*iter)->getGlobalBounds()))
+		{
+			joueur->Collisionner(*(*iter));
+			(*iter)->Collisionner(*joueur);
 		}
 		if((*iter)->IsDead())
 		{

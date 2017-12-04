@@ -12,6 +12,9 @@
 #include "Bouclier.hpp"
 #include "ArmeBase.h"
 #include <algorithm>
+#include <SFML/Graphics/RenderWindow.hpp>
+#include "Projectile.hpp"
+class Enemy;
 class Personnage
 	: public sf::Sprite
 {
@@ -39,6 +42,24 @@ protected:
 			setPosition(bounds.left + bounds.width - getLocalBounds().width / 2, getPosition().y);
 	}
 public:
+	struct ElementToAdd
+	{
+		bool hasElementToAdd = false;
+		StructuresDonnees::list<Projectile*> projectiles;
+		StructuresDonnees::list<Enemy*> enemies;
+		ElementToAdd(bool hasElementToAdd) : hasElementToAdd{ hasElementToAdd } {};
+		ElementToAdd& operator=(ElementToAdd& other)
+		{
+			projectiles.assign(other.projectiles.begin(), other.projectiles.end());
+			enemies.assign(other.enemies.begin(), other.enemies.end());
+			hasElementToAdd = other.hasElementToAdd;
+			return *this;
+		}
+		ElementToAdd(ElementToAdd& other)
+		{
+			*this = other;
+		};
+	};
 	Personnage(sf::Texture& texture, const sf::IntRect& rectTexture, int pointsDeVie, Arme* armeEquipe, float vitesse, float modificateurVitesseRecul, TypeWeapon projectiletype)
 		: pointsDeVie{pointsDeVie}, armeEquipe{armeEquipe}, vitesse{vitesse},modificateurVitesseRecul{modificateurVitesseRecul}
 		, type{projectiletype}
@@ -54,10 +75,16 @@ public:
 		{
 			delete arme;
 		}
+		for (int i = 0; i < boucliers.size(); i++)
+		{
+			delete boucliers.top();
+			boucliers.pop();
+		}
 	}
 	bool CanFire() const
 	{
-		return clock.getElapsedTime().asMilliseconds() - armeEquipe->GetTempsEntreTir().asMilliseconds() > dernierTir.asMilliseconds();
+		bool armeMunition = armeEquipe->GetMunition() != 0 || armeEquipe->GetArmeCharge() > 0;
+		return armeMunition && clock.getElapsedTime().asMilliseconds() - armeEquipe->GetTempsEntreTir().asMilliseconds() > dernierTir.asMilliseconds();
 	}
 	bool IsDead() const
 	{
@@ -152,7 +179,10 @@ public:
 					{
 						dommageRestant = boucliers.top()->RecoitDommage(type, dommage);
 						if (boucliers.top()->Detruit())
+						{
+							delete boucliers.top();
 							boucliers.pop();
+						}
 					}
 					else
 					{
@@ -176,27 +206,46 @@ public:
 	void previousWeapon()
 	{
 		auto iter = std::find(armes.rbegin(), armes.rend(), armeEquipe);
-		if (iter != armes.end() && ++iter != armes.end())
+		if (iter != armes.rend() && ++iter != armes.rend())
 			armeEquipe = *iter;
+	}
+	virtual void chargerArme()
+	{
+		armeEquipe->ChargerArme();
+	}
+	Arme::ArmeType GetArmeType() const
+	{
+		return armeEquipe->GetArmeType();
+	}
+	void AjouterArme(Arme* arme)
+	{
+		armes.push_back(arme);
+	}
+	virtual void Draw(RenderWindow& window)
+	{
+		window.draw(*this);
+		if (!boucliers.is_empty())
+			window.draw(*boucliers.top());
 	}
 	void SetType(TypeWeapon type)
 	{
 		type = type;
 	}
-	TypeWeapon GetType()
+	TypeWeapon GetType() const
 	{
 		return type;
 	}
-	int GetVie()
+	int GetVie() const
 	{
 		return pointsDeVie;
 	}
-	float GetVitesse()
+	float GetVitesse() const
 	{
 		return vitesse;
 	}
-	float GetVitesseRecule()
+	float GetVitesseRecule() const
 	{
 		return vitesse*modificateurVitesseRecul;
 	}
+	virtual ElementToAdd Collisionner(const Personnage& other) = 0;
 };

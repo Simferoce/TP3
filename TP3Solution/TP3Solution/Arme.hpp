@@ -6,9 +6,13 @@
 class Arme
 	:public Bonus
 {
+public:
+	enum ArmeType { Charger, Other };
 protected:
 	sf::Time tempsEntreTir;
+	ArmeType typeArme = Other;
 	int munition;
+	int charge = 0;
 public:
 	Arme(sf::Texture& texture, sf::Time tempsEntreTir, int munition , Vector2f pos = Vector2f(0, 0) ) : Bonus(texture , pos), tempsEntreTir{tempsEntreTir}, munition{munition}
 	{
@@ -29,5 +33,21 @@ public:
 	void SetTempsEntreTir(sf::Time tempsEntreTir) 
 	{
 		this->tempsEntreTir = tempsEntreTir;
+	}
+	virtual void ChargerArme()
+	{
+		
+	}
+	int GetMunition() const
+	{
+		return munition;
+	}
+	ArmeType GetArmeType() const
+	{
+		return typeArme;
+	}
+	int GetArmeCharge() const
+	{
+		return charge;
 	}
 };

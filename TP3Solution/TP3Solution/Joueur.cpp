@@ -1,5 +1,6 @@
 #include "Joueur.h"
 #include <SFML/Graphics/Texture.hpp>
+#include "Kamikaze.h"
 const std::string Joueur::texturePath = "Ressources/Sprites/Joueur/Joueur_32x16.png";
 sf::Texture Joueur::texture = sf::Texture();
 const float Joueur::vitesseDeBase = 12.0f; // 3 avant
@@ -36,11 +37,22 @@ void Joueur::Move(int bitMask, sf::FloatRect bounds)
 		animationHorloge.restart();
 	}
 	setTextureRect(textureRectBase[animateur]);
+	if(!boucliers.is_empty())
+	boucliers.top()->setPosition(getPosition());
+}
+
+Personnage::ElementToAdd Joueur::Collisionner(const Personnage& other)
+{
+	ElementToAdd elem = ElementToAdd(false);
+	if (typeid(other) == typeid(Kamikaze))
+		pointsDeVie -= other.GetVie();
+	return elem;
 }
 
 Joueur::Joueur() : Personnage(texture, textureRectBase[animationDeBase], pointsVieDeBase, GetArmeDefaut(), vitesseDeBase,modificateurVitesseReculDebase, projectileTypeDeBase)
 {
 	setOrigin(getGlobalBounds().width / 2, getGlobalBounds().height / 2);
+	boucliers.push(new Bouclier(2, TypeWeapon::EnemyYellow, getPosition()));
 }
 
 Joueur::~Joueur()

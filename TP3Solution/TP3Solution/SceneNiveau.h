@@ -27,6 +27,12 @@ private:
 	Texture ecranNiveauT;
 	Sprite ecranNiveau;
 	Sprite ecranNiveau2;
+	static const int posXNextEnemy = 1150;
+	static const int posYNextEnemy = 50;
+	static const int distanceNextEnemy = 30;
+	static const int nbreEnemyNext = 5;
+	bool spaceReleased = false;
+	StructuresDonnees::Queue<Sprite> nextEnemy;
 	//Le type de police utilisée
 	Font font;
 	Text vieJoueur;
