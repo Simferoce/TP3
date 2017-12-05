@@ -52,7 +52,7 @@ Personnage::ElementToAdd Joueur::Collisionner(const Personnage& other)
 Joueur::Joueur() : Personnage(texture, textureRectBase[animationDeBase], pointsVieDeBase, GetArmeDefaut(), vitesseDeBase,modificateurVitesseReculDebase, projectileTypeDeBase)
 {
 	setOrigin(getGlobalBounds().width / 2, getGlobalBounds().height / 2);
-	boucliers.push(new Bouclier(2, TypeWeapon::EnemyYellow, getPosition()));
+	boucliers.push(new Bouclier(2, TypeWeapon::EnemyGreen, getPosition()));
 }
 
 Joueur::~Joueur()

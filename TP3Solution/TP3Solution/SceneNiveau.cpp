@@ -75,7 +75,6 @@ const FloatRect SceneNiveau::GetBounds() const
 void SceneNiveau::getInputs()
 {
 	spaceReleased = false;
-	srand(NULL);
 	while (mainWin->pollEvent(event))
 	{
 		//x sur la fenêtre
