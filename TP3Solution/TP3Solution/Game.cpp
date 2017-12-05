@@ -1,8 +1,9 @@
 #include "Game.h"
 #include "Joueur.h"
 #include "Scene.h"
-#include "SceneMenu.h"
 #include "SceneNiveau.h"
+#include "SceneTitre.h"
+#include "SceneGameOver.h"
 
 Game::Game()
 {
@@ -29,7 +30,7 @@ int Game::run()
 		return EXIT_FAILURE;
 	}
 	//deux enums et un pointeur de scene pour faire la manipulation de scène
-	Scene::scenes selecteurDeScene = Scene::scenes::Niveau1;
+	Scene::scenes selecteurDeScene = Scene::scenes::Titre;
 	Scene::scenes sceneEnRetour;
 	Scene* sceneActive = nullptr; //Pointeur de la super-classe, peut pointer sur n'imprte quelle scène
 
@@ -46,13 +47,16 @@ int Game::run()
 			//être ajoutées ici
 			switch (selecteurDeScene)
 			{
-			/*case Scene::scenes::Menu:
-				sceneActive = new SceneMenu();
-				break;*/
+			case Scene::scenes::Titre:
+				sceneActive = new SceneTitre();
+				break;
 			case Scene::scenes::Niveau1:
 				sceneActive = new SceneNiveau();
 				break;
-			case Scene::scenes::Fin:
+			case Scene::scenes::GameOver:
+				sceneActive = new SceneGameOver();
+				break;
+			case Scene::scenes::Fin: //N'est pas une scene. On ferme simplement la fenêtre
 				mainWin.close();
 				break;
 			}

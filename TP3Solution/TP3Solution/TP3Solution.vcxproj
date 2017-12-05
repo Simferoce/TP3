@@ -90,18 +90,26 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="ArmeBase.cpp" />
+    <ClCompile Include="ArmeChargee.cpp" />
+    <ClCompile Include="Bouclier.cpp" />
     <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="EnemySentinelle.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="Joueur.cpp" />
+    <ClCompile Include="Kamikaze.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="ProjectileBase.cpp" />
+    <ClCompile Include="ProjectileCharge.cpp" />
+    <ClCompile Include="SceneGameOver.cpp" />
     <ClCompile Include="SceneNiveau.cpp" />
+    <ClCompile Include="SceneTitre.cpp" />
     <ClCompile Include="Sujet.cpp" />
+    <ClCompile Include="Transporter.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Arme.hpp" />
     <ClInclude Include="ArmeBase.h" />
+    <ClInclude Include="ArmeChargee.h" />
     <ClInclude Include="Bonus.h" />
     <ClInclude Include="Bouclier.hpp" />
     <ClInclude Include="Enemy.h" />
@@ -110,12 +118,16 @@
     <ClInclude Include="INiveau.h" />
     <ClInclude Include="IObservateur.h" />
     <ClInclude Include="Joueur.h" />
+    <ClInclude Include="Kamikaze.h" />
     <ClInclude Include="Personnage.hpp" />
     <ClInclude Include="Projectile.hpp" />
     <ClInclude Include="ProjectileBase.h" />
+    <ClInclude Include="ProjectileCharge.h" />
+    <ClInclude Include="SceneGameOver.h" />
+    <ClInclude Include="SceneTitre.h" />
+    <ClInclude Include="Transporter.h" />
     <ClInclude Include="TypeWeapon.h" />
     <ClInclude Include="Scene.h" />
-    <ClInclude Include="SceneMenu.h" />
     <ClInclude Include="SceneNiveau.h" />
     <ClInclude Include="Sujet.h" />
   </ItemGroup>

@@ -6,18 +6,15 @@
 class Arme
 	:public Bonus // Dérive de la classe bonus, car les armes peuvent être rammassées
 {
+public:
+	enum ArmeType { Charger, Other };
 protected:
-	sf::Time tempsEntreTir; // Temps de tir entre chaque coup. Différent entre chaque arme
-	int munition; // Nombre d emunition que chaque arme possède
-public:	
-	/// <summary>
-	/// ICréation d'une nouvelle arme
-	/// </summary>
-	/// <param name="texture">La texture.</param>
-	/// <param name="tempsEntreTir">Le temps entre les tirs.</param>
-	/// <param name="munition">Les munitions.</param>
-	/// <param name="pos">La position.</param>
-	Arme(sf::Texture& texture, sf::Time tempsEntreTir, int munition, Vector2f pos = Vector2f(0, 0)) : Bonus(texture, pos), tempsEntreTir{ tempsEntreTir }, munition{ munition }
+	sf::Time tempsEntreTir;
+	ArmeType typeArme = Other;
+	int munition;
+	int charge = 0;
+public:
+	Arme(sf::Texture& texture, sf::Time tempsEntreTir, int munition , Vector2f pos = Vector2f(0, 0) ) : Bonus(texture , pos), tempsEntreTir{tempsEntreTir}, munition{munition}
 	{
 		setTexture(texture); // On positionne correctement la texture de l'arme
 		setPosition(pos); // On positionne la texture à 0,0 par défaut
@@ -36,5 +33,25 @@ public:
 	sf::Time GetTempsEntreTir() const
 	{
 		return tempsEntreTir;
+	}
+	void SetTempsEntreTir(sf::Time tempsEntreTir) 
+	{
+		this->tempsEntreTir = tempsEntreTir;
+	}
+	virtual void ChargerArme()
+	{
+		
+	}
+	int GetMunition() const
+	{
+		return munition;
+	}
+	ArmeType GetArmeType() const
+	{
+		return typeArme;
+	}
+	int GetArmeCharge() const
+	{
+		return charge;
 	}
 };

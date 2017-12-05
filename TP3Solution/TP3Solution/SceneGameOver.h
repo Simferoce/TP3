@@ -1,11 +1,11 @@
 #pragma once
 #include "Scene.h"
-
-class SceneMenu : public Scene
+class SceneGameOver :
+	public Scene
 {
 public:
-	SceneMenu();
-	~SceneMenu();
+	SceneGameOver();
+	~SceneGameOver();
 
 	scenes run();
 	bool init(RenderWindow * const window);
@@ -15,9 +15,7 @@ public:
 
 private:
 	//L'arrière plan de l'écran titre.
-	Texture ecranMenuT;
-	Sprite ecranMenu;
-	//Le type de police utilisée
-	Font font;
-
+	Texture ecranGameOverT;
+	Sprite ecranGameOver;
 };
+
