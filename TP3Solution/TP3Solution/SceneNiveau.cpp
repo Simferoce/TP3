@@ -61,7 +61,6 @@ const Joueur & SceneNiveau::GetPlayer() const
 
 void SceneNiveau::getInputs()
 {
-	srand(NULL);
 	while (mainWin->pollEvent(event))
 	{
 		//x sur la fenêtre

@@ -9,15 +9,20 @@ class Bonus
 	: public Sprite, public Sujet
 {
 public:
-	bool isPickedUp = false;
-	bool isDestroyed = false;
-	bool isActive = false;
-
-	Bonus(Texture& texture, Vector2f pos )
+	bool isPickedUp = false; // Si le joueur prend le bonus
+	bool isDestroyed = false; // Si un ennemi prend le bonus avant le joueur
+	bool isActive = false; // Si le bonus est sur le jeu
+	
+/// <summary>
+/// Création d'un bonus
+/// </summary>
+/// <param name="texture">La texture.</param>
+/// <param name="pos">La position.</param>
+	Bonus(Texture& texture, Vector2f pos)
 	{
-		setTexture(texture);
-		setPosition(pos);
-		setOrigin(getGlobalBounds().width / 2, getGlobalBounds().height / 2);
+		setTexture(texture); // La texture du dit bonus
+		setPosition(pos); // La position du bonus
+		setOrigin(getGlobalBounds().width / 2, getGlobalBounds().height / 2); // On centre la texture du bonus
 	}	
 	/// <summary>
 	/// Détermine si le bonus est actif

@@ -16,7 +16,8 @@ const int EnemySentinelle::animationDeBase = 0;
 
 TypeWeapon EnemySentinelle::genererTypeArmeEnemy()
 {
-	int typeArme = rand() % 2;
+	srand(NULL);
+	int typeArme = rand() % 2 + 0;
 	return (TypeWeapon)typeArme;
 }
 

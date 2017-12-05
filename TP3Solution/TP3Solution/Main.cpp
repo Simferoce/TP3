@@ -4,6 +4,7 @@
 
 int main()
 {
+	srand(NULL);
 	StructuresDonnees::Queue<int> test;
 	test.push_back(1);
 	test.push_back(2);
