@@ -10,6 +10,7 @@ class ArmeBase :
 	static const std::string texturePath; // L'emplacement de la texture de base
 	static const int munition; // Le nombre de munition de l'arme de base soit infini
 	static const sf::Time delaiEntreLesTirsDeBase; // Delais entre chaque tir avec l'arme de base
+	static const std::string nomArme;
 public:
 	static bool initTexture(); // Initialisation de la texture de l'arme de base	
 /// <summary>
@@ -20,6 +21,7 @@ public:
 /// <param name="angle">L'angle de la balle.</param>
 /// <returns></returns>
 	StructuresDonnees::list<Projectile*>* Tire(sf::Vector2f origineDuTir, TypeWeapon type, float angle) override;
+	std::string GetNomArme() const override;
 	ArmeBase(); // Constructeur de l'arme de base
 	~ArmeBase(); // Destructeur de l'arme de base
 };

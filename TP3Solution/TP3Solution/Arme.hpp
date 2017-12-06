@@ -54,4 +54,5 @@ public:
 	{
 		return charge;
 	}
+	virtual std::string GetNomArme() const = 0;
 };

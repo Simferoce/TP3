@@ -51,6 +51,10 @@ public:
 	/// </summary>
 	/// <returns></returns>
 	bool Detruit() const { return ptsVie <= 0; };
+	int GetVie() const
+	{
+		return ptsVie;
+	}
 	static bool initTexture()
 	{
 		if (!textureActive.loadFromFile(texturePathActive))

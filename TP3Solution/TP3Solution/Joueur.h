@@ -28,9 +28,10 @@ class Joueur :
 public:
 	static bool initTexture();
 	virtual void Move(int bitMask, sf::FloatRect bounds) override;
-	virtual ElementToAdd Collisionner(const Personnage& other) override;
+	virtual ElementToModify Collisionner(const Personnage& other) override;
 	Joueur();
 	~Joueur();
 	void notifier(Sujet* sujet) override;
+	Arme* Joueur::GetArme();
 };
 

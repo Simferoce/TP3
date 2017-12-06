@@ -8,10 +8,13 @@ class ArmeChargee :
 	static const int munition;
 	static const sf::Time delaiEntreLesTirsDeBase;
 	static const int chargeMax = 100;
+	static const int chargeMinimal = 20;
+	static const std::string nomArme;
 public:
 	static bool initTexture();
 	StructuresDonnees::list<Projectile*>* Tire(sf::Vector2f origineDuTir, TypeWeapon type, float angle) override;
 	void ChargerArme() override;
+	std::string GetNomArme() const override;
 	ArmeChargee();
 	~ArmeChargee();
 };

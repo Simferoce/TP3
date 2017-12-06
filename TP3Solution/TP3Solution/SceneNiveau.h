@@ -5,6 +5,7 @@
 #include "EnemySentinelle.h"
 #include "INiveau.h"
 #include "../StructuresDonnees/queue.hpp"
+#include "Spawner.h"
 
 class SceneNiveau : public Scene , public INiveau
 {
@@ -32,13 +33,20 @@ private:
 	static const int distanceNextEnemy = 30;
 	static const int nbreEnemyNext = 5;
 	bool spaceReleased = false;
-	StructuresDonnees::Queue<Sprite> nextEnemy;
+	Sprite nextEnemy[nbreEnemyNext];
 	//Le type de police utilisée
 	Font font;
 	Text vieJoueur;
+	Text munitionArmes;
+	Text boucliersText;
 	Joueur* joueur;
 	StructuresDonnees::list<Projectile*> projectiles;
 	StructuresDonnees::list<Enemy*> enemies;
+	static const int nbSpawner = 3;
+	static const int DistanceAvecLeFond = 50;
+	static const int posXSpawner[nbSpawner];
+	static const int nbEnemy = 6;
+	Spawner spawner[nbSpawner];
 	sf::Clock enemiesSpawnClock;
 	sf::Time lastEnemySpawn = sf::milliseconds(0);
 	static const float vitesseDeBaseBackground;

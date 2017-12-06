@@ -103,6 +103,7 @@
     <ClCompile Include="SceneGameOver.cpp" />
     <ClCompile Include="SceneNiveau.cpp" />
     <ClCompile Include="SceneTitre.cpp" />
+    <ClCompile Include="Spawner.cpp" />
     <ClCompile Include="Sujet.cpp" />
     <ClCompile Include="Transporter.cpp" />
   </ItemGroup>
@@ -125,6 +126,7 @@
     <ClInclude Include="ProjectileCharge.h" />
     <ClInclude Include="SceneGameOver.h" />
     <ClInclude Include="SceneTitre.h" />
+    <ClInclude Include="Spawner.h" />
     <ClInclude Include="Transporter.h" />
     <ClInclude Include="TypeWeapon.h" />
     <ClInclude Include="Scene.h" />

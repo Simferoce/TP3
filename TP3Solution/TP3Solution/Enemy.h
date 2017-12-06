@@ -11,7 +11,7 @@ public:
 	Enemy(sf::Texture& texture, const sf::IntRect& rectTexture, int pointsDeVie, Arme* armeEquipe, float vitesse, float modificateurVitesseRecul, TypeWeapon projectiletype);
 	~Enemy();
 	void notifier(Sujet* sujet) override;
-	virtual Personnage::ElementToAdd Collisionner(const Personnage& other) override;
-	virtual ElementToAdd Update(const INiveau& game) = 0;
+	virtual Personnage::ElementToModify Collisionner(const Personnage& other) override;
+	virtual ElementToModify Update(INiveau& game) = 0;
 };
 

@@ -30,9 +30,9 @@ Kamikaze::~Kamikaze()
 {
 }
 
-Enemy::ElementToAdd Kamikaze::Update(const INiveau& game)
+Enemy::ElementToModify Kamikaze::Update(INiveau& game)
 {
-	ElementToAdd elementToAdd(false);
+	ElementToModify elementToAdd(false);
 	float variationX = game.GetPlayer().getPosition().x - getPosition().x;
 	float variationY = game.GetPlayer().getPosition().y - getPosition().y;
 	float distance = sqrtf(powf(variationX, 2) + powf(variationY, 2));
@@ -56,9 +56,9 @@ void Kamikaze::Move(const Vector2f vectorDirection, const sf::FloatRect bounds)
 	RepositionnerDansLimite(bounds);
 }
 
-Personnage::ElementToAdd Kamikaze::Collisionner(const Personnage& other)
+Personnage::ElementToModify Kamikaze::Collisionner(const Personnage& other)
 {
-	ElementToAdd elem = Enemy::Collisionner(other);
+	ElementToModify elem = Enemy::Collisionner(other);
 	pointsDeVie = 0;
 	return elem;
 }

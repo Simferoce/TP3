@@ -3,7 +3,7 @@
 #include "Kamikaze.h"
 const std::string Joueur::texturePath = "Ressources/Sprites/Joueur/Joueur_32x16.png";
 sf::Texture Joueur::texture = sf::Texture();
-const float Joueur::vitesseDeBase = 12.0f; // 3 avant
+const float Joueur::vitesseDeBase = 3.0f; // 3 avant
 const int Joueur::pointsVieDeBase = 100;
 const float Joueur::modificateurVitesseReculDebase = 0.7f;
 const TypeWeapon Joueur::projectileTypeDeBase = TypeWeapon::Player;
@@ -41,9 +41,9 @@ void Joueur::Move(int bitMask, sf::FloatRect bounds)
 	boucliers.top()->setPosition(getPosition());
 }
 
-Personnage::ElementToAdd Joueur::Collisionner(const Personnage& other)
+Personnage::ElementToModify Joueur::Collisionner(const Personnage& other)
 {
-	ElementToAdd elem = ElementToAdd(false);
+	ElementToModify elem = ElementToModify(false);
 	if (typeid(other) == typeid(Kamikaze))
 		pointsDeVie -= other.GetVie();
 	return elem;
@@ -52,17 +52,27 @@ Personnage::ElementToAdd Joueur::Collisionner(const Personnage& other)
 Joueur::Joueur() : Personnage(texture, textureRectBase[animationDeBase], pointsVieDeBase, GetArmeDefaut(), vitesseDeBase,modificateurVitesseReculDebase, projectileTypeDeBase)
 {
 	setOrigin(getGlobalBounds().width / 2, getGlobalBounds().height / 2);
-	boucliers.push(new Bouclier(2, TypeWeapon::EnemyGreen, getPosition()));
+	boucliers.push(new Bouclier(2, TypeWeapon::EnemyRed, getPosition()));
+	boucliers.push(new Bouclier(2, TypeWeapon::EnemyYellow, getPosition()));
 }
 
 Joueur::~Joueur()
 {
-	
+	for(int i = 0; i < boucliers.size(); i++)
+	{
+		delete boucliers.top();
+		boucliers.pop();
+	}
 }
 
 void Joueur::notifier(Sujet* sujet)
 {
 	
+}
+
+Arme* Joueur::GetArme()
+{
+	return armeEquipe;
 }
 
 

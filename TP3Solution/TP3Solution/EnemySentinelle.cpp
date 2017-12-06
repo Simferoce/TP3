@@ -6,14 +6,14 @@
 
 const std::string EnemySentinelle::texturePath = "Ressources\\Sprites\\Enemy\\Regulier\\Sentinelle\\sentinelle_16x16.png";
 sf::Texture EnemySentinelle::texture = sf::Texture();
-const float EnemySentinelle::vitesseDeBase = 1.0f;
+const float EnemySentinelle::vitesseDeBase = 2.0f;
 const int EnemySentinelle::pointsVieDeBase = 1;
 const float EnemySentinelle::modificateurVitesseReculDebase = 0.0f;
 const sf::IntRect EnemySentinelle::textureRectBase[nbreAnimation] = { sf::IntRect(0,0,16,16), sf::IntRect(16,0,16,16),
 sf::IntRect(32,0,16,16), sf::IntRect(48,0,16,16), sf::IntRect(64,0,16,16), sf::IntRect(80,0,16,16), sf::IntRect(96,0,16,16), sf::IntRect(112,0,16,16) };
 const int EnemySentinelle::tempAnimation = 100;
 const int EnemySentinelle::animationDeBase = 0;
-
+const float EnemySentinelle::proportionVitesseHautBas = 0.7f;
 TypeWeapon EnemySentinelle::genererTypeArmeEnemy()
 {
 	int typeArme = rand() % 3 + 0;
@@ -30,12 +30,21 @@ EnemySentinelle::~EnemySentinelle()
 {
 }
 
-Enemy::ElementToAdd EnemySentinelle::Update(const INiveau& game)
+Enemy::ElementToModify EnemySentinelle::Update(INiveau& game)
 {
-	Move(sensDeplacementHautBas, game.GetBounds());
+	ElementToModify elementToModify(false);
+	Move(sensDeplacementHautBas, vitesse*proportionVitesseHautBas);
+	if (getPosition().x < getOrigin().x)
+	{
+		elementToModify.deleteObjectReturning = true;
+		elementToModify.hasElementToModify = true;
+	}
+	else
+		RepositionnerDansLimite(game.GetBounds());
+	Move(Direction::Gauche, vitesse*(1 - proportionVitesseHautBas));
 	if (sensDeplacementHautBas == Bas)
 	{
-		distanceDeplacementHautBasParcourue += vitesse;
+		distanceDeplacementHautBasParcourue += vitesse*proportionVitesseHautBas;
 		if(distanceDeplacementHautBasParcourue > distanceDeplacementHautBas)
 		{
 			sensDeplacementHautBas = Haut;
@@ -44,7 +53,7 @@ Enemy::ElementToAdd EnemySentinelle::Update(const INiveau& game)
 	}
 	else if (sensDeplacementHautBas == Haut)
 	{
-		distanceDeplacementHautBasParcourue -= vitesse;
+		distanceDeplacementHautBasParcourue -= vitesse*proportionVitesseHautBas;
 		if (distanceDeplacementHautBasParcourue < -1*distanceDeplacementHautBas)
 		{
 			sensDeplacementHautBas = Bas;
@@ -52,11 +61,11 @@ Enemy::ElementToAdd EnemySentinelle::Update(const INiveau& game)
 		}
 	}
 	bool fire = CanFire();
-	ElementToAdd elementToAdd(fire);
 	if (fire)
 	{
+		elementToModify.hasElementToModify = true;
 		StructuresDonnees::list<Projectile*>* temp = armeEquipe->Tire(getPosition(), type, 180);
-		elementToAdd.projectiles.splice(*temp, elementToAdd.projectiles.begin());
+		elementToModify.projectilesToAdd.splice(*temp, elementToModify.projectilesToAdd.begin());
 		dernierTir = clock.getElapsedTime();
 		delete temp;
 	}
@@ -66,7 +75,7 @@ Enemy::ElementToAdd EnemySentinelle::Update(const INiveau& game)
 	else if (animationSens < 0 && abs(animateur) > nbreAnimation*tempAnimation)
 		animationSens = 1;
 	setTextureRect(textureRectBase[(animateur / tempAnimation) % nbreAnimation]);
-	return elementToAdd;
+	return elementToModify;
 }
 
 void EnemySentinelle::SetDirection(Direction direction)

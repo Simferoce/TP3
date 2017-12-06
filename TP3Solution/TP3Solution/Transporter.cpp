@@ -32,7 +32,7 @@ Transporter::~Transporter()
 {
 }
 
-Enemy::ElementToAdd Transporter::Update(const INiveau& game)
+Enemy::ElementToModify Transporter::Update(INiveau& game)
 {
 	Move(sensDeplacementHautBas, game.GetBounds());
 	if (sensDeplacementHautBas == Bas)
@@ -54,10 +54,10 @@ Enemy::ElementToAdd Transporter::Update(const INiveau& game)
 		}
 	}
 	bool spawnEnemy = enemiesSpawnClock.getElapsedTime() - tempsDernierSpawnEnemies > tempsEntreEnemies;
-	ElementToAdd elementToAdd(spawnEnemy);
+	ElementToModify elementToAdd(spawnEnemy);
 	if(spawnEnemy)
 	{
-		elementToAdd.enemies.push_back(FabriqueEnemy());
+		elementToAdd.enemiesToAdd.push_back(FabriqueEnemy());
 		tempsDernierSpawnEnemies = enemiesSpawnClock.getElapsedTime();
 	}
 	return elementToAdd;

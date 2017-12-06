@@ -26,16 +26,19 @@ class EnemySentinelle :
 	int animateur = 0;
 	int animationSens = 1;
 	float distanceDeplacementHautBasParcourue = 0.0f;
+	static const float proportionVitesseHautBas;
 	Direction sensDeplacementHautBas = Haut;
 public:
 	void SetDirection(Direction direction);
 	static bool initTexture();
 	EnemySentinelle();
 	~EnemySentinelle();
-	virtual ElementToAdd Update(const INiveau& game) override;
+	virtual ElementToModify Update(INiveau& game) override;
 	virtual void Move(Direction direction, float distance, sf::FloatRect bounds) override { Personnage::Move(direction, distance, bounds); };
 	virtual void Move(int bitMasks, sf::FloatRect bounds) override { Personnage::Move(bitMasks, bounds); };
 	virtual void Move(Direction direction, sf::FloatRect bounds) override { Personnage::Move(direction, bounds); };
+	virtual void Move(Direction direction) override { Personnage::Move(direction); }
+	virtual void Move(Direction direction, float distance) override { Personnage::Move(direction, distance); }
 
 };
 

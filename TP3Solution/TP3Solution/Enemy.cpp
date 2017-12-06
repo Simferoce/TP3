@@ -13,9 +13,9 @@ void Enemy::notifier(Sujet* sujet)
 {
 	
 }
-Personnage::ElementToAdd Enemy::Collisionner(const Personnage& other)
+Personnage::ElementToModify Enemy::Collisionner(const Personnage& other)
 {
-	ElementToAdd elem = Personnage::ElementToAdd(false);
+	ElementToModify elem = Personnage::ElementToModify(false);
 	return elem;
 }
 void Enemy::Move(int bitMask, sf::FloatRect bounds)

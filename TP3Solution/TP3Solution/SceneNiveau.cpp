@@ -5,6 +5,7 @@
 #include "ProjectileCharge.h"
 
 const float SceneNiveau::vitesseDeBaseBackground = 5.0f;
+const int SceneNiveau::posXSpawner[] = { 200, 400 , 600 };
 SceneNiveau::SceneNiveau() 
 {
 	isRunning = true;
@@ -22,6 +23,8 @@ SceneNiveau::~SceneNiveau()
 	{
 		delete enemy;
 	}
+	for (int i = 0; i < nbSpawner; i++)
+		mainWin->draw(spawner[i]);
 	enemies.clear();
 	delete joueur;
 }
@@ -49,6 +52,8 @@ void SceneNiveau::draw()
 	for (int i = 0; i < nbreEnemyNext; i++)
 		mainWin->draw(nextEnemy[i]);
 	mainWin->draw(vieJoueur);
+	mainWin->draw(boucliersText);
+	mainWin->draw(munitionArmes);
 	mainWin->display();
 }
 
@@ -124,30 +129,55 @@ bool SceneNiveau::init(RenderWindow * const window)
 		return false;
 	if (!Bouclier::initTexture())
 		return false;
-	Enemy* initEnemy = new EnemySentinelle();
-	initEnemy->setPosition(400, 400);
-	Enemy* initEnemy2 = new Transporter();
-	initEnemy2->setPosition(400, 400);
-	Enemy* initEnemy3 = new Kamikaze();
-	initEnemy3->setPosition(400, 400);
-	enemiesQueue.push_back(EnemiesHolder(initEnemy, sf::milliseconds(2000)));
-	enemiesQueue.push_back(EnemiesHolder(initEnemy2, sf::milliseconds(2000)));
-	enemiesQueue.push_back(EnemiesHolder(initEnemy3, sf::milliseconds(2000)));
+	spawner[0].setPosition(mainWin->getSize().x - DistanceAvecLeFond, posXSpawner[0]);
+	spawner[1].setPosition(mainWin->getSize().x - DistanceAvecLeFond, posXSpawner[1]);
+	spawner[2].setPosition(mainWin->getSize().x - DistanceAvecLeFond, posXSpawner[2]);
+	for(int i = 0; i < nbEnemy; i++)
+	{
+		const int random = rand() % nbSpawner;
+		const Spawner::EnemiesEnum random2 = static_cast<Spawner::EnemiesEnum>(rand() % Spawner::EnemiesEnum::NumEnemies);
+		enemiesQueue.push_back(EnemiesHolder(spawner[random].FabriquerEnemy(random2), sf::milliseconds(2000)));
+	}
 	joueur = new Joueur();
 	joueur->setPosition(32, mainWin->getSize().y / 2);
 	joueur->AjouterArme(new ArmeChargee());
 	vieJoueur.setFont(font);
 	vieJoueur.setString("Vie joueur: " + std::to_string(joueur->GetVie()));
 	vieJoueur.setPosition(0, 0);
+	boucliersText.setFont(font);
+	const Bouclier* bouclierActif = joueur->GetBouclier();
+	if(bouclierActif != nullptr)
+	{
+		switch (bouclierActif->GetTypeBouclier())
+		{
+			case EnemyGreen:
+				boucliersText.setFillColor(Color::Green);
+				break;
+			case EnemyRed:
+				boucliersText.setFillColor(Color::Red);
+				break;
+			case EnemyYellow:
+				boucliersText.setFillColor(Color::Yellow);
+				break;
+			default:
+				boucliersText.setFillColor(Color::White);
+				break;
+		}
+	}
+	else
+	{
+		boucliersText.setFillColor(Color::White);
+	}
+	boucliersText.setString("Bouclier: " + std::to_string(bouclierActif != nullptr ? bouclierActif->GetVie() : 0));
+	boucliersText.setPosition(vieJoueur.getPosition().x, vieJoueur.getPosition().y + vieJoueur.getCharacterSize());
+	munitionArmes.setFont(font);
+	munitionArmes.setString(joueur->GetArme()->GetNomArme() + ": " + (joueur->GetArme()->GetMunition() == -1 ? "infini" : std::to_string(joueur->GetArme()->GetMunition())));
+	munitionArmes.setPosition(0, mainWin->getSize().y - munitionArmes.getCharacterSize());
 	ecranNiveau.setTexture(ecranNiveauT);
 	ecranNiveau.setOrigin(0, 0);
 	ecranNiveau2.setTexture(ecranNiveauT);
 	ecranNiveau2.setOrigin(0, 0);
 	ecranNiveau2.setPosition(ecranNiveau.getGlobalBounds().width, 0);
-	for(int j = 0; j < nbreEnemyNext; j++)
-	{
-		nextEnemy.push_back(Sprite());
-	}
 	for(int i = 0; i < enemiesQueue.size() && i < nbreEnemyNext; ++i)
 	{
 		nextEnemy[i].setTexture(*enemiesQueue[i].enemyInWaiting->getTexture());
@@ -185,24 +215,39 @@ void SceneNiveau::update()
 	{
 		enemies.push_back(enemiesQueue.front().enemyInWaiting);
 		enemiesQueue.pop_front();
-		nextEnemy.pop_front();
-		for (int i = 0; i < enemiesQueue.size() && i < nbreEnemyNext; ++i)
+		for (int i = 0; i < nbreEnemyNext; ++i)
 		{
-			nextEnemy[i].setTexture(*enemiesQueue[i].enemyInWaiting->getTexture());
-			nextEnemy[i].setTextureRect(enemiesQueue[i].enemyInWaiting->getTextureRect());
-			nextEnemy[i].setPosition(posXNextEnemy + i*distanceNextEnemy, posYNextEnemy);
+			if(enemiesQueue.size() > i)
+			{
+				nextEnemy[i].setTexture(*enemiesQueue[i].enemyInWaiting->getTexture());
+				nextEnemy[i].setTextureRect(enemiesQueue[i].enemyInWaiting->getTextureRect());
+				nextEnemy[i].setPosition(posXNextEnemy + i*distanceNextEnemy, posYNextEnemy);
+			}
+			else
+			{
+				nextEnemy[i].setTextureRect(IntRect(0,0,0,0));
+			}
 		}
 		lastEnemySpawn = enemiesSpawnClock.getElapsedTime();
 	}
 	for (auto iter = enemies.begin(); iter != enemies.end();)
 	{
-		Personnage::ElementToAdd elementToAdd = (*iter)->Update(*this);
-		if (elementToAdd.hasElementToAdd)
+		Personnage::ElementToModify elementToAdd = (*iter)->Update(*this);
+		if (elementToAdd.hasElementToModify)
 		{
-			if (!elementToAdd.projectiles.is_empty())
-				projectiles.splice(elementToAdd.projectiles, projectiles.begin());
-			if (!elementToAdd.enemies.is_empty())
-				enemies.splice(elementToAdd.enemies, enemies.begin());
+			if (!elementToAdd.projectilesToAdd.is_empty())
+				projectiles.splice(elementToAdd.projectilesToAdd, projectiles.begin());
+			if (!elementToAdd.enemiesToAdd.is_empty())
+				enemies.splice(elementToAdd.enemiesToAdd, enemies.begin());
+			if(elementToAdd.deleteObjectReturning)
+			{
+				auto temp = iter;
+				++iter;
+				delete *temp;
+				enemies.erase(temp);
+				if (iter == enemies.end())
+					break;
+			}
 		}
 		for (auto iterP = projectiles.begin(); iterP != projectiles.end();)
 		{
@@ -246,6 +291,14 @@ void SceneNiveau::update()
 			delete *temp;
 			projectiles.erase(temp);
 		}
+		else if((*iterP)->getPosition().x < 0 || (*iterP)->getPosition().x > mainWin->getSize().x 
+			|| (*iterP)->getPosition().y < 0 || (*iterP)->getPosition().y > mainWin->getSize().y)
+		{
+			auto temp = iterP;
+			++iterP;
+			delete *temp;
+			projectiles.erase(temp);
+		}
 		else
 		{
 			++iterP;
@@ -254,7 +307,33 @@ void SceneNiveau::update()
 	for (Projectile* projectile : projectiles)
 		projectile->Update();
 	vieJoueur.setString("Vie joueur: " + std::to_string(joueur->GetVie()));
-
+	boucliersText.setFont(font);
+	const Bouclier* bouclierActif = joueur->GetBouclier();
+	if (bouclierActif != nullptr)
+	{
+		switch (bouclierActif->GetTypeBouclier())
+		{
+		case EnemyGreen:
+			boucliersText.setFillColor(Color::Green);
+			break;
+		case EnemyRed:
+			boucliersText.setFillColor(Color::Red);
+			break;
+		case EnemyYellow:
+			boucliersText.setFillColor(Color::Yellow);
+			break;
+		default:
+			boucliersText.setFillColor(Color::White);
+			break;
+		}
+	}
+	else
+	{
+		boucliersText.setFillColor(Color::White);
+	}
+	boucliersText.setString("Bouclier: " + std::to_string(bouclierActif != nullptr ? bouclierActif->GetVie() : 0));
+	boucliersText.setPosition(vieJoueur.getPosition().x, vieJoueur.getPosition().y + vieJoueur.getCharacterSize());
+	munitionArmes.setString(joueur->GetArme()->GetNomArme() + ": " + (joueur->GetArme()->GetMunition() == -1 ? "infini" : std::to_string(joueur->GetArme()->GetMunition())));
 	if(joueur->IsDead())
 	{
 		isRunning = false;

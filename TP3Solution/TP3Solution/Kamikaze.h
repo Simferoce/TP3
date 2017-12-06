@@ -21,11 +21,11 @@ public:
 	static bool initTexture();
 	Kamikaze();
 	~Kamikaze();
-	virtual ElementToAdd Update(const INiveau& game) override;
+	virtual ElementToModify Update(INiveau& game) override;
 	virtual void Move(Direction direction, float distance, sf::FloatRect bounds) override { Personnage::Move(direction, distance, bounds); };
 	virtual void Move(int bitMasks, sf::FloatRect bounds) override { Personnage::Move(bitMasks, bounds); };
 	virtual void Move(Direction direction, sf::FloatRect bounds) override { Personnage::Move(direction, bounds); };
 	virtual void Move(const Vector2f vectorDistance, const sf::FloatRect bounds);
-	virtual Personnage::ElementToAdd Collisionner(const Personnage& other) override;
+	virtual Personnage::ElementToModify Collisionner(const Personnage& other) override;
 };
 

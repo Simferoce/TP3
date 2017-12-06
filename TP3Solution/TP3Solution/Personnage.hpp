@@ -30,32 +30,24 @@ protected:
 	StructuresDonnees::list<Bonus> bonus;
 	StructuresDonnees::list<Arme*> armes;
 	StructuresDonnees::stack<Bouclier*> boucliers;
-	void RepositionnerDansLimite(FloatRect bounds)
-	{
-		if (getPosition().y < bounds.top + getGlobalBounds().height / 2)
-			setPosition(getPosition().x, bounds.top + getGlobalBounds().height / 2);
-		if (getPosition().y + getLocalBounds().height / 2 > bounds.top + bounds.height)
-			setPosition(getPosition().x, bounds.top + bounds.height - getLocalBounds().height / 2);
-		if (getPosition().x < bounds.left + getGlobalBounds().width / 2)
-			setPosition(bounds.left + getGlobalBounds().width / 2, getPosition().y);
-		if (getPosition().x + getLocalBounds().width / 2 > bounds.left + bounds.width)
-			setPosition(bounds.left + bounds.width - getLocalBounds().width / 2, getPosition().y);
-	}
+	
 public:
-	struct ElementToAdd
+	struct ElementToModify
 	{
-		bool hasElementToAdd = false;
-		StructuresDonnees::list<Projectile*> projectiles;
-		StructuresDonnees::list<Enemy*> enemies;
-		ElementToAdd(bool hasElementToAdd) : hasElementToAdd{ hasElementToAdd } {};
-		ElementToAdd& operator=(ElementToAdd& other)
+		bool hasElementToModify = false;
+		bool deleteObjectReturning = false;
+		StructuresDonnees::list<Projectile*> projectilesToAdd;
+		StructuresDonnees::list<Enemy*> enemiesToAdd;
+		ElementToModify(bool hasElementToAdd) : hasElementToModify{ hasElementToAdd } {};
+		ElementToModify& operator=(ElementToModify& other)
 		{
-			projectiles.assign(other.projectiles.begin(), other.projectiles.end());
-			enemies.assign(other.enemies.begin(), other.enemies.end());
-			hasElementToAdd = other.hasElementToAdd;
+			projectilesToAdd.assign(other.projectilesToAdd.begin(), other.projectilesToAdd.end());
+			enemiesToAdd.assign(other.enemiesToAdd.begin(), other.enemiesToAdd.end());
+			hasElementToModify = other.hasElementToModify;
+			deleteObjectReturning = other.deleteObjectReturning;
 			return *this;
 		}
-		ElementToAdd(ElementToAdd& other)
+		ElementToModify(ElementToModify& other)
 		{
 			*this = other;
 		};
@@ -95,6 +87,17 @@ public:
 		dernierTir = clock.getElapsedTime();
 		return armeEquipe->Tire(getPosition(), type, 0);
 	}	
+	void RepositionnerDansLimite(FloatRect bounds)
+	{
+		if (getPosition().y < bounds.top + getGlobalBounds().height / 2)
+			setPosition(getPosition().x, bounds.top + getGlobalBounds().height / 2);
+		if (getPosition().y + getLocalBounds().height / 2 > bounds.top + bounds.height)
+			setPosition(getPosition().x, bounds.top + bounds.height - getLocalBounds().height / 2);
+		if (getPosition().x < bounds.left + getGlobalBounds().width / 2)
+			setPosition(bounds.left + getGlobalBounds().width / 2, getPosition().y);
+		if (getPosition().x + getLocalBounds().width / 2 > bounds.left + bounds.width)
+			setPosition(bounds.left + bounds.width - getLocalBounds().width / 2, getPosition().y);
+	}
 	/// <summary>
 	/// Moves the player..
 	/// </summary>
@@ -145,7 +148,16 @@ public:
 	{
 		Move(direction, vitesse, bounds);
 	}
+	virtual void Move(Direction direction)
+	{
+		Move(direction, vitesse);
+	}
 	virtual void Move(Direction direction, float distance, sf::FloatRect bounds)
+	{
+		Move(direction, distance);
+		RepositionnerDansLimite(bounds);
+	}
+	virtual void Move(Direction direction, float distance)
 	{
 		switch (direction)
 		{
@@ -164,7 +176,6 @@ public:
 		default:
 			break;
 		}
-		RepositionnerDansLimite(bounds);
 	}
 	virtual void RecoitDommage(TypeWeapon type, int dommage)
 	{
@@ -247,5 +258,11 @@ public:
 	{
 		return vitesse*modificateurVitesseRecul;
 	}
-	virtual ElementToAdd Collisionner(const Personnage& other) = 0;
+	const Bouclier* GetBouclier()
+	{
+		if (boucliers.is_empty())
+			return nullptr;
+		return boucliers.top();
+	}
+	virtual ElementToModify Collisionner(const Personnage& other) = 0;
 };
