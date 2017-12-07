@@ -2,16 +2,23 @@
 #include "Bonus.h"
 #include "TypeWeapon.h"
 #include <SFML/Graphics/Texture.hpp>
+#include <SFML/Graphics/RectangleShape.hpp>
+
 class Bouclier :
 	public Bonus // Dérive de la classe bonus
 {
 private:
+	static Texture textureInactive;
+	static const std::string texturePathInactive;
 	static Texture textureActive;
 	static const std::string texturePathActive;
+	
 protected:
 	int ptsVie; // Le nombre de point de vie que le bouclier possède
-	TypeWeapon type; // Le type du bouclier (vert/jaune/rouge)
+
 public:	
+
+
 	/// <summary>
 	/// Créeation du dit bouclier
 	/// </summary>
@@ -19,19 +26,19 @@ public:
 	/// <param name="ptsVie">Les PTS de vie.</param>
 	/// <param name="type">Le type du bouclier.</param>
 	/// <param name="pos">Sa position.</param>
-	Bouclier::Bouclier(int ptsVie, TypeWeapon type, Vector2f pos) : Bonus(textureActive, pos), ptsVie{ ptsVie }, type{ type }
+	Bouclier::Bouclier(int ptsVie, BonusType type, Vector2f pos) : Bonus(textureInactive, type, pos), ptsVie{ ptsVie }
 	{
-		if (type == TypeWeapon::EnemyGreen)
+		if (type == BouclierVert)
 			setColor(sf::Color::Green);
-		else if (type == TypeWeapon::EnemyRed)
+		else if (type == BouclierRouge)
 			setColor(sf::Color::Red);
-		else if (type == TypeWeapon::EnemyYellow)
+		else if (type == BouclierJaune)
 			setColor(sf::Color::Yellow);
 		setPosition(pos);
-		setTexture(textureActive);
+		setTexture(textureInactive);
 		setOrigin(getGlobalBounds().width / 2, getGlobalBounds().height / 2);
 	}
-	TypeWeapon GetTypeBouclier() const { return type; };
+	BonusType GetTypeBouclier() const { return type; };
 	virtual ~Bouclier(){};
 	
 	/// <summary>
@@ -59,7 +66,16 @@ public:
 	{
 		if (!textureActive.loadFromFile(texturePathActive))
 			return false;
+		if (!textureInactive.loadFromFile(texturePathInactive))
+			return false;
 		return true;
+	}
+
+	void SetActiveTexture()
+	{
+		setTexture(textureActive);
+		setTextureRect(IntRect(0, 0, 32, 32));
+		setOrigin(getGlobalBounds().width / 2, getGlobalBounds().height / 2);
 	}
 };
 

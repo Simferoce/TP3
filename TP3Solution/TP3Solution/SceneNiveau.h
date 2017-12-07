@@ -40,8 +40,10 @@ private:
 	Text munitionArmes;
 	Text boucliersText;
 	Joueur* joueur;
+	
 	StructuresDonnees::list<Projectile*> projectiles;
 	StructuresDonnees::list<Enemy*> enemies;
+	StructuresDonnees::list<Bonus*> bonus;
 	static const int nbSpawner = 3;
 	static const int DistanceAvecLeFond = 50;
 	static const int posXSpawner[nbSpawner];

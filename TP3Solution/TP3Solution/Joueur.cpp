@@ -52,8 +52,12 @@ Personnage::ElementToModify Joueur::Collisionner(const Personnage& other)
 Joueur::Joueur() : Personnage(texture, textureRectBase[animationDeBase], pointsVieDeBase, GetArmeDefaut(), vitesseDeBase,modificateurVitesseReculDebase, projectileTypeDeBase)
 {
 	setOrigin(getGlobalBounds().width / 2, getGlobalBounds().height / 2);
-	boucliers.push(new Bouclier(2, TypeWeapon::EnemyRed, getPosition()));
-	boucliers.push(new Bouclier(2, TypeWeapon::EnemyYellow, getPosition()));
+	boucliers.push(new Bouclier(2, Bonus::BouclierRouge, getPosition()));
+	boucliers.top()->SetActiveTexture();
+	boucliers.push(new Bouclier(2, Bonus::BouclierJaune, getPosition()));
+	boucliers.top()->SetActiveTexture();
+	boucliers.push(new Bouclier(2, Bonus::BouclierVert, getPosition()));
+	boucliers.top()->SetActiveTexture();
 }
 
 Joueur::~Joueur()
@@ -74,6 +78,26 @@ Arme* Joueur::GetArme()
 {
 	return armeEquipe;
 }
+
+void Joueur::AjouterBonus(Bonus* bonus)
+{
+	if(bonus->type == Bonus::BouclierVert)
+	{
+		boucliers.push(new Bouclier(2, Bonus::BouclierVert, getPosition()));
+		boucliers.top()->SetActiveTexture();
+	}
+	else if (bonus->type == Bonus::BouclierJaune)
+	{
+		boucliers.push(new Bouclier(2, Bonus::BouclierJaune, getPosition()));
+		boucliers.top()->SetActiveTexture();
+	}
+	else if (bonus->type == Bonus::BouclierRouge)
+	{
+		boucliers.push(new Bouclier(2, Bonus::BouclierRouge, getPosition()));
+		boucliers.top()->SetActiveTexture();
+	}
+}
+
 
 
 

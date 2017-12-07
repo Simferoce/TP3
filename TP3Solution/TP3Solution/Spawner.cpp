@@ -9,7 +9,6 @@ bool Spawner::initTexture()
 	if (!texture.loadFromFile(texturePath))
 		return false;
 	return true;
-
 }
 Spawner::Spawner(sf::Vector2f pos)
 {
