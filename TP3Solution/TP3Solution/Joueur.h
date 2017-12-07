@@ -32,6 +32,7 @@ public:
 	Joueur();
 	~Joueur();
 	void notifier(Sujet* sujet) override;
+	void AjouterBonus(Bonus* bonus);
 	Arme* Joueur::GetArme();
 };
 

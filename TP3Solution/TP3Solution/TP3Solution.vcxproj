@@ -95,6 +95,7 @@
     <ClCompile Include="Bouclier.cpp" />
     <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="EnemySentinelle.cpp" />
+    <ClCompile Include="FabriqueBonus.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="Joueur.cpp" />
     <ClCompile Include="Kamikaze.cpp" />
@@ -118,6 +119,7 @@
     <ClInclude Include="Composite.h" />
     <ClInclude Include="Enemy.h" />
     <ClInclude Include="EnemySentinelle.h" />
+    <ClInclude Include="FabriqueBonus.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="INiveau.h" />
     <ClInclude Include="IObservateur.h" />

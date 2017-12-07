@@ -4,10 +4,11 @@
 #include "Kamikaze.h"
 #include "ProjectileCharge.h"
 #include "Assistant.h"
+#include "FabriqueBonus.h"
 
 const float SceneNiveau::vitesseDeBaseBackground = 5.0f;
 const int SceneNiveau::posXSpawner[] = { 200, 400 , 600 };
-SceneNiveau::SceneNiveau() 
+SceneNiveau::SceneNiveau()
 {
 	isRunning = true;
 }
@@ -24,6 +25,10 @@ SceneNiveau::~SceneNiveau()
 	{
 		delete enemy;
 	}
+	for (Bonus* bonusToDelete : bonus)
+	{
+		delete bonusToDelete;
+	}
 	for (int i = 0; i < nbSpawner; i++)
 		mainWin->draw(spawner[i]);
 	enemies.clear();
@@ -32,7 +37,8 @@ SceneNiveau::~SceneNiveau()
 
 Scene::scenes SceneNiveau::run()
 {
-	while(isRunning)
+
+	while (isRunning)
 	{
 		getInputs();
 		update();
@@ -50,6 +56,8 @@ void SceneNiveau::draw()
 		projectile->Draw(*mainWin);
 	for (Enemy* enemy : enemies)
 		enemy->Draw(*mainWin);
+	for (Bonus* bonusToDraw : bonus)
+		bonusToDraw->Draw(*mainWin);
 	for (int i = 0; i < nbreEnemyNext; i++)
 		mainWin->draw(nextEnemy[i]);
 	mainWin->draw(vieJoueur);
@@ -75,7 +83,7 @@ const Joueur & SceneNiveau::GetPlayer() const
 
 const FloatRect SceneNiveau::GetBounds() const
 {
-	return FloatRect(Vector2f(0,0), (Vector2f)mainWin->getSize());
+	return FloatRect(Vector2f(0, 0), (Vector2f)mainWin->getSize());
 }
 
 void SceneNiveau::getInputs()
@@ -95,7 +103,7 @@ void SceneNiveau::getInputs()
 			isRunning = false;
 			transitionVersScene = scenes::Titre; // À changer???
 		}
-		else if(event.type == Event::KeyPressed)
+		else if (event.type == Event::KeyPressed)
 		{
 			inputKeys[event.key.code] = true;
 		}
@@ -111,7 +119,7 @@ bool SceneNiveau::init(RenderWindow * const window)
 {
 	mainWin = window;
 	if (!ecranNiveauT.loadFromFile("Ressources\\Background\\Niveau.jpg"))
-		return false;	
+		return false;
 	if (!font.loadFromFile("Ressources/Fonts/PressStart2P-Regular.ttf"))
 		return false;
 	if (!ArmeBase::initTexture())
@@ -146,27 +154,28 @@ bool SceneNiveau::init(RenderWindow * const window)
 	joueur = new Joueur();
 	joueur->setPosition(32, mainWin->getSize().y / 2);
 	joueur->AjouterArme(new ArmeChargee());
+	bonus.push_back(FabriqueBonus::FabriquerUnBonus(Bonus::BouclierVert, Vector2f(LONGUEUR_VUE / 2, LARGEUR_VUE / 2)));
 	vieJoueur.setFont(font);
 	vieJoueur.setString("Vie joueur: " + std::to_string(joueur->GetVie()));
 	vieJoueur.setPosition(0, 0);
 	boucliersText.setFont(font);
 	const Bouclier* bouclierActif = joueur->GetBouclier();
-	if(bouclierActif != nullptr)
+	if (bouclierActif != nullptr)
 	{
 		switch (bouclierActif->GetTypeBouclier())
 		{
-			case EnemyGreen:
-				boucliersText.setFillColor(Color::Green);
-				break;
-			case EnemyRed:
-				boucliersText.setFillColor(Color::Red);
-				break;
-			case EnemyYellow:
-				boucliersText.setFillColor(Color::Yellow);
-				break;
-			default:
-				boucliersText.setFillColor(Color::White);
-				break;
+		case EnemyGreen:
+			boucliersText.setFillColor(Color::Green);
+			break;
+		case EnemyRed:
+			boucliersText.setFillColor(Color::Red);
+			break;
+		case EnemyYellow:
+			boucliersText.setFillColor(Color::Yellow);
+			break;
+		default:
+			boucliersText.setFillColor(Color::White);
+			break;
 		}
 	}
 	else
@@ -183,7 +192,7 @@ bool SceneNiveau::init(RenderWindow * const window)
 	ecranNiveau2.setTexture(ecranNiveauT);
 	ecranNiveau2.setOrigin(0, 0);
 	ecranNiveau2.setPosition(ecranNiveau.getGlobalBounds().width, 0);
-	for(int i = 0; i < enemiesQueue.size() && i < nbreEnemyNext; ++i)
+	for (int i = 0; i < enemiesQueue.size() && i < nbreEnemyNext; ++i)
 	{
 		nextEnemy[i].setTexture(*enemiesQueue[i].enemyInWaiting->getTexture());
 		nextEnemy[i].setTextureRect(enemiesQueue[i].enemyInWaiting->getTextureRect());
@@ -198,7 +207,7 @@ void SceneNiveau::update()
 	if (inputKeys[Keyboard::A]) bitsMask += 2;
 	if (inputKeys[Keyboard::S]) bitsMask += 4;
 	if (inputKeys[Keyboard::D]) bitsMask += 8;
-	joueur->Move(bitsMask,FloatRect(Vector2f(0,0),(Vector2f)mainWin->getSize()));
+	joueur->Move(bitsMask, FloatRect(Vector2f(0, 0), (Vector2f)mainWin->getSize()));
 	ecranNiveau.move(-vitesseDeBaseBackground, 0);
 	ecranNiveau2.move(-vitesseDeBaseBackground, 0);
 	if (ecranNiveau.getPosition().x + ecranNiveau.getGlobalBounds().width < 0)
@@ -216,13 +225,13 @@ void SceneNiveau::update()
 	}
 	if (inputKeys[Keyboard::E]) joueur->nextWeapon();
 	if (inputKeys[Keyboard::Q]) joueur->previousWeapon();
-	if(!enemiesQueue.empty() && enemiesSpawnClock.getElapsedTime() - enemiesQueue.front().timeToWait > lastEnemySpawn)
+	if (!enemiesQueue.empty() && enemiesSpawnClock.getElapsedTime() - enemiesQueue.front().timeToWait > lastEnemySpawn)
 	{
 		enemies.push_back(enemiesQueue.front().enemyInWaiting);
 		enemiesQueue.pop_front();
 		for (int i = 0; i < nbreEnemyNext; ++i)
 		{
-			if(enemiesQueue.size() > i)
+			if (enemiesQueue.size() > i)
 			{
 				nextEnemy[i].setTexture(*enemiesQueue[i].enemyInWaiting->getTexture());
 				nextEnemy[i].setTextureRect(enemiesQueue[i].enemyInWaiting->getTextureRect());
@@ -230,7 +239,7 @@ void SceneNiveau::update()
 			}
 			else
 			{
-				nextEnemy[i].setTextureRect(IntRect(0,0,0,0));
+				nextEnemy[i].setTextureRect(IntRect(0, 0, 0, 0));
 			}
 		}
 		lastEnemySpawn = enemiesSpawnClock.getElapsedTime();
@@ -244,7 +253,7 @@ void SceneNiveau::update()
 				projectiles.splice(elementToAdd.projectilesToAdd, projectiles.begin());
 			if (!elementToAdd.enemiesToAdd.is_empty())
 				enemies.splice(elementToAdd.enemiesToAdd, enemies.begin());
-			if(elementToAdd.deleteObjectReturning)
+			if (elementToAdd.deleteObjectReturning)
 			{
 				auto temp = iter;
 				++iter;
@@ -264,7 +273,7 @@ void SceneNiveau::update()
 		}
 		for (auto iterP = projectiles.begin(); iterP != projectiles.end();)
 		{
-			if((*iterP)->GetType() == TypeWeapon::Player && (*iterP)->getGlobalBounds().intersects((*iter)->getGlobalBounds()))
+			if ((*iterP)->GetType() == TypeWeapon::Player && (*iterP)->getGlobalBounds().intersects((*iter)->getGlobalBounds()))
 			{
 				(*iter)->RecoitDommage((*iterP)->GetType(), (*iterP)->GetDommage());
 				auto temp = iterP;
@@ -315,7 +324,7 @@ void SceneNiveau::update()
 			joueur->Collisionner(*(*iter));
 			(*iter)->Collisionner(*joueur);
 		}
-		if((*iter)->IsDead())
+		if ((*iter)->IsDead())
 		{
 			auto temp = iter;
 			++iter;
@@ -337,7 +346,7 @@ void SceneNiveau::update()
 			delete *temp;
 			projectiles.erase(temp);
 		}
-		else if((*iterP)->getPosition().x < 0 || (*iterP)->getPosition().x > mainWin->getSize().x 
+		else if ((*iterP)->getPosition().x < 0 || (*iterP)->getPosition().x > mainWin->getSize().x
 			|| (*iterP)->getPosition().y < 0 || (*iterP)->getPosition().y > mainWin->getSize().y)
 		{
 			auto temp = iterP;
@@ -352,6 +361,22 @@ void SceneNiveau::update()
 	}
 	for (Projectile* projectile : projectiles)
 		projectile->Update();
+	for (auto iterB = bonus.begin(); iterB != bonus.end();)
+	{
+		if ((*iterB)->getGlobalBounds().intersects(joueur->getGlobalBounds()))
+		{
+			(*iterB)->notifierTousLesObservateurs();
+			joueur->AjouterBonus(*iterB);
+			auto temp = iterB;
+			++iterB;
+			delete *temp;
+			bonus.erase(temp);
+		}
+		else
+		{
+			++iterB;
+		}
+	}
 	vieJoueur.setString("Vie joueur: " + std::to_string(joueur->GetVie()));
 	boucliersText.setFont(font);
 	const Bouclier* bouclierActif = joueur->GetBouclier();
@@ -380,7 +405,7 @@ void SceneNiveau::update()
 	boucliersText.setString("Bouclier: " + std::to_string(bouclierActif != nullptr ? bouclierActif->GetVie() : 0));
 	boucliersText.setPosition(vieJoueur.getPosition().x, vieJoueur.getPosition().y + vieJoueur.getCharacterSize());
 	munitionArmes.setString(joueur->GetArme()->GetNomArme() + ": " + (joueur->GetArme()->GetMunition() == -1 ? "infini" : std::to_string(joueur->GetArme()->GetMunition())));
-	if(joueur->IsDead())
+	if (joueur->IsDead())
 	{
 		isRunning = false;
 		transitionVersScene = GameOver;
