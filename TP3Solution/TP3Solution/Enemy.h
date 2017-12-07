@@ -2,9 +2,10 @@
 #include "Personnage.hpp"
 #include "IObservateur.h"
 #include "ArmeBase.h"
+#include "Composite.h"
 class INiveau;
 class Enemy :
-	public Personnage, public IObservateur
+	public Personnage, public IObservateur, public Composite
 {
 public:
 	virtual void Move(int bitMask, sf::FloatRect bounds);
@@ -12,6 +13,7 @@ public:
 	~Enemy();
 	void notifier(Sujet* sujet) override;
 	virtual Personnage::ElementToModify Collisionner(const Personnage& other) override;
-	virtual ElementToModify Update(INiveau& game) = 0;
+	virtual ElementToModify Update(INiveau& game);
+	virtual void Draw(RenderWindow& window) override;
 };
 

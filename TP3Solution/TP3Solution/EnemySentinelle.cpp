@@ -32,7 +32,7 @@ EnemySentinelle::~EnemySentinelle()
 
 Enemy::ElementToModify EnemySentinelle::Update(INiveau& game)
 {
-	ElementToModify elementToModify(false);
+	ElementToModify elementToModify = Enemy::Update(game);
 	Move(sensDeplacementHautBas, vitesse*proportionVitesseHautBas);
 	if (getPosition().x < getOrigin().x)
 	{

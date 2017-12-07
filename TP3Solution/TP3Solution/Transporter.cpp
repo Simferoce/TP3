@@ -54,9 +54,10 @@ Enemy::ElementToModify Transporter::Update(INiveau& game)
 		}
 	}
 	bool spawnEnemy = enemiesSpawnClock.getElapsedTime() - tempsDernierSpawnEnemies > tempsEntreEnemies;
-	ElementToModify elementToAdd(spawnEnemy);
+	ElementToModify elementToAdd = Enemy::Update(game);
 	if(spawnEnemy)
 	{
+		elementToAdd.hasElementToModify = true;
 		elementToAdd.enemiesToAdd.push_back(FabriqueEnemy());
 		tempsDernierSpawnEnemies = enemiesSpawnClock.getElapsedTime();
 	}

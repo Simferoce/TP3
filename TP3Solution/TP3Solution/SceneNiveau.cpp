@@ -3,6 +3,7 @@
 #include "Transporter.h"
 #include "Kamikaze.h"
 #include "ProjectileCharge.h"
+#include "Assistant.h"
 
 const float SceneNiveau::vitesseDeBaseBackground = 5.0f;
 const int SceneNiveau::posXSpawner[] = { 200, 400 , 600 };
@@ -57,12 +58,12 @@ void SceneNiveau::draw()
 	mainWin->display();
 }
 
-const StructuresDonnees::list<Projectile*>& SceneNiveau::GetAllProjectiles() const
+StructuresDonnees::list<Projectile*>& SceneNiveau::GetAllProjectiles()
 {
 	return projectiles;
 }
 
-const StructuresDonnees::list<Enemy*>& SceneNiveau::GetAllEnemies() const
+StructuresDonnees::list<Enemy*>& SceneNiveau::GetAllEnemies()
 {
 	return enemies;
 }
@@ -129,15 +130,19 @@ bool SceneNiveau::init(RenderWindow * const window)
 		return false;
 	if (!Bouclier::initTexture())
 		return false;
+	if (!Assistant::initTexture())
+		return false;
 	spawner[0].setPosition(mainWin->getSize().x - DistanceAvecLeFond, posXSpawner[0]);
 	spawner[1].setPosition(mainWin->getSize().x - DistanceAvecLeFond, posXSpawner[1]);
 	spawner[2].setPosition(mainWin->getSize().x - DistanceAvecLeFond, posXSpawner[2]);
-	for(int i = 0; i < nbEnemy; i++)
+	/*for(int i = 0; i < nbEnemy; i++)
 	{
 		const int random = rand() % nbSpawner;
 		const Spawner::EnemiesEnum random2 = static_cast<Spawner::EnemiesEnum>(rand() % Spawner::EnemiesEnum::NumEnemies);
 		enemiesQueue.push_back(EnemiesHolder(spawner[random].FabriquerEnemy(random2), sf::milliseconds(2000)));
-	}
+	}*/
+	enemiesQueue.push_back(EnemiesHolder(spawner[0].FabriquerEnemy(Spawner::AssistantEnum), sf::milliseconds(2000)));
+	enemiesQueue.push_back(EnemiesHolder(spawner[0].FabriquerEnemy(Spawner::KamikazeEnum), sf::milliseconds(2000)));
 	joueur = new Joueur();
 	joueur->setPosition(32, mainWin->getSize().y / 2);
 	joueur->AjouterArme(new ArmeChargee());
@@ -248,6 +253,14 @@ void SceneNiveau::update()
 				if (iter == enemies.end())
 					break;
 			}
+			else if (elementToAdd.removeObject)
+			{
+				auto temp = iter;
+				++iter;
+				enemies.erase(temp);
+				if (iter == enemies.end())
+					break;
+			}
 		}
 		for (auto iterP = projectiles.begin(); iterP != projectiles.end();)
 		{
@@ -263,6 +276,39 @@ void SceneNiveau::update()
 			{
 				++iterP;
 			}
+		}
+		for (auto iterP = projectiles.begin(); iterP != projectiles.end();)
+		{
+			bool destroyedProjectile = false;
+			for (auto iterC = (*iter)->GetComposites().begin(); iterC != (*iter)->GetComposites().end();)
+			{
+				if (Enemy* enemy = dynamic_cast<Enemy*>(*iterC))
+				{
+					if ((*iterP)->GetType() == TypeWeapon::Player && (*iterP)->getGlobalBounds().intersects(enemy->getGlobalBounds()))
+					{
+						enemy->RecoitDommage((*iterP)->GetType(), (*iterP)->GetDommage());
+						auto temp = iterP;
+						++iterP;
+						destroyedProjectile = true;
+						delete *temp;
+						projectiles.erase(temp);
+						break;
+					}
+					if(enemy->IsDead())
+					{
+						auto temp = iterC;
+						++iterC;
+						delete *temp;
+						(*iter)->GetComposites().erase(temp);
+					}
+					else
+					{
+						++iterC;
+					}
+				}
+			}
+			if(!destroyedProjectile)
+					++iterP;
 		}
 		if(joueur->getGlobalBounds().intersects((*iter)->getGlobalBounds()))
 		{

@@ -36,6 +36,7 @@ public:
 	{
 		bool hasElementToModify = false;
 		bool deleteObjectReturning = false;
+		bool removeObject = false;
 		StructuresDonnees::list<Projectile*> projectilesToAdd;
 		StructuresDonnees::list<Enemy*> enemiesToAdd;
 		ElementToModify(bool hasElementToAdd) : hasElementToModify{ hasElementToAdd } {};
@@ -45,6 +46,7 @@ public:
 			enemiesToAdd.assign(other.enemiesToAdd.begin(), other.enemiesToAdd.end());
 			hasElementToModify = other.hasElementToModify;
 			deleteObjectReturning = other.deleteObjectReturning;
+			removeObject = other.removeObject;
 			return *this;
 		}
 		ElementToModify(ElementToModify& other)

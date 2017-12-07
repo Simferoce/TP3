@@ -91,6 +91,7 @@
   <ItemGroup>
     <ClCompile Include="ArmeBase.cpp" />
     <ClCompile Include="ArmeChargee.cpp" />
+    <ClCompile Include="Assistant.cpp" />
     <ClCompile Include="Bouclier.cpp" />
     <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="EnemySentinelle.cpp" />
@@ -111,8 +112,10 @@
     <ClInclude Include="Arme.hpp" />
     <ClInclude Include="ArmeBase.h" />
     <ClInclude Include="ArmeChargee.h" />
+    <ClInclude Include="Assistant.h" />
     <ClInclude Include="Bonus.h" />
     <ClInclude Include="Bouclier.hpp" />
+    <ClInclude Include="Composite.h" />
     <ClInclude Include="Enemy.h" />
     <ClInclude Include="EnemySentinelle.h" />
     <ClInclude Include="Game.h" />

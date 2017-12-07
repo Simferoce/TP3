@@ -19,8 +19,8 @@ public:
 	void getInputs();
 	void update();
 	void draw();
-	virtual const StructuresDonnees::list<Projectile*>& GetAllProjectiles() const override;
-	virtual const StructuresDonnees::list<Enemy*>& GetAllEnemies() const override;
+	virtual StructuresDonnees::list<Projectile*>& GetAllProjectiles() override;
+	virtual StructuresDonnees::list<Enemy*>& GetAllEnemies() override;
 	virtual const Joueur& GetPlayer() const override;
 	virtual const FloatRect GetBounds() const override;
 private:
