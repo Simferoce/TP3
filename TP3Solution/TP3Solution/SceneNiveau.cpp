@@ -301,19 +301,14 @@ void SceneNiveau::update()
 						destroyedProjectile = true;
 						delete *temp;
 						projectiles.erase(temp);
+						if(enemy->IsDead())
+						{
+							delete *iterC;
+							(*iter)->GetComposites().erase(iterC);
+						}
 						break;
 					}
-					if(enemy->IsDead())
-					{
-						auto temp = iterC;
-						++iterC;
-						delete *temp;
-						(*iter)->GetComposites().erase(temp);
-					}
-					else
-					{
-						++iterC;
-					}
+					++iterC;
 				}
 			}
 			if(!destroyedProjectile)
