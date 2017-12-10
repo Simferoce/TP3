@@ -30,9 +30,9 @@ EnemySentinelle::~EnemySentinelle()
 {
 }
 
-Enemy::ElementToModify EnemySentinelle::Update(INiveau& game)
+Enemy::ElementToModify EnemySentinelle::update(INiveau& game)
 {
-	ElementToModify elementToModify = Enemy::Update(game);
+	ElementToModify elementToModify(false);
 	Move(sensDeplacementHautBas, vitesse*proportionVitesseHautBas);
 	if (getPosition().x < getOrigin().x)
 	{
@@ -64,7 +64,7 @@ Enemy::ElementToModify EnemySentinelle::Update(INiveau& game)
 	if (fire)
 	{
 		elementToModify.hasElementToModify = true;
-		StructuresDonnees::list<Projectile*>* temp = armeEquipe->Tire(getPosition(), type, 180);
+		StructuresDonnees::list<Projectile*>* temp = armeEquipe->Tire(this, type, 180);
 		elementToModify.projectilesToAdd.splice(*temp, elementToModify.projectilesToAdd.begin());
 		dernierTir = clock.getElapsedTime();
 		delete temp;

@@ -1,6 +1,6 @@
 #pragma once
 #include "../StructuresDonnees/list.hpp"
-#include "Projectile.hpp"
+#include "Projectile.h"
 #include "Enemy.h"
 #include "Joueur.h"
 

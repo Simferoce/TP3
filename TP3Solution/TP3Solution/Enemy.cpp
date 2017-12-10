@@ -4,7 +4,7 @@
 Enemy::Enemy(sf::Texture& texture, const sf::IntRect& rectTexture, int pointsDeVie, Arme* armeEquipe, float vitesse, float modificateurVitesseRecul, TypeWeapon projectiletype) 
 	: Personnage(texture, rectTexture, pointsDeVie, armeEquipe, vitesse, modificateurVitesseRecul, projectiletype)
 {
-	
+
 }
 Enemy::~Enemy()
 {
@@ -21,14 +21,23 @@ Personnage::ElementToModify Enemy::Collisionner(const Personnage& other)
 }
 Personnage::ElementToModify Enemy::Update(INiveau & game)
 {
+	Vector2f posBefore = getPosition();
+	ElementToModify elemToModify = update(game);
+	Vector2f deplacement = getPosition() - posBefore;
 	for (Composite* composite : composites)
 	{
 		if (Assistant* assistant = dynamic_cast<Assistant*>(composite))
 		{
-			assistant->MoveAround(getPosition());
+			ElementToModify elem = assistant->Update(game);
+			if(!elem.projectilesToAdd.is_empty())
+			{
+				elemToModify.hasElementToModify = true;
+				elemToModify.projectilesToAdd.splice(elem.projectilesToAdd, elemToModify.projectilesToAdd.begin());
+			}
+			assistant->move(deplacement);
 		}
 	}
-	return ElementToModify(false);
+	return elemToModify;
 }
 void Enemy::Draw(RenderWindow & window)
 {

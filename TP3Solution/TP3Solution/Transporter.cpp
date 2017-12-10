@@ -32,7 +32,7 @@ Transporter::~Transporter()
 {
 }
 
-Enemy::ElementToModify Transporter::Update(INiveau& game)
+Enemy::ElementToModify Transporter::update(INiveau& game)
 {
 	Move(sensDeplacementHautBas, game.GetBounds());
 	if (sensDeplacementHautBas == Bas)
@@ -54,7 +54,7 @@ Enemy::ElementToModify Transporter::Update(INiveau& game)
 		}
 	}
 	bool spawnEnemy = enemiesSpawnClock.getElapsedTime() - tempsDernierSpawnEnemies > tempsEntreEnemies;
-	ElementToModify elementToAdd = Enemy::Update(game);
+	ElementToModify elementToAdd(false);
 	if(spawnEnemy)
 	{
 		elementToAdd.hasElementToModify = true;

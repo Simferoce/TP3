@@ -82,7 +82,6 @@ int Game::run()
 
 bool Game::init()
 {
-
 	return true;
 }
 

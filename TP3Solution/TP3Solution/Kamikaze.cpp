@@ -31,22 +31,15 @@ Kamikaze::~Kamikaze()
 {
 }
 
-Enemy::ElementToModify Kamikaze::Update(INiveau& game)
+Enemy::ElementToModify Kamikaze::update(INiveau& game)
 {
-	ElementToModify elementToAdd = Enemy::Update(game);
+	ElementToModify elementToAdd(false);
 	float variationX = game.GetPlayer().getPosition().x - getPosition().x;
 	float variationY = game.GetPlayer().getPosition().y - getPosition().y;
 	float distance = sqrtf(powf(variationX, 2) + powf(variationY, 2));
 	this->direction = sf::Vector2f(variationX / distance, variationY / distance);
 	setRotation(atan2f(variationY / distance, variationX / distance) * (180 / 3.14));
 	Move(direction, game.GetBounds());
-	for (Composite* composite : composites)
-	{
-		if (Assistant* assistant = dynamic_cast<Assistant*>(composite))
-		{
-			assistant->Move(direction, game.GetBounds());
-		}
-	}
 	animateur++;
 	if (animationSens > 0 && animateur > nbreAnimation*tempAnimation)
 		animationSens = -1;

@@ -1,7 +1,7 @@
 #include "ArmeChargee.h"
 #include "ProjectileBase.h"
 #include "ProjectileCharge.h"
-
+#include "Personnage.hpp"
 const std::string ArmeChargee::texturePath = "Gem.png";
 sf::Texture ArmeChargee::texture = sf::Texture();
 const sf::Time ArmeChargee::delaiEntreLesTirsDeBase = sf::milliseconds(100);
@@ -13,7 +13,7 @@ bool ArmeChargee::initTexture()
 		return false;
 	return true;
 }
-StructuresDonnees::list<Projectile*>* ArmeChargee::Tire(sf::Vector2f origineDuTir, TypeWeapon type, float angle)
+StructuresDonnees::list<Projectile*>* ArmeChargee::Tire(Personnage* tireur, TypeWeapon type, float angle)
 {
 	StructuresDonnees::list<Projectile*>* projectiles = new StructuresDonnees::list<Projectile*>;
 	if(charge < chargeMinimal)
@@ -23,7 +23,7 @@ StructuresDonnees::list<Projectile*>* ArmeChargee::Tire(sf::Vector2f origineDuTi
 			Arme::munition = 0;
 		charge = chargeMinimal;
 	}
-	projectiles->push_back(new ProjectileCharge(type, origineDuTir, angle,charge, (float)charge/chargeMax > 0.3f ? (float)charge/chargeMax : 0.3f));
+	projectiles->push_back(new ProjectileCharge(type, tireur, angle,charge, (float)charge/chargeMax > 0.3f ? (float)charge/chargeMax : 0.3f));
 	charge = 0;
 	return projectiles;
 }

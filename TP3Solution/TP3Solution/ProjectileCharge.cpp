@@ -13,7 +13,7 @@ bool ProjectileCharge::initTexture()
 	return true;
 }
 
-ProjectileCharge::ProjectileCharge(TypeWeapon type, sf::Vector2f pos, float angle, int charge, float scale) : Projectile(texture, type, vitesseDeBase, pos, angle, dommageDeBase), charge{charge}
+ProjectileCharge::ProjectileCharge(TypeWeapon type, Personnage* tireur, float angle, int charge, float scale) : Projectile(texture, type, vitesseDeBase, tireur, angle, dommageDeBase), charge{charge}
 {
 	setScale(scale, scale);
 }

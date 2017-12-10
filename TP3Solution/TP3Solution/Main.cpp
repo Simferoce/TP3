@@ -4,7 +4,6 @@
 
 int main()
 {
-	srand(NULL);
 	Game game;
 	return game.run();
 }

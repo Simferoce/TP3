@@ -16,6 +16,7 @@ public:
 		KamikazeEnum,
 		TransporteurEnum,
 		AssistantEnum,
+		AssistantEliteEnum,
 		NumEnemies
 	};
 	static bool initTexture();
