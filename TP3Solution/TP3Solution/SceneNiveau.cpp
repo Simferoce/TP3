@@ -213,7 +213,6 @@ bool SceneNiveau::init(RenderWindow * const window)
 		nextEnemy[i].setTextureRect(enemiesQueue[i].enemyInWaiting->getTextureRect());
 		nextEnemy[i].setPosition(posXNextEnemy + i*distanceNextEnemy, posYNextEnemy);
 	}
-	srand(NULL);
 	return true;
 }
 void SceneNiveau::update()

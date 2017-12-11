@@ -9,9 +9,6 @@ using namespace sf;
 class Bonus
 	: public Sprite, public Sujet
 {
-	bool isPickedUp = false; // Si le joueur prend le bonus
-	bool isActive = false; // Si le bonus est sur le jeu
-
 public:
 	enum BonusType
 	{
