@@ -26,7 +26,7 @@ public:
 	/// <param name="ptsVie">Les PTS de vie.</param>
 	/// <param name="type">Le type du bouclier.</param>
 	/// <param name="pos">Sa position.</param>
-	Bouclier::Bouclier(int ptsVie, BonusType type, Vector2f pos) : Bonus(textureInactive, type, pos), ptsVie{ ptsVie }
+	Bouclier::Bouclier(int ptsVie, BonusType type, Vector2f pos, bool activeTextureOn) : Bonus(textureInactive, type, pos), ptsVie{ ptsVie }
 	{
 		if (type == BouclierVert)
 			setColor(sf::Color::Green);
@@ -34,9 +34,19 @@ public:
 			setColor(sf::Color::Red);
 		else if (type == BouclierJaune)
 			setColor(sf::Color::Yellow);
-		setPosition(pos);
-		setTexture(textureInactive);
-		setOrigin(getGlobalBounds().width / 2, getGlobalBounds().height / 2);
+		if(activeTextureOn)
+		{
+			setPosition(pos);
+			setTexture(textureActive);
+			setTextureRect(IntRect(0,0,32,32));
+			setOrigin(getGlobalBounds().width / 2, getGlobalBounds().height / 2);
+		}
+		else
+		{
+			setPosition(pos);
+			setTexture(textureInactive);
+			setOrigin(getGlobalBounds().width / 2, getGlobalBounds().height / 2);
+		}
 	}
 	BonusType GetTypeBouclier() const { return type; };
 	virtual ~Bouclier(){};
@@ -71,11 +81,5 @@ public:
 		return true;
 	}
 
-	void SetActiveTexture()
-	{
-		setTexture(textureActive);
-		setTextureRect(IntRect(0, 0, 32, 32));
-		setOrigin(getGlobalBounds().width / 2, getGlobalBounds().height / 2);
-	}
 };
 

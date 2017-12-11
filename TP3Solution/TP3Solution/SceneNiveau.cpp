@@ -28,10 +28,12 @@ SceneNiveau::~SceneNiveau()
 	{
 		delete bonusToDelete;
 	}
+	bonus.clear();
 	for (int i = 0; i < nbSpawner; i++)
 		mainWin->draw(spawner[i]);
 	enemies.clear();
 	delete joueur;
+
 }
 
 Scene::scenes SceneNiveau::run()
@@ -149,6 +151,8 @@ bool SceneNiveau::init(RenderWindow * const window)
 	joueur->setPosition(32, mainWin->getSize().y / 2);
 	joueur->AjouterArme(new ArmeChargee());
 	bonus.push_back(FabriqueBonus::FabriquerUnBonus(Bonus::BouclierVert, Vector2f(LONGUEUR_VUE / 2, LARGEUR_VUE / 2)));
+	bonus.push_back(FabriqueBonus::FabriquerUnBonus(Bonus::BouclierJaune, Vector2f(LONGUEUR_VUE / 2+ 100, LARGEUR_VUE / 2)));
+	bonus.push_back(FabriqueBonus::FabriquerUnBonus(Bonus::BouclierRouge, Vector2f(LONGUEUR_VUE / 2 - 100, LARGEUR_VUE / 2)));
 	vieJoueur.setFont(font);
 	vieJoueur.setString("Vie joueur: " + std::to_string(joueur->GetVie()));
 	vieJoueur.setPosition(0, 0);
@@ -351,6 +355,7 @@ void SceneNiveau::update()
 			break;
 		}
 	}
+	
 	else
 	{
 		boucliersText.setFillColor(Color::White);
