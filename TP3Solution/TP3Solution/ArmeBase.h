@@ -20,7 +20,7 @@ public:
 /// <param name="type">Le type d'arme utilisé (joueur/ennemu).</param>
 /// <param name="angle">L'angle de la balle.</param>
 /// <returns></returns>
-	StructuresDonnees::list<Projectile*>* Tire(sf::Vector2f origineDuTir, TypeWeapon type, float angle) override;
+	StructuresDonnees::list<Projectile*>* Tire(Personnage* tireur, TypeWeapon type, float angle) override;
 	std::string GetNomArme() const override;
 	ArmeBase(); // Constructeur de l'arme de base
 	~ArmeBase(); // Destructeur de l'arme de base

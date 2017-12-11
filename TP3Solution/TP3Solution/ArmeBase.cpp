@@ -1,6 +1,6 @@
 #include "ArmeBase.h"
 #include "ProjectileBase.h"
-
+#include "Personnage.hpp"
 const std::string ArmeBase::texturePath = "Gem.png";
 sf::Texture ArmeBase::texture = sf::Texture();
 const sf::Time ArmeBase::delaiEntreLesTirsDeBase= sf::milliseconds(300);
@@ -12,10 +12,10 @@ bool ArmeBase::initTexture()
 		return false;
 	return true;
 }
-StructuresDonnees::list<Projectile*>* ArmeBase::Tire(sf::Vector2f origineDuTir, TypeWeapon type, float angle)
+StructuresDonnees::list<Projectile*>* ArmeBase::Tire(Personnage* tireur, TypeWeapon type, float angle)
 {
 	StructuresDonnees::list<Projectile*>* projectiles = new StructuresDonnees::list<Projectile*>;
-	projectiles->push_back(new ProjectileBase(type, origineDuTir, angle));
+	projectiles->push_back(new ProjectileBase(type, tireur, angle));
 	return projectiles;
 }
 

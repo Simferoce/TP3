@@ -91,6 +91,10 @@
   <ItemGroup>
     <ClCompile Include="ArmeBase.cpp" />
     <ClCompile Include="ArmeChargee.cpp" />
+    <ClCompile Include="ArmeFusilAPompe.cpp" />
+    <ClCompile Include="ArmeLaserPercant.cpp" />
+    <ClCompile Include="Assistant.cpp" />
+    <ClCompile Include="AssistantElite.cpp" />
     <ClCompile Include="Bouclier.cpp" />
     <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="EnemySentinelle.cpp" />
@@ -99,8 +103,10 @@
     <ClCompile Include="Joueur.cpp" />
     <ClCompile Include="Kamikaze.cpp" />
     <ClCompile Include="Main.cpp" />
+    <ClCompile Include="Projectile.cpp" />
     <ClCompile Include="ProjectileBase.cpp" />
     <ClCompile Include="ProjectileCharge.cpp" />
+    <ClCompile Include="ProjectileLaserPercant.cpp" />
     <ClCompile Include="SceneGameOver.cpp" />
     <ClCompile Include="SceneNiveau.cpp" />
     <ClCompile Include="SceneTitre.cpp" />
@@ -112,8 +118,13 @@
     <ClInclude Include="Arme.hpp" />
     <ClInclude Include="ArmeBase.h" />
     <ClInclude Include="ArmeChargee.h" />
+    <ClInclude Include="ArmeFusilAPompe.h" />
+    <ClInclude Include="ArmeLaserPercant.h" />
+    <ClInclude Include="Assistant.h" />
+    <ClInclude Include="AssistantElite.h" />
     <ClInclude Include="Bonus.h" />
     <ClInclude Include="Bouclier.hpp" />
+    <ClInclude Include="Composite.h" />
     <ClInclude Include="Enemy.h" />
     <ClInclude Include="EnemySentinelle.h" />
     <ClInclude Include="FabriqueBonus.h" />
@@ -123,9 +134,10 @@
     <ClInclude Include="Joueur.h" />
     <ClInclude Include="Kamikaze.h" />
     <ClInclude Include="Personnage.hpp" />
-    <ClInclude Include="Projectile.hpp" />
+    <ClInclude Include="Projectile.h" />
     <ClInclude Include="ProjectileBase.h" />
     <ClInclude Include="ProjectileCharge.h" />
+    <ClInclude Include="ProjectileLaserPercant.h" />
     <ClInclude Include="SceneGameOver.h" />
     <ClInclude Include="SceneTitre.h" />
     <ClInclude Include="Spawner.h" />

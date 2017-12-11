@@ -21,11 +21,12 @@ class Transporter :
 	int animateur = animationDeBase;
 	float distanceDeplacementHautBasParcourue = 0.0f;
 	Direction sensDeplacementHautBas = Haut;
+protected:
+	Personnage::ElementToModify update(INiveau& game) override;
 public:
 	static bool initTexture();
 	Transporter();
 	~Transporter();
-	virtual ElementToModify Update(INiveau& game) override;
 	virtual void Move(Direction direction, float distance, sf::FloatRect bounds) override { Personnage::Move(direction, distance, bounds); };
 	virtual void Move(int bitMasks, sf::FloatRect bounds) override { Personnage::Move(bitMasks, bounds); };
 	virtual void Move(Direction direction, sf::FloatRect bounds) override { Personnage::Move(direction, bounds); };

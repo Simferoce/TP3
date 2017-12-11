@@ -17,11 +17,12 @@ class Kamikaze :
 	int animateur = 0;
 	int animationSens = 1;
 	Vector2f direction = Vector2f(-vitesseDeBase,0);
+protected:
+	Personnage::ElementToModify update(INiveau& game) override;
 public:
 	static bool initTexture();
 	Kamikaze();
 	~Kamikaze();
-	virtual ElementToModify Update(INiveau& game) override;
 	virtual void Move(Direction direction, float distance, sf::FloatRect bounds) override { Personnage::Move(direction, distance, bounds); };
 	virtual void Move(int bitMasks, sf::FloatRect bounds) override { Personnage::Move(bitMasks, bounds); };
 	virtual void Move(Direction direction, sf::FloatRect bounds) override { Personnage::Move(direction, bounds); };

@@ -28,12 +28,13 @@ class EnemySentinelle :
 	float distanceDeplacementHautBasParcourue = 0.0f;
 	static const float proportionVitesseHautBas;
 	Direction sensDeplacementHautBas = Haut;
+protected:
+	Personnage::ElementToModify update(INiveau& game) override;
 public:
 	void SetDirection(Direction direction);
 	static bool initTexture();
 	EnemySentinelle();
 	~EnemySentinelle();
-	virtual ElementToModify Update(INiveau& game) override;
 	virtual void Move(Direction direction, float distance, sf::FloatRect bounds) override { Personnage::Move(direction, distance, bounds); };
 	virtual void Move(int bitMasks, sf::FloatRect bounds) override { Personnage::Move(bitMasks, bounds); };
 	virtual void Move(Direction direction, sf::FloatRect bounds) override { Personnage::Move(direction, bounds); };

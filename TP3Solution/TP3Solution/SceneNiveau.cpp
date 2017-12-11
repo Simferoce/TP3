@@ -3,10 +3,15 @@
 #include "Transporter.h"
 #include "Kamikaze.h"
 #include "ProjectileCharge.h"
+#include "Assistant.h"
 #include "FabriqueBonus.h"
+#include "AssistantElite.h"
+#include "ArmeLaserPercant.h"
+#include "ProjectileLaserPercant.h"
+#include "ArmeFusilAPompe.h"
 
 const float SceneNiveau::vitesseDeBaseBackground = 5.0f;
-const int SceneNiveau::posXSpawner[] = { 200, 400 , 600 };
+const int SceneNiveau::posYSpawner[] = { 200, 400 , 600 };
 SceneNiveau::SceneNiveau()
 {
 	isRunning = true;
@@ -38,6 +43,7 @@ SceneNiveau::~SceneNiveau()
 
 Scene::scenes SceneNiveau::run()
 {
+
 	while (isRunning)
 	{
 		getInputs();
@@ -66,12 +72,12 @@ void SceneNiveau::draw()
 	mainWin->display();
 }
 
-const StructuresDonnees::list<Projectile*>& SceneNiveau::GetAllProjectiles() const
+StructuresDonnees::list<Projectile*>& SceneNiveau::GetAllProjectiles()
 {
 	return projectiles;
 }
 
-const StructuresDonnees::list<Enemy*>& SceneNiveau::GetAllEnemies() const
+StructuresDonnees::list<Enemy*>& SceneNiveau::GetAllEnemies()
 {
 	return enemies;
 }
@@ -124,11 +130,15 @@ bool SceneNiveau::init(RenderWindow * const window)
 		return false;
 	if (!ArmeBase::initTexture())
 		return false;
+	if (!ArmeLaserPercant::initTexture())
+		return false;
 	if (!Joueur::initTexture())
 		return false;
 	if (!ProjectileBase::initTexture())
 		return false;
 	if (!ProjectileCharge::initTexture())
+		return false;
+	if (!ProjectileLaserPercant::initTexture())
 		return false;
 	if (!EnemySentinelle::initTexture())
 		return false;
@@ -138,18 +148,25 @@ bool SceneNiveau::init(RenderWindow * const window)
 		return false;
 	if (!Bouclier::initTexture())
 		return false;
-	spawner[0].setPosition(mainWin->getSize().x - DistanceAvecLeFond, posXSpawner[0]);
-	spawner[1].setPosition(mainWin->getSize().x - DistanceAvecLeFond, posXSpawner[1]);
-	spawner[2].setPosition(mainWin->getSize().x - DistanceAvecLeFond, posXSpawner[2]);
-	for (int i = 0; i < nbEnemy; i++)
+	if (!Assistant::initTexture())
+		return false;
+	if (!AssistantElite::initTexture())
+		return false;
+
+	spawner[0].setPosition(mainWin->getSize().x - DistanceAvecLeFond, posYSpawner[1]);
+	spawner[1].setPosition(mainWin->getSize().x - 400, posYSpawner[1]);
+	spawner[2].setPosition(mainWin->getSize().x - DistanceAvecLeFond, posYSpawner[2]);
+	for(int i = 0; i < nbEnemy; i++)
 	{
 		const int random = rand() % nbSpawner;
 		const Spawner::EnemiesEnum random2 = static_cast<Spawner::EnemiesEnum>(rand() % Spawner::EnemiesEnum::NumEnemies);
 		enemiesQueue.push_back(EnemiesHolder(spawner[random].FabriquerEnemy(random2), sf::milliseconds(2000)));
 	}
 	joueur = new Joueur();
-	joueur->setPosition(32, mainWin->getSize().y / 2);
+	joueur->setPosition(32, posYSpawner[0]);
 	joueur->AjouterArme(new ArmeChargee());
+	joueur->AjouterArme(new ArmeLaserPercant());
+	joueur->AjouterArme(new ArmeFusilAPompe());
 	bonus.push_back(FabriqueBonus::FabriquerUnBonus(Bonus::BouclierVert, Vector2f(LONGUEUR_VUE / 2, LARGEUR_VUE / 2)));
 	bonus.push_back(FabriqueBonus::FabriquerUnBonus(Bonus::BouclierJaune, Vector2f(LONGUEUR_VUE / 2+ 100, LARGEUR_VUE / 2)));
 	bonus.push_back(FabriqueBonus::FabriquerUnBonus(Bonus::BouclierRouge, Vector2f(LONGUEUR_VUE / 2 - 100, LARGEUR_VUE / 2)));
@@ -196,6 +213,7 @@ bool SceneNiveau::init(RenderWindow * const window)
 		nextEnemy[i].setTextureRect(enemiesQueue[i].enemyInWaiting->getTextureRect());
 		nextEnemy[i].setPosition(posXNextEnemy + i*distanceNextEnemy, posYNextEnemy);
 	}
+	srand(NULL);
 	return true;
 }
 void SceneNiveau::update()
@@ -260,23 +278,73 @@ void SceneNiveau::update()
 				if (iter == enemies.end())
 					break;
 			}
+			else if (elementToAdd.removeObject)
+			{
+				auto temp = iter;
+				++iter;
+				enemies.erase(temp);
+				if (iter == enemies.end())
+					break;
+			}
 		}
 		for (auto iterP = projectiles.begin(); iterP != projectiles.end();)
 		{
 			if ((*iterP)->GetType() == TypeWeapon::Player && (*iterP)->getGlobalBounds().intersects((*iter)->getGlobalBounds()))
 			{
 				(*iter)->RecoitDommage((*iterP)->GetType(), (*iterP)->GetDommage());
-				auto temp = iterP;
-				++iterP;
-				delete *temp;
-				projectiles.erase(temp);
+				if(typeid(*(*iterP)) != typeid(ProjectileLaserPercant))
+				{
+					auto temp = iterP;
+					++iterP;
+					delete *temp;
+					projectiles.erase(temp);
+				}
+				else
+				{
+					++iterP;
+				}
 			}
 			else
 			{
 				++iterP;
 			}
 		}
-		if (joueur->getGlobalBounds().intersects((*iter)->getGlobalBounds()))
+		for (auto iterP = projectiles.begin(); iterP != projectiles.end();)
+		{
+			bool destroyedProjectile = false;
+			for (auto iterC = (*iter)->GetComposites().begin(); iterC != (*iter)->GetComposites().end();)
+			{
+				if (Enemy* enemy = dynamic_cast<Enemy*>(*iterC))
+				{
+					if ((*iterP)->GetType() == TypeWeapon::Player && (*iterP)->getGlobalBounds().intersects(enemy->getGlobalBounds()))
+					{
+						enemy->RecoitDommage((*iterP)->GetType(), (*iterP)->GetDommage());
+						if (typeid(*(*iterP)) != typeid(ProjectileLaserPercant))
+						{
+							auto temp = iterP;
+							++iterP;
+							destroyedProjectile = true;
+							delete *temp;
+							projectiles.erase(temp);
+						}
+						else
+						{
+							++iterP;
+						}
+						if(enemy->IsDead())
+						{
+							delete *iterC;
+							(*iter)->GetComposites().erase(iterC);
+						}
+						break;
+					}
+					++iterC;
+				}
+			}
+			if(!destroyedProjectile)
+					++iterP;
+		}
+		if(joueur->getGlobalBounds().intersects((*iter)->getGlobalBounds()))
 		{
 			joueur->Collisionner(*(*iter));
 			(*iter)->Collisionner(*joueur);
@@ -298,10 +366,17 @@ void SceneNiveau::update()
 		if ((*iterP)->GetType() != TypeWeapon::Player && (*iterP)->getGlobalBounds().intersects(joueur->getGlobalBounds()))
 		{
 			joueur->RecoitDommage((*iterP)->GetType(), (*iterP)->GetDommage());
-			auto temp = iterP;
-			++iterP;
-			delete *temp;
-			projectiles.erase(temp);
+			if (typeid(*(*iterP)) != typeid(ProjectileLaserPercant))
+			{
+				auto temp = iterP;
+				++iterP;
+				delete *temp;
+				projectiles.erase(temp);
+			}
+			else
+			{
+				++iterP;
+			}
 		}
 		else if ((*iterP)->getPosition().x < 0 || (*iterP)->getPosition().x > mainWin->getSize().x
 			|| (*iterP)->getPosition().y < 0 || (*iterP)->getPosition().y > mainWin->getSize().y)
@@ -310,6 +385,20 @@ void SceneNiveau::update()
 			++iterP;
 			delete *temp;
 			projectiles.erase(temp);
+		}
+		else if(ProjectileLaserPercant* projectile = dynamic_cast<ProjectileLaserPercant*>(*iterP))
+		{
+			if(projectile->EstPasserDate())
+			{
+				auto temp = iterP;
+				++iterP;
+				delete *temp;
+				projectiles.erase(temp);
+			}
+			else
+			{
+				++iterP;
+			}
 		}
 		else
 		{

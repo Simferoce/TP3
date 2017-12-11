@@ -2,7 +2,9 @@
 #include "Bonus.h"
 #include <SFML/System/Time.hpp>
 #include "../StructuresDonnees/list.hpp"
-#include "Projectile.hpp"
+#include "Projectile.h"
+class Personnage;
+
 class Arme
 	:public Bonus // Dérive de la classe bonus, car les armes peuvent être rammassées
 {
@@ -25,7 +27,7 @@ public:
 	{
 		
 	}
-	virtual StructuresDonnees::list<Projectile*>* Tire(sf::Vector2f origineDuTir, TypeWeapon type, float angle) = 0; // À caque tir on retourne une liste de balle puisque chaque arme à un comportement différent	
+	virtual StructuresDonnees::list<Projectile*>* Tire(Personnage* tireur, TypeWeapon type, float angle) = 0; // À caque tir on retourne une liste de balle puisque chaque arme à un comportement différent	
 /// <summary>
 /// Retourne le temps de tir de l'arme en utilisation
 /// </summary>

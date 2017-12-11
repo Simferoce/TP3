@@ -19,8 +19,8 @@ public:
 	void getInputs();
 	void update();
 	void draw();
-	virtual const StructuresDonnees::list<Projectile*>& GetAllProjectiles() const override;
-	virtual const StructuresDonnees::list<Enemy*>& GetAllEnemies() const override;
+	virtual StructuresDonnees::list<Projectile*>& GetAllProjectiles() override;
+	virtual StructuresDonnees::list<Enemy*>& GetAllEnemies() override;
 	virtual const Joueur& GetPlayer() const override;
 	virtual const FloatRect GetBounds() const override;
 private:
@@ -46,8 +46,8 @@ private:
 	StructuresDonnees::list<Bonus*> bonus;
 	static const int nbSpawner = 3;
 	static const int DistanceAvecLeFond = 50;
-	static const int posXSpawner[nbSpawner];
-	static const int nbEnemy = 6;
+	static const int posYSpawner[nbSpawner];
+	static const int nbEnemy = 100;
 	Spawner spawner[nbSpawner];
 	sf::Clock enemiesSpawnClock;
 	sf::Time lastEnemySpawn = sf::milliseconds(0);

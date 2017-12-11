@@ -12,7 +12,7 @@ bool ProjectileBase::initTexture()
 	return true;
 }
 
-ProjectileBase::ProjectileBase(TypeWeapon type, sf::Vector2f pos, float angle) : Projectile(texture, type, vitesseDeBase, pos, angle, dommageDeBase)
+ProjectileBase::ProjectileBase(TypeWeapon type, Personnage* tireur, float angle) : Projectile(texture, type, vitesseDeBase, tireur, angle, dommageDeBase)
 {
 }
 

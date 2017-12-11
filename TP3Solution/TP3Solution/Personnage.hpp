@@ -6,14 +6,13 @@
 #include <SFML/System/Time.hpp>
 #include <SFML/System/Clock.hpp>
 #include <SFML/Graphics/Texture.hpp>
-#include "Projectile.hpp"
+#include "Projectile.h"
 #include "Arme.hpp"
 #include "../StructuresDonnees/stack.hpp"
 #include "Bouclier.hpp"
 #include "ArmeBase.h"
 #include <algorithm>
 #include <SFML/Graphics/RenderWindow.hpp>
-#include "Projectile.hpp"
 class Enemy;
 class Personnage
 	: public sf::Sprite
@@ -36,6 +35,7 @@ public:
 	{
 		bool hasElementToModify = false;
 		bool deleteObjectReturning = false;
+		bool removeObject = false;
 		StructuresDonnees::list<Projectile*> projectilesToAdd;
 		StructuresDonnees::list<Enemy*> enemiesToAdd;
 		ElementToModify(bool hasElementToAdd) : hasElementToModify{ hasElementToAdd } {};
@@ -45,6 +45,7 @@ public:
 			enemiesToAdd.assign(other.enemiesToAdd.begin(), other.enemiesToAdd.end());
 			hasElementToModify = other.hasElementToModify;
 			deleteObjectReturning = other.deleteObjectReturning;
+			removeObject = other.removeObject;
 			return *this;
 		}
 		ElementToModify(ElementToModify& other)
@@ -85,7 +86,7 @@ public:
 	virtual StructuresDonnees::list<Projectile*>* Fire()
 	{
 		dernierTir = clock.getElapsedTime();
-		return armeEquipe->Tire(getPosition(), type, 0);
+		return armeEquipe->Tire(this, type, 0);
 	}	
 	void RepositionnerDansLimite(FloatRect bounds)
 	{

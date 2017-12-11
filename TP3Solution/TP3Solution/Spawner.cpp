@@ -2,6 +2,8 @@
 #include "EnemySentinelle.h"
 #include "Kamikaze.h"
 #include "Transporter.h"
+#include "Assistant.h"
+#include "AssistantElite.h"
 const std::string Spawner::texturePath = "";
 Texture Spawner::texture = Texture();
 bool Spawner::initTexture()
@@ -34,6 +36,14 @@ Enemy * Spawner::FabriquerEnemy(EnemiesEnum enemy) const
 		break;
 	case TransporteurEnum:
 		temp = new Transporter();
+		temp->setPosition(getPosition());
+		break;
+	case AssistantEnum:
+		temp = new Assistant();
+		temp->setPosition(getPosition());
+		break;
+	case AssistantEliteEnum:
+		temp = new AssistantElite();
 		temp->setPosition(getPosition());
 		break;
 	default:

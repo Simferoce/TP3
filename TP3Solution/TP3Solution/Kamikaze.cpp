@@ -2,6 +2,7 @@
 #include "Joueur.h"
 #include "ProjectileBase.h"
 #include "INiveau.h"
+#include "Assistant.h"
 
 
 const std::string Kamikaze::texturePath = "Ressources\\Sprites\\Enemy\\Regulier\\Kamikaze\\Kamikaze_16x16.png";
@@ -30,7 +31,7 @@ Kamikaze::~Kamikaze()
 {
 }
 
-Enemy::ElementToModify Kamikaze::Update(INiveau& game)
+Enemy::ElementToModify Kamikaze::update(INiveau& game)
 {
 	ElementToModify elementToAdd(false);
 	float variationX = game.GetPlayer().getPosition().x - getPosition().x;
