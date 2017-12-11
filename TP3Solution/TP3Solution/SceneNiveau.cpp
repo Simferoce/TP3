@@ -94,7 +94,8 @@ const FloatRect SceneNiveau::GetBounds() const
 
 void SceneNiveau::getInputs()
 {
-	spaceReleased = false;
+	for (auto iter = releaseKeys.begin(); iter != releaseKeys.end(); ++iter)
+		(*iter).second = false;
 	while (mainWin->pollEvent(event))
 	{
 		//x sur la fenêtre
@@ -115,8 +116,7 @@ void SceneNiveau::getInputs()
 		}
 		else if (event.type == Event::KeyReleased)
 		{
-			if (event.key.code == Keyboard::Space)
-				spaceReleased = true;
+			releaseKeys[event.key.code] = true;
 			inputKeys[event.key.code] = false;
 		}
 	}
@@ -153,14 +153,14 @@ bool SceneNiveau::init(RenderWindow * const window)
 	if (!AssistantElite::initTexture())
 		return false;
 
-	spawner[0].setPosition(mainWin->getSize().x - DistanceAvecLeFond, posYSpawner[1]);
-	spawner[1].setPosition(mainWin->getSize().x - 400, posYSpawner[1]);
+	spawner[0].setPosition(mainWin->getSize().x - DistanceAvecLeFond, posYSpawner[0]);
+	spawner[1].setPosition(mainWin->getSize().x - DistanceAvecLeFond, posYSpawner[1]);
 	spawner[2].setPosition(mainWin->getSize().x - DistanceAvecLeFond, posYSpawner[2]);
 	for(int i = 0; i < nbEnemy; i++)
 	{
 		const int random = rand() % nbSpawner;
 		const Spawner::EnemiesEnum random2 = static_cast<Spawner::EnemiesEnum>(rand() % Spawner::EnemiesEnum::NumEnemies);
-		enemiesQueue.push_back(EnemiesHolder(spawner[random].FabriquerEnemy(random2), sf::milliseconds(2000)));
+		enemiesQueue.push_back(EnemiesHolder(spawner[random].FabriquerEnemy(random2), sf::milliseconds(1000)));
 	}
 	joueur = new Joueur();
 	joueur->setPosition(32, posYSpawner[0]);
@@ -209,6 +209,21 @@ bool SceneNiveau::init(RenderWindow * const window)
 	ecranNiveau2.setPosition(ecranNiveau.getGlobalBounds().width, 0);
 	for (int i = 0; i < enemiesQueue.size() && i < nbreEnemyNext; ++i)
 	{
+		switch (enemiesQueue[i].enemyInWaiting->GetType())
+		{
+		case EnemyGreen:
+			nextEnemy[i].setColor(Color::Green);
+			break;
+		case EnemyRed:
+			nextEnemy[i].setColor(Color::Red);
+			break;
+		case EnemyYellow:
+			nextEnemy[i].setColor(Color::Yellow);
+			break;
+		default:
+			nextEnemy[i].setColor(Color::White);
+			break;
+		}
 		nextEnemy[i].setTexture(*enemiesQueue[i].enemyInWaiting->getTexture());
 		nextEnemy[i].setTextureRect(enemiesQueue[i].enemyInWaiting->getTextureRect());
 		nextEnemy[i].setPosition(posXNextEnemy + i*distanceNextEnemy, posYNextEnemy);
@@ -232,14 +247,16 @@ void SceneNiveau::update()
 	if (inputKeys[Keyboard::Space])
 		joueur->chargerArme();
 	if (((joueur->GetArmeType() != Arme::ArmeType::Charger && inputKeys[Keyboard::Space])
-		|| (joueur->GetArmeType() == Arme::ArmeType::Charger && spaceReleased)) && joueur->CanFire())
+		|| (joueur->GetArmeType() == Arme::ArmeType::Charger && releaseKeys[Keyboard::Space])) && joueur->CanFire())
 	{
 		StructuresDonnees::list<Projectile*>* projectilesTemp = joueur->Fire();
 		projectiles.splice(*projectilesTemp, projectiles.begin());
 		delete projectilesTemp;
 	}
-	if (inputKeys[Keyboard::E]) joueur->nextWeapon();
-	if (inputKeys[Keyboard::Q]) joueur->previousWeapon();
+	if (releaseKeys[Keyboard::E]) 
+		joueur->nextWeapon();
+	if (releaseKeys[Keyboard::Q]) 
+		joueur->previousWeapon();
 	if (!enemiesQueue.empty() && enemiesSpawnClock.getElapsedTime() - enemiesQueue.front().timeToWait > lastEnemySpawn)
 	{
 		enemies.push_back(enemiesQueue.front().enemyInWaiting);
@@ -248,6 +265,21 @@ void SceneNiveau::update()
 		{
 			if (enemiesQueue.size() > i)
 			{
+				switch (enemiesQueue[i].enemyInWaiting->GetType())
+				{
+				case EnemyGreen:
+					nextEnemy[i].setColor(Color::Green);
+					break;
+				case EnemyRed:
+					nextEnemy[i].setColor(Color::Red);
+					break;
+				case EnemyYellow:
+					nextEnemy[i].setColor(Color::Yellow);
+					break;
+				default:
+					nextEnemy[i].setColor(Color::White);
+					break;
+				}
 				nextEnemy[i].setTexture(*enemiesQueue[i].enemyInWaiting->getTexture());
 				nextEnemy[i].setTextureRect(enemiesQueue[i].enemyInWaiting->getTextureRect());
 				nextEnemy[i].setPosition(posXNextEnemy + i*distanceNextEnemy, posYNextEnemy);

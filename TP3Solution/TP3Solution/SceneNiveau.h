@@ -32,7 +32,6 @@ private:
 	static const int posYNextEnemy = 50;
 	static const int distanceNextEnemy = 30;
 	static const int nbreEnemyNext = 5;
-	bool spaceReleased = false;
 	Sprite nextEnemy[nbreEnemyNext];
 	//Le type de police utilisée
 	Font font;
@@ -60,4 +59,5 @@ private:
 	};
 	StructuresDonnees::Queue<EnemiesHolder> enemiesQueue;
 	std::map<Keyboard::Key, bool> inputKeys;
+	std::map<Keyboard::Key, bool> releaseKeys;
 };

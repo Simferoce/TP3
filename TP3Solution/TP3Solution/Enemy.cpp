@@ -4,7 +4,20 @@
 Enemy::Enemy(sf::Texture& texture, const sf::IntRect& rectTexture, int pointsDeVie, Arme* armeEquipe, float vitesse, float modificateurVitesseRecul, TypeWeapon projectiletype) 
 	: Personnage(texture, rectTexture, pointsDeVie, armeEquipe, vitesse, modificateurVitesseRecul, projectiletype)
 {
-
+	switch (projectiletype)
+	{
+	case TypeWeapon::EnemyGreen:
+		setColor(Color::Green);
+		break;
+	case TypeWeapon::EnemyRed:
+		setColor(Color::Red);
+		break;
+	case TypeWeapon::EnemyYellow:
+		setColor(Color::Yellow);
+		break;
+	default:
+		break;
+	}
 }
 Enemy::~Enemy()
 {
