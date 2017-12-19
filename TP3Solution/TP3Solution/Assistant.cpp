@@ -35,6 +35,7 @@ Enemy * Assistant::TrouverLePlusProche(Vector2f pos, StructuresDonnees::list<Ene
 Assistant::Assistant() : Enemy(texture, textureRectBase[animationDeBase], pointsVieDeBase, nullptr, vitesseDeBase, modificateurVitesseReculDebase, genererTypeArmeEnemy())
 {
 	setOrigin(getGlobalBounds().width / 2, getGlobalBounds().height / 2);
+	valeurPoints = 10;
 }
 
 Assistant::Assistant(sf::Texture & texture, int pointsDeVie, Arme * armeEquipe, float vitesse)

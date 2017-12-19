@@ -23,6 +23,7 @@ TypeWeapon EnemySentinelle::genererTypeArmeEnemy()
 EnemySentinelle::EnemySentinelle() : Enemy(texture, textureRectBase[animationDeBase], pointsVieDeBase, GetArmeDefaut(), vitesseDeBase, modificateurVitesseReculDebase, genererTypeArmeEnemy())
 {
 	setOrigin(getGlobalBounds().width / 2, getGlobalBounds().height / 2);
+	valeurPoints = 5;
 }
 
 

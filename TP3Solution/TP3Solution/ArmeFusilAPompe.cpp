@@ -1,7 +1,7 @@
 #include "ArmeFusilAPompe.h"
 #include "ProjectileBase.h"
 #include "Personnage.hpp"
-const std::string ArmeFusilAPompe::texturePath = "Gem.png";
+const std::string ArmeFusilAPompe::texturePath = "Ressources/Sprites/Bonus/FusilPompe_16x16.png";
 sf::Texture ArmeFusilAPompe::texture = sf::Texture();
 const sf::Time ArmeFusilAPompe::delaiEntreLesTirsDeBase = sf::milliseconds(300);
 const int ArmeFusilAPompe::munition = 50;
@@ -35,7 +35,7 @@ std::string ArmeFusilAPompe::GetNomArme() const
 	return nomArme;
 }
 
-ArmeFusilAPompe::ArmeFusilAPompe() : Arme(texture, delaiEntreLesTirsDeBase, munition)
+ArmeFusilAPompe::ArmeFusilAPompe(Vector2f pos) : Arme(texture, delaiEntreLesTirsDeBase, munition,ArmeSpecialeShotgun,pos)
 {
 }
 

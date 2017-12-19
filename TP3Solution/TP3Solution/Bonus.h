@@ -41,5 +41,8 @@ public:
 	{
 		window.draw(*this);
 	}
-
+	void Move()
+	{
+		move(-1.5f, 0);
+	}
 };

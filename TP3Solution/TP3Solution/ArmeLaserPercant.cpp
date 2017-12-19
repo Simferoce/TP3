@@ -1,6 +1,6 @@
 #include "ArmeLaserPercant.h"
 #include "ProjectileLaserPercant.h"
-const std::string ArmeLaserPercant::texturePath = "Gem.png";
+const std::string ArmeLaserPercant::texturePath = "Ressources/Sprites/Bonus/RayonLaser_16x16.png";
 sf::Texture ArmeLaserPercant::texture = sf::Texture();
 const sf::Time ArmeLaserPercant::delaiEntreLesTirsDeBase = sf::milliseconds(2500);
 const int ArmeLaserPercant::munition = 5;
@@ -24,7 +24,7 @@ std::string ArmeLaserPercant::GetNomArme() const
 	return nomArme;
 }
 
-ArmeLaserPercant::ArmeLaserPercant() : Arme(texture, delaiEntreLesTirsDeBase, munition)
+ArmeLaserPercant::ArmeLaserPercant(Vector2f pos) : Arme(texture, delaiEntreLesTirsDeBase, munition, ArmeSpecialeRayonLaser, pos)
 {
 	typeArme = Other;
 }

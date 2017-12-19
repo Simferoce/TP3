@@ -1,6 +1,10 @@
 #include "Joueur.h"
 #include <SFML/Graphics/Texture.hpp>
 #include "Kamikaze.h"
+#include "ArmeLaserPercant.h"
+#include "ArmeFusilAPompe.h"
+#include "BombeExplosive.h"
+#include "FabriqueBonus.h"
 const std::string Joueur::texturePath = "Ressources/Sprites/Joueur/Joueur_32x16.png";
 sf::Texture Joueur::texture = sf::Texture();
 const float Joueur::vitesseDeBase = 3.0f; // 3 avant
@@ -49,7 +53,7 @@ Personnage::ElementToModify Joueur::Collisionner(const Personnage& other)
 	return elem;
 }
 
-Joueur::Joueur() : Personnage(texture, textureRectBase[animationDeBase], pointsVieDeBase, GetArmeDefaut(), vitesseDeBase,modificateurVitesseReculDebase, projectileTypeDeBase)
+Joueur::Joueur() : Personnage(texture, textureRectBase[animationDeBase], pointsVieDeBase, GetArmeDefaut(), vitesseDeBase,modificateurVitesseReculDebase, projectileTypeDeBase), score{0}
 {
 	setOrigin(getGlobalBounds().width / 2, getGlobalBounds().height / 2);
 	boucliers.push(new Bouclier(2, Bonus::BouclierRouge, getPosition(),true));
@@ -69,7 +73,52 @@ Joueur::~Joueur()
 
 void Joueur::notifier(Sujet* sujet)
 {
-	
+	if (typeid(*(sujet)) == typeid(ArmeLaserPercant)) 
+	{
+		auto iterArmeJoueur = std::find(armes.begin(), armes.end(), armeEquipe);
+		while (armeEquipe->type != Bonus::BonusType::ArmeSpecialeRayonLaser) // recherche nouvelle arme
+		{
+			if (armeEquipe->type == Bonus::ArmeSpecialeShotgun)
+				previousWeapon();
+			else if (armeEquipe->type == Bonus::ArmeDeBase)
+				nextWeapon();
+			else if (armeEquipe->type == Bonus::ArmeSpecialeSurpuissante)
+				nextWeapon();
+		}
+		auto iterArmeRamassee = std::find(armes.begin(), armes.end(), armeEquipe);
+		armeEquipe = *iterArmeRamassee;
+		armeEquipe->SetMunition(5);
+		armeEquipe = *iterArmeJoueur;
+	}
+	else if (typeid(*(sujet)) == typeid(ArmeFusilAPompe))
+	{
+		auto iterArmeJoueur = std::find(armes.begin(), armes.end(), armeEquipe);
+		while (armeEquipe->type != Bonus::BonusType::ArmeSpecialeShotgun) // recherche nouvelle arme
+		{
+			nextWeapon();
+		}
+		auto iterArmeRamassee = std::find(armes.begin(), armes.end(), armeEquipe);
+		armeEquipe = *iterArmeRamassee;
+		armeEquipe->SetMunition(50);
+		armeEquipe = *iterArmeJoueur;
+	}
+	else if (typeid(*(sujet)) == typeid(ArmeChargee))
+	{
+		auto iterArmeJoueur = std::find(armes.begin(), armes.end(), armeEquipe);
+		while (armeEquipe->type != Bonus::BonusType::ArmeSpecialeSurpuissante) // recherche nouvelle arme
+		{
+			if (armeEquipe->type == Bonus::ArmeSpecialeShotgun)
+				previousWeapon();
+			else if (armeEquipe->type == Bonus::ArmeDeBase)
+				nextWeapon();
+			else if (armeEquipe->type == Bonus::ArmeSpecialeRayonLaser)
+				previousWeapon();
+		}
+		auto iterArmeRamassee = std::find(armes.begin(), armes.end(), armeEquipe);
+		armeEquipe = *iterArmeRamassee;
+		armeEquipe->SetMunition(2000);
+		armeEquipe = *iterArmeJoueur;
+	}
 }
 
 Arme* Joueur::GetArme()
@@ -87,8 +136,19 @@ void Joueur::AjouterBonus(Bonus* bonus)
 	
 	else if (bonus->type == Bonus::BouclierRouge)
 		boucliers.push(new Bouclier(2, Bonus::BouclierRouge, getPosition(), true));
-	
+
 }
+int Joueur::GetScore() const
+{
+	return score;
+}
+
+void Joueur::SetScore(int points)
+{
+	score += points;
+}
+
+
 
 
 

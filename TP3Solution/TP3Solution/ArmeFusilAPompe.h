@@ -13,7 +13,7 @@ public:
 	static bool initTexture();
 	StructuresDonnees::list<Projectile*>* Tire(Personnage* tireur, TypeWeapon type, float angle) override;
 	std::string GetNomArme() const override;
-	ArmeFusilAPompe();
+	ArmeFusilAPompe(Vector2f pos);
 	~ArmeFusilAPompe();
 };
 

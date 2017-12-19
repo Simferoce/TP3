@@ -22,7 +22,7 @@ public:
 /// <returns></returns>
 	StructuresDonnees::list<Projectile*>* Tire(Personnage* tireur, TypeWeapon type, float angle) override;
 	std::string GetNomArme() const override;
-	ArmeBase(); // Constructeur de l'arme de base
+	ArmeBase(Vector2f pos); // Constructeur de l'arme de base
 	~ArmeBase(); // Destructeur de l'arme de base
 };
 

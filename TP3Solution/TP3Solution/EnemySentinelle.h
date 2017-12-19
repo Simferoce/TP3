@@ -17,7 +17,7 @@ class EnemySentinelle :
 	static const int animationDeBase;
 	static Arme* GetArmeDefaut()
 	{
-		Arme* arme = new ArmeBase();
+		Arme* arme = new ArmeBase(Vector2f(0, 0));
 		arme->SetTempsEntreTir(sf::milliseconds(1000));
 		return arme;
 	}

@@ -1,6 +1,9 @@
 #include "FabriqueBonus.h"
 #include "Bouclier.hpp"
 #include "ArmeChargee.h"
+#include "ArmeFusilAPompe.h"
+#include "ArmeLaserPercant.h"
+#include "BombeExplosive.h"
 
 FabriqueBonus::FabriqueBonus()
 {
@@ -21,13 +24,16 @@ Bonus* FabriqueBonus::FabriquerUnBonus(Bonus::BonusType bonus, Vector2f pos)
 		nouveauBonus = new Bouclier(rand() % 3 + 1, Bonus::BouclierRouge, pos, false);
 		break;
 	case Bonus::ArmeSpecialeShotgun:
-		nouveauBonus = new Bouclier(rand() % 3 + 1, Bonus::BouclierVert, pos, false);
+		nouveauBonus = new ArmeFusilAPompe(pos);
 		break;
 	case Bonus::ArmeSpecialeRayonLaser:
-		nouveauBonus = new Bouclier(rand() % 3 + 1, Bonus::BouclierVert, pos, false);
+		nouveauBonus = new ArmeLaserPercant(pos);
 		break;
 	case Bonus::ArmeSpecialeSurpuissante:
-		nouveauBonus = new ArmeChargee();
+		nouveauBonus = new ArmeChargee(pos);
+		break;
+	case Bonus::BombeExplosive:
+		nouveauBonus = new BombeExplosive(pos);
 		break;
 	default:
 		break;

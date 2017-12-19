@@ -15,7 +15,7 @@ public:
 	StructuresDonnees::list<Projectile*>* Tire(Personnage* tireur, TypeWeapon type, float angle) override;
 	void ChargerArme() override;
 	std::string GetNomArme() const override;
-	ArmeChargee();
+	ArmeChargee(Vector2f pos);
 	~ArmeChargee();
 };
 

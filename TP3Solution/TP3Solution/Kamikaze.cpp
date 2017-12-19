@@ -24,6 +24,7 @@ TypeWeapon Kamikaze::genererTypeArmeEnemy()
 Kamikaze::Kamikaze() : Enemy(texture, textureRectBase[animationDeBase], pointsVieDeBase, nullptr, vitesseDeBase, modificateurVitesseReculDebase, genererTypeArmeEnemy())
 {
 	setOrigin(getGlobalBounds().width / 2, getGlobalBounds().height / 2);
+	valeurPoints = 35;
 }
 
 

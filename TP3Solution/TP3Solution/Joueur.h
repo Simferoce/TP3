@@ -18,11 +18,12 @@ class Joueur :
 	static const sf::IntRect textureRectBase[nbreAnimation];
 	static const int animationDeBase;
 	int animateur = animationDeBase;
+	int score = 0;
 	sf::Clock animationHorloge = sf::Clock();
 	static const sf::Time tempAnimation;
 	static Arme* GetArmeDefaut()
 	{
-		return new ArmeBase();
+		return new ArmeBase(Vector2f(0, 0));
 	}
 
 public:
@@ -34,5 +35,7 @@ public:
 	void notifier(Sujet* sujet) override;
 	void AjouterBonus(Bonus* bonus);
 	Arme* Joueur::GetArme();
+	int GetScore() const;
+	void SetScore(int points);
 };
 

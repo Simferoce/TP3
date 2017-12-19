@@ -2,7 +2,7 @@
 #include "ProjectileBase.h"
 #include "ProjectileCharge.h"
 #include "Personnage.hpp"
-const std::string ArmeChargee::texturePath = "Gem.png";
+const std::string ArmeChargee::texturePath = "Ressources/Sprites/Bonus/HyperBullet_16x16.png";
 sf::Texture ArmeChargee::texture = sf::Texture();
 const sf::Time ArmeChargee::delaiEntreLesTirsDeBase = sf::milliseconds(100);
 const int ArmeChargee::munition = 2000;
@@ -42,7 +42,7 @@ std::string ArmeChargee::GetNomArme() const
 	return nomArme;
 }
 
-ArmeChargee::ArmeChargee() : Arme(texture, delaiEntreLesTirsDeBase, munition)
+ArmeChargee::ArmeChargee(Vector2f pos) : Arme(texture, delaiEntreLesTirsDeBase, munition, ArmeSpecialeSurpuissante ,pos)
 {
 	typeArme = Charger;
 }

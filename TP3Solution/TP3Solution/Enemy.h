@@ -8,6 +8,7 @@ class Enemy :
 	public Personnage, public IObservateur, public Composite
 {
 protected:
+	int valeurPoints;
 	virtual ElementToModify update(INiveau& game) = 0;
 public:
 	virtual void Move(int bitMask, sf::FloatRect bounds);
@@ -17,5 +18,6 @@ public:
 	virtual Personnage::ElementToModify Collisionner(const Personnage& other) override;
 	ElementToModify Update(INiveau& game);
 	virtual void Draw(RenderWindow& window) override;
+	int GetValeurPoints() const;
 };
 

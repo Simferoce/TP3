@@ -24,7 +24,7 @@ std::string ArmeBase::GetNomArme() const
 	return nomArme;
 }
 
-ArmeBase::ArmeBase() : Arme(texture, delaiEntreLesTirsDeBase, munition)
+ArmeBase::ArmeBase(Vector2f pos) : Arme(texture, delaiEntreLesTirsDeBase, munition,ArmeDeBase,pos)
 {
 }
 

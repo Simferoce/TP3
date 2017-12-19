@@ -16,7 +16,7 @@ protected:
 	int munition;
 	int charge = 0;
 public:
-	Arme(sf::Texture& texture, sf::Time tempsEntreTir, int munition , Vector2f pos = Vector2f(0, 0) ) : Bonus(texture, ArmeDeBase , pos), tempsEntreTir{tempsEntreTir}, munition{munition}
+	Arme(sf::Texture& texture, sf::Time tempsEntreTir, int munition, BonusType typeBonus, Vector2f pos = Vector2f(0, 0)) : Bonus(texture, typeBonus, pos), tempsEntreTir{tempsEntreTir}, munition{munition}
 	{
 		setTexture(texture); // On positionne correctement la texture de l'arme
 		setPosition(pos); // On positionne la texture à 0,0 par défaut
@@ -47,6 +47,10 @@ public:
 	int GetMunition() const
 	{
 		return munition;
+	}
+	void SetMunition(int ajoutBalles)
+	{
+		munition += ajoutBalles;
 	}
 	ArmeType GetArmeType() const
 	{

@@ -7,6 +7,7 @@ const int AssistantElite::pointsVieDeBase = 2;
 
 AssistantElite::AssistantElite() : Assistant(texture, pointsVieDeBase, GetArmeDefaut(), vitesseDeBase)
 {
+	valeurPoints = 20;
 }
 
 

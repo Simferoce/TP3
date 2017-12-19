@@ -25,6 +25,7 @@ TypeWeapon Transporter::genererTypeArmeEnemy()
 Transporter::Transporter() : Enemy(texture, textureRectBase[animationDeBase], pointsVieDeBase, nullptr, vitesseDeBase, modificateurVitesseReculDebase, genererTypeArmeEnemy())
 {
 	setOrigin(getGlobalBounds().width / 2, getGlobalBounds().height / 2);
+	valeurPoints = 50;
 }
 
 

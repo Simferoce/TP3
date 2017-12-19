@@ -10,7 +10,7 @@ using namespace sf;
 class Scene
 {
 public: 
-	enum scenes{Titre, Niveau1, GameOver ,Fin};
+	enum scenes{Titre, Niveau1, GameOver ,Fin, Victoire};
 	virtual ~Scene() {};
 
 	// Méthode de qui débute l'utilisation d'une scene
@@ -30,6 +30,7 @@ protected:
 	// Dimention de la vue
 	const int LONGUEUR_VUE = 1280;
 	const int LARGEUR_VUE = 720;
+	int scoreFinal;
 
 
 	/*Utile ???*/

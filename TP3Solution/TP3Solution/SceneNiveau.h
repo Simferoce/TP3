@@ -38,6 +38,7 @@ private:
 	Text vieJoueur;
 	Text munitionArmes;
 	Text boucliersText;
+	Text scoreText;
 	Joueur* joueur;
 	
 	StructuresDonnees::list<Projectile*> projectiles;

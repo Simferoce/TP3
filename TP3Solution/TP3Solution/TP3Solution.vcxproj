@@ -95,6 +95,7 @@
     <ClCompile Include="ArmeLaserPercant.cpp" />
     <ClCompile Include="Assistant.cpp" />
     <ClCompile Include="AssistantElite.cpp" />
+    <ClCompile Include="BombeExplosive.cpp" />
     <ClCompile Include="Bouclier.cpp" />
     <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="EnemySentinelle.cpp" />
@@ -122,6 +123,7 @@
     <ClInclude Include="ArmeLaserPercant.h" />
     <ClInclude Include="Assistant.h" />
     <ClInclude Include="AssistantElite.h" />
+    <ClInclude Include="BombeExplosive.h" />
     <ClInclude Include="Bonus.h" />
     <ClInclude Include="Bouclier.hpp" />
     <ClInclude Include="Composite.h" />

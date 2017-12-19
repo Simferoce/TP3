@@ -9,6 +9,7 @@
 #include "ArmeLaserPercant.h"
 #include "ProjectileLaserPercant.h"
 #include "ArmeFusilAPompe.h"
+#include "BombeExplosive.h"
 
 const float SceneNiveau::vitesseDeBaseBackground = 5.0f;
 const int SceneNiveau::posYSpawner[] = { 200, 400 , 600 };
@@ -69,6 +70,7 @@ void SceneNiveau::draw()
 	mainWin->draw(vieJoueur);
 	mainWin->draw(boucliersText);
 	mainWin->draw(munitionArmes);
+	mainWin->draw(scoreText);
 	mainWin->display();
 }
 
@@ -132,6 +134,12 @@ bool SceneNiveau::init(RenderWindow * const window)
 		return false;
 	if (!ArmeLaserPercant::initTexture())
 		return false;
+	if (!ArmeChargee::initTexture())
+		return false;
+	if (!ArmeFusilAPompe::initTexture())
+		return false;
+	if (!BombeExplosive::initTexture())
+		return false;
 	if (!Joueur::initTexture())
 		return false;
 	if (!ProjectileBase::initTexture())
@@ -156,7 +164,7 @@ bool SceneNiveau::init(RenderWindow * const window)
 	spawner[0].setPosition(mainWin->getSize().x - DistanceAvecLeFond, posYSpawner[0]);
 	spawner[1].setPosition(mainWin->getSize().x - DistanceAvecLeFond, posYSpawner[1]);
 	spawner[2].setPosition(mainWin->getSize().x - DistanceAvecLeFond, posYSpawner[2]);
-	for(int i = 0; i < nbEnemy; i++)
+	for (int i = 0; i < nbEnemy; i++)
 	{
 		const int random = rand() % nbSpawner;
 		const Spawner::EnemiesEnum random2 = static_cast<Spawner::EnemiesEnum>(rand() % Spawner::EnemiesEnum::NumEnemies);
@@ -164,12 +172,16 @@ bool SceneNiveau::init(RenderWindow * const window)
 	}
 	joueur = new Joueur();
 	joueur->setPosition(32, posYSpawner[0]);
-	joueur->AjouterArme(new ArmeChargee());
-	joueur->AjouterArme(new ArmeLaserPercant());
-	joueur->AjouterArme(new ArmeFusilAPompe());
+	joueur->AjouterArme(new ArmeChargee(Vector2f(0, 0)));
+	joueur->AjouterArme(new ArmeLaserPercant(Vector2f(0, 0)));
+	joueur->AjouterArme(new ArmeFusilAPompe(Vector2f(0, 0)));
 	bonus.push_back(FabriqueBonus::FabriquerUnBonus(Bonus::BouclierVert, Vector2f(LONGUEUR_VUE / 2, LARGEUR_VUE / 2)));
-	bonus.push_back(FabriqueBonus::FabriquerUnBonus(Bonus::BouclierJaune, Vector2f(LONGUEUR_VUE / 2+ 100, LARGEUR_VUE / 2)));
+	bonus.push_back(FabriqueBonus::FabriquerUnBonus(Bonus::BouclierJaune, Vector2f(LONGUEUR_VUE / 2 + 100, LARGEUR_VUE / 2)));
 	bonus.push_back(FabriqueBonus::FabriquerUnBonus(Bonus::BouclierRouge, Vector2f(LONGUEUR_VUE / 2 - 100, LARGEUR_VUE / 2)));
+	bonus.push_back(FabriqueBonus::FabriquerUnBonus(Bonus::ArmeSpecialeSurpuissante, Vector2f(LONGUEUR_VUE / 2, LARGEUR_VUE / 2 + 100)));
+	bonus.push_back(FabriqueBonus::FabriquerUnBonus(Bonus::ArmeSpecialeShotgun, Vector2f(LONGUEUR_VUE / 2 + 100, LARGEUR_VUE / 2 + 100)));
+	bonus.push_back(FabriqueBonus::FabriquerUnBonus(Bonus::ArmeSpecialeRayonLaser, Vector2f(LONGUEUR_VUE / 2 - 100, LARGEUR_VUE / 2 + 100)));
+	bonus.push_back(FabriqueBonus::FabriquerUnBonus(Bonus::BombeExplosive, Vector2f(LONGUEUR_VUE / 2, LARGEUR_VUE / 2 - 100)));
 	vieJoueur.setFont(font);
 	vieJoueur.setString("Vie joueur: " + std::to_string(joueur->GetVie()));
 	vieJoueur.setPosition(0, 0);
@@ -197,6 +209,9 @@ bool SceneNiveau::init(RenderWindow * const window)
 	{
 		boucliersText.setFillColor(Color::White);
 	}
+	scoreText.setString("Score : " + std::to_string(joueur->GetScore()));
+	scoreText.setPosition(LONGUEUR_VUE / 2, 0);
+	scoreText.setFont(font);
 	boucliersText.setString("Bouclier: " + std::to_string(bouclierActif != nullptr ? bouclierActif->GetVie() : 0));
 	boucliersText.setPosition(vieJoueur.getPosition().x, vieJoueur.getPosition().y + vieJoueur.getCharacterSize());
 	munitionArmes.setFont(font);
@@ -228,10 +243,14 @@ bool SceneNiveau::init(RenderWindow * const window)
 		nextEnemy[i].setTextureRect(enemiesQueue[i].enemyInWaiting->getTextureRect());
 		nextEnemy[i].setPosition(posXNextEnemy + i*distanceNextEnemy, posYNextEnemy);
 	}
+
+	
+
 	return true;
 }
 void SceneNiveau::update()
 {
+	scoreText.setString("Score : " + std::to_string(joueur->GetScore()));
 	int bitsMask = 0;
 	if (inputKeys[Keyboard::W]) bitsMask += 1;
 	if (inputKeys[Keyboard::A]) bitsMask += 2;
@@ -253,9 +272,9 @@ void SceneNiveau::update()
 		projectiles.splice(*projectilesTemp, projectiles.begin());
 		delete projectilesTemp;
 	}
-	if (releaseKeys[Keyboard::E]) 
+	if (releaseKeys[Keyboard::E])
 		joueur->nextWeapon();
-	if (releaseKeys[Keyboard::Q]) 
+	if (releaseKeys[Keyboard::Q])
 		joueur->previousWeapon();
 	if (!enemiesQueue.empty() && enemiesSpawnClock.getElapsedTime() - enemiesQueue.front().timeToWait > lastEnemySpawn)
 	{
@@ -323,7 +342,7 @@ void SceneNiveau::update()
 			if ((*iterP)->GetType() == TypeWeapon::Player && (*iterP)->getGlobalBounds().intersects((*iter)->getGlobalBounds()))
 			{
 				(*iter)->RecoitDommage((*iterP)->GetType(), (*iterP)->GetDommage());
-				if(typeid(*(*iterP)) != typeid(ProjectileLaserPercant))
+				if (typeid(*(*iterP)) != typeid(ProjectileLaserPercant))
 				{
 					auto temp = iterP;
 					++iterP;
@@ -362,7 +381,7 @@ void SceneNiveau::update()
 						{
 							++iterP;
 						}
-						if(enemy->IsDead())
+						if (enemy->IsDead())
 						{
 							delete *iterC;
 							(*iter)->GetComposites().erase(iterC);
@@ -372,20 +391,22 @@ void SceneNiveau::update()
 					++iterC;
 				}
 			}
-			if(!destroyedProjectile)
-					++iterP;
+			if (!destroyedProjectile)
+				++iterP;
 		}
-		if(joueur->getGlobalBounds().intersects((*iter)->getGlobalBounds()))
+		if (joueur->getGlobalBounds().intersects((*iter)->getGlobalBounds()))
 		{
 			joueur->Collisionner(*(*iter));
 			(*iter)->Collisionner(*joueur);
 		}
 		if ((*iter)->IsDead())
 		{
+			joueur->SetScore((*iter)->GetValeurPoints());
 			auto temp = iter;
 			++iter;
 			delete *temp;
 			enemies.erase(temp);
+			
 		}
 		else
 		{
@@ -417,9 +438,9 @@ void SceneNiveau::update()
 			delete *temp;
 			projectiles.erase(temp);
 		}
-		else if(ProjectileLaserPercant* projectile = dynamic_cast<ProjectileLaserPercant*>(*iterP))
+		else if (ProjectileLaserPercant* projectile = dynamic_cast<ProjectileLaserPercant*>(*iterP))
 		{
-			if(projectile->EstPasserDate())
+			if (projectile->EstPasserDate())
 			{
 				auto temp = iterP;
 				++iterP;
@@ -442,11 +463,21 @@ void SceneNiveau::update()
 	{
 		if ((*iterB)->getGlobalBounds().intersects(joueur->getGlobalBounds()))
 		{
+
+			(*iterB)->ajouterObservateur(joueur);
+			for (Enemy* enemy : enemies)	
+				(*iterB)->ajouterObservateur(enemy);
+			
 			(*iterB)->notifierTousLesObservateurs();
 			joueur->AjouterBonus(*iterB);
 			auto temp = iterB;
 			++iterB;
 			delete *temp;
+
+			(*iterB)->retirerObservateur(joueur);
+			for (Enemy* enemy : enemies)
+				(*iterB)->retirerObservateur(enemy);
+
 			bonus.erase(temp);
 		}
 		else
@@ -475,7 +506,7 @@ void SceneNiveau::update()
 			break;
 		}
 	}
-	
+
 	else
 	{
 		boucliersText.setFillColor(Color::White);
@@ -483,10 +514,18 @@ void SceneNiveau::update()
 	boucliersText.setString("Bouclier: " + std::to_string(bouclierActif != nullptr ? bouclierActif->GetVie() : 0));
 	boucliersText.setPosition(vieJoueur.getPosition().x, vieJoueur.getPosition().y + vieJoueur.getCharacterSize());
 	munitionArmes.setString(joueur->GetArme()->GetNomArme() + ": " + (joueur->GetArme()->GetMunition() == -1 ? "infini" : std::to_string(joueur->GetArme()->GetMunition())));
+	for (Bonus* bonusToDraw : bonus)
+		bonusToDraw->Move();
 	if (joueur->IsDead())
 	{
 		isRunning = false;
 		transitionVersScene = GameOver;
+	}
+	if (enemies.is_empty() && enemiesQueue.empty())
+	{
+		isRunning = false;
+		transitionVersScene = Victoire;
+		scoreFinal = joueur->GetScore();
 	}
 }
 
