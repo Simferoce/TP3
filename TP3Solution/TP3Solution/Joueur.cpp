@@ -5,6 +5,8 @@
 #include "ArmeFusilAPompe.h"
 #include "BombeExplosive.h"
 #include "FabriqueBonus.h"
+#include "MultiplicateurXp.h"
+
 const std::string Joueur::texturePath = "Ressources/Sprites/Joueur/Joueur_32x16.png";
 sf::Texture Joueur::texture = sf::Texture();
 const float Joueur::vitesseDeBase = 3.0f; // 3 avant
@@ -59,6 +61,9 @@ Joueur::Joueur() : Personnage(texture, textureRectBase[animationDeBase], pointsV
 	boucliers.push(new Bouclier(2, Bonus::BouclierRouge, getPosition(),true));
 	boucliers.push(new Bouclier(2, Bonus::BouclierJaune, getPosition(), true));
 	boucliers.push(new Bouclier(2, Bonus::BouclierVert, getPosition(), true));
+	multiplicateurActif = false;
+	delaisEntreActivationBonus.restart();
+	dernierBonusActif = delaisEntreActivationBonus.getElapsedTime();
 }
 
 Joueur::~Joueur()
@@ -119,6 +124,11 @@ void Joueur::notifier(Sujet* sujet)
 		armeEquipe->SetMunition(2000);
 		armeEquipe = *iterArmeJoueur;
 	}
+	else if (typeid(*(sujet)) == typeid(MultiplicateurXp))
+	{
+		multiplicateurActif = true;
+		dernierBonusActif = delaisEntreActivationBonus.getElapsedTime();
+	}
 }
 
 Arme* Joueur::GetArme()
@@ -145,8 +155,20 @@ int Joueur::GetScore() const
 
 void Joueur::SetScore(int points)
 {
-	score += points;
+	if(MultiplicateurActif())
+		score += points*2;
+	else
+		score += points;
 }
+
+bool Joueur::MultiplicateurActif()
+{
+	if (multiplicateurActif && delaisEntreActivationBonus.getElapsedTime().asMilliseconds() - dernierBonusActif.asMilliseconds() < dureeTempsBonus)
+		return multiplicateurActif;
+	else
+		return multiplicateurActif = false;
+}
+
 
 
 

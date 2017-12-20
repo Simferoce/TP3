@@ -43,6 +43,6 @@ public:
 	}
 	void Move()
 	{
-		move(-1.5f, 0);
+		move(-0.5f, 0);
 	}
 };

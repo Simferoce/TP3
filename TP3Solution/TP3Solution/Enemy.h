@@ -7,6 +7,11 @@ class INiveau;
 class Enemy :
 	public Personnage, public IObservateur, public Composite
 {
+
+	const float dureeTempsBonus = 10000; // 10 sec
+	sf::Time dernierBombeActif;
+	sf::Clock delaisEntreActivationBombe;
+	bool bombeElectriqueActive;
 protected:
 	int valeurPoints;
 	virtual ElementToModify update(INiveau& game) = 0;
@@ -19,5 +24,7 @@ public:
 	ElementToModify Update(INiveau& game);
 	virtual void Draw(RenderWindow& window) override;
 	int GetValeurPoints() const;
+
+	bool BombeElectriqueActive();
 };
 

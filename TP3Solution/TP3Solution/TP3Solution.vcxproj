@@ -95,6 +95,7 @@
     <ClCompile Include="ArmeLaserPercant.cpp" />
     <ClCompile Include="Assistant.cpp" />
     <ClCompile Include="AssistantElite.cpp" />
+    <ClCompile Include="BombeElectrique.cpp" />
     <ClCompile Include="BombeExplosive.cpp" />
     <ClCompile Include="Bouclier.cpp" />
     <ClCompile Include="Enemy.cpp" />
@@ -104,6 +105,7 @@
     <ClCompile Include="Joueur.cpp" />
     <ClCompile Include="Kamikaze.cpp" />
     <ClCompile Include="Main.cpp" />
+    <ClCompile Include="MultiplicateurXp.cpp" />
     <ClCompile Include="Projectile.cpp" />
     <ClCompile Include="ProjectileBase.cpp" />
     <ClCompile Include="ProjectileCharge.cpp" />
@@ -123,6 +125,7 @@
     <ClInclude Include="ArmeLaserPercant.h" />
     <ClInclude Include="Assistant.h" />
     <ClInclude Include="AssistantElite.h" />
+    <ClInclude Include="BombeElectrique.h" />
     <ClInclude Include="BombeExplosive.h" />
     <ClInclude Include="Bonus.h" />
     <ClInclude Include="Bouclier.hpp" />
@@ -135,6 +138,7 @@
     <ClInclude Include="IObservateur.h" />
     <ClInclude Include="Joueur.h" />
     <ClInclude Include="Kamikaze.h" />
+    <ClInclude Include="MultiplicateurXp.h" />
     <ClInclude Include="Personnage.hpp" />
     <ClInclude Include="Projectile.h" />
     <ClInclude Include="ProjectileBase.h" />

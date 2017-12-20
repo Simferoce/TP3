@@ -21,6 +21,11 @@ class Joueur :
 	int score = 0;
 	sf::Clock animationHorloge = sf::Clock();
 	static const sf::Time tempAnimation;
+
+	const float dureeTempsBonus = 20000; // 20 sec
+	sf::Time dernierBonusActif;
+	sf::Clock delaisEntreActivationBonus;
+	bool multiplicateurActif;
 	static Arme* GetArmeDefaut()
 	{
 		return new ArmeBase(Vector2f(0, 0));
@@ -37,5 +42,7 @@ public:
 	Arme* Joueur::GetArme();
 	int GetScore() const;
 	void SetScore(int points);
+
+	bool MultiplicateurActif();
 };
 

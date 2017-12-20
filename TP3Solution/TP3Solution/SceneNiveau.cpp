@@ -10,6 +10,8 @@
 #include "ProjectileLaserPercant.h"
 #include "ArmeFusilAPompe.h"
 #include "BombeExplosive.h"
+#include "MultiplicateurXp.h"
+#include "BombeElectrique.h"
 
 const float SceneNiveau::vitesseDeBaseBackground = 5.0f;
 const int SceneNiveau::posYSpawner[] = { 200, 400 , 600 };
@@ -140,7 +142,11 @@ bool SceneNiveau::init(RenderWindow * const window)
 		return false;
 	if (!BombeExplosive::initTexture())
 		return false;
+	if (!BombeElectrique::initTexture())
+		return false;
 	if (!Joueur::initTexture())
+		return false;
+	if (!MultiplicateurXp::initTexture())
 		return false;
 	if (!ProjectileBase::initTexture())
 		return false;
@@ -182,6 +188,8 @@ bool SceneNiveau::init(RenderWindow * const window)
 	bonus.push_back(FabriqueBonus::FabriquerUnBonus(Bonus::ArmeSpecialeShotgun, Vector2f(LONGUEUR_VUE / 2 + 100, LARGEUR_VUE / 2 + 100)));
 	bonus.push_back(FabriqueBonus::FabriquerUnBonus(Bonus::ArmeSpecialeRayonLaser, Vector2f(LONGUEUR_VUE / 2 - 100, LARGEUR_VUE / 2 + 100)));
 	bonus.push_back(FabriqueBonus::FabriquerUnBonus(Bonus::BombeExplosive, Vector2f(LONGUEUR_VUE / 2, LARGEUR_VUE / 2 - 100)));
+	bonus.push_back(FabriqueBonus::FabriquerUnBonus(Bonus::BombeElectromagnetique, Vector2f(LONGUEUR_VUE / 2 + 100, LARGEUR_VUE / 2 - 100)));
+	bonus.push_back(FabriqueBonus::FabriquerUnBonus(Bonus::MultiplicateurDePoints, Vector2f(LONGUEUR_VUE / 2 - 100, LARGEUR_VUE / 2 - 100)));
 	vieJoueur.setFont(font);
 	vieJoueur.setString("Vie joueur: " + std::to_string(joueur->GetVie()));
 	vieJoueur.setPosition(0, 0);
@@ -250,7 +258,12 @@ bool SceneNiveau::init(RenderWindow * const window)
 }
 void SceneNiveau::update()
 {
+	if(joueur->MultiplicateurActif())
+		scoreText.setFillColor(Color::Blue);
+	else
+		scoreText.setFillColor(Color::White);
 	scoreText.setString("Score : " + std::to_string(joueur->GetScore()));
+
 	int bitsMask = 0;
 	if (inputKeys[Keyboard::W]) bitsMask += 1;
 	if (inputKeys[Keyboard::A]) bitsMask += 2;
@@ -469,14 +482,15 @@ void SceneNiveau::update()
 				(*iterB)->ajouterObservateur(enemy);
 			
 			(*iterB)->notifierTousLesObservateurs();
-			joueur->AjouterBonus(*iterB);
-			auto temp = iterB;
-			++iterB;
-			delete *temp;
 
 			(*iterB)->retirerObservateur(joueur);
 			for (Enemy* enemy : enemies)
 				(*iterB)->retirerObservateur(enemy);
+
+			joueur->AjouterBonus(*iterB);
+			auto temp = iterB;
+			++iterB;
+			delete *temp;
 
 			bonus.erase(temp);
 		}

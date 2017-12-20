@@ -1,10 +1,14 @@
 #include "Enemy.h"
 #include "Assistant.h"
 #include "BombeExplosive.h"
+#include "BombeElectrique.h"
 
 Enemy::Enemy(sf::Texture& texture, const sf::IntRect& rectTexture, int pointsDeVie, Arme* armeEquipe, float vitesse, float modificateurVitesseRecul, TypeWeapon projectiletype) 
 	: Personnage(texture, rectTexture, pointsDeVie, armeEquipe, vitesse, modificateurVitesseRecul, projectiletype)
 {
+	bombeElectriqueActive = false;
+	delaisEntreActivationBombe.restart();
+	dernierBombeActif = delaisEntreActivationBombe.getElapsedTime();
 	switch (projectiletype)
 	{
 	case TypeWeapon::EnemyGreen:
@@ -28,7 +32,12 @@ void Enemy::notifier(Sujet* sujet)
 {
 	if (typeid(*(sujet)) == typeid(BombeExplosive))
 	{
-		
+		RecoitDommage(Laser, 999);
+	}
+	else if (typeid(*(sujet)) == typeid(BombeElectrique))
+	{
+		bombeElectriqueActive = true;
+		dernierBombeActif = delaisEntreActivationBombe.getElapsedTime();
 	}
 }
 Personnage::ElementToModify Enemy::Collisionner(const Personnage& other)
@@ -38,23 +47,28 @@ Personnage::ElementToModify Enemy::Collisionner(const Personnage& other)
 }
 Personnage::ElementToModify Enemy::Update(INiveau & game)
 {
-	Vector2f posBefore = getPosition();
-	ElementToModify elemToModify = update(game);
-	Vector2f deplacement = getPosition() - posBefore;
-	for (Composite* composite : composites)
+	ElementToModify elemToModify(&game);
+	if (!BombeElectriqueActive())
 	{
-		if (Assistant* assistant = dynamic_cast<Assistant*>(composite))
+		Vector2f posBefore = getPosition();
+		elemToModify = update(game);
+		Vector2f deplacement = getPosition() - posBefore;
+		for (Composite* composite : composites)
 		{
-			ElementToModify elem = assistant->Update(game);
-			if(!elem.projectilesToAdd.is_empty())
+			if (Assistant* assistant = dynamic_cast<Assistant*>(composite))
 			{
-				elemToModify.hasElementToModify = true;
-				elemToModify.projectilesToAdd.splice(elem.projectilesToAdd, elemToModify.projectilesToAdd.begin());
+				ElementToModify elem = assistant->Update(game);
+				if (!elem.projectilesToAdd.is_empty())
+				{
+					elemToModify.hasElementToModify = true;
+					elemToModify.projectilesToAdd.splice(elem.projectilesToAdd, elemToModify.projectilesToAdd.begin());
+				}
+				assistant->move(deplacement);
 			}
-			assistant->move(deplacement);
 		}
 	}
 	return elemToModify;
+	
 }
 void Enemy::Draw(RenderWindow & window)
 {
@@ -74,5 +88,14 @@ int Enemy::GetValeurPoints() const
 {
 	return valeurPoints;
 }
+
+bool Enemy::BombeElectriqueActive()
+{
+	if (bombeElectriqueActive && delaisEntreActivationBombe.getElapsedTime().asMilliseconds() - dernierBombeActif.asMilliseconds() < dureeTempsBonus)
+		return bombeElectriqueActive;
+	else
+		return bombeElectriqueActive = false;
+}
+
 
 

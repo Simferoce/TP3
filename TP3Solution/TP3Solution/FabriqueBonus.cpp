@@ -4,6 +4,8 @@
 #include "ArmeFusilAPompe.h"
 #include "ArmeLaserPercant.h"
 #include "BombeExplosive.h"
+#include "MultiplicateurXp.h"
+#include "BombeElectrique.h"
 
 FabriqueBonus::FabriqueBonus()
 {
@@ -34,6 +36,12 @@ Bonus* FabriqueBonus::FabriquerUnBonus(Bonus::BonusType bonus, Vector2f pos)
 		break;
 	case Bonus::BombeExplosive:
 		nouveauBonus = new BombeExplosive(pos);
+		break;
+	case Bonus::BombeElectromagnetique:
+		nouveauBonus = new BombeElectrique(pos);
+		break;
+	case Bonus::MultiplicateurDePoints:
+		nouveauBonus = new MultiplicateurXp(pos);
 		break;
 	default:
 		break;
