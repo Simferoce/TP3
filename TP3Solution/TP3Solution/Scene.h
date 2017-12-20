@@ -30,7 +30,6 @@ protected:
 	// Dimention de la vue
 	const int LONGUEUR_VUE = 1280;
 	const int LARGEUR_VUE = 720;
-	int scoreFinal;
 
 
 	/*Utile ???*/

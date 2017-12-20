@@ -4,6 +4,7 @@
 #include "SceneNiveau.h"
 #include "SceneTitre.h"
 #include "SceneGameOver.h"
+#include "SceneVictoire.h"
 
 Game::Game()
 {
@@ -55,6 +56,9 @@ int Game::run()
 				break;
 			case Scene::scenes::GameOver:
 				sceneActive = new SceneGameOver();
+				break;
+			case Scene::scenes::Victoire:
+				sceneActive = new SceneVictoire();
 				break;
 			case Scene::scenes::Fin: //N'est pas une scene. On ferme simplement la fenêtre
 				mainWin.close();

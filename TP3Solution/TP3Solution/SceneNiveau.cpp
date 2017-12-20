@@ -12,6 +12,7 @@
 #include "BombeExplosive.h"
 #include "MultiplicateurXp.h"
 #include "BombeElectrique.h"
+#include "Bonus.h"
 
 const float SceneNiveau::vitesseDeBaseBackground = 5.0f;
 const int SceneNiveau::posYSpawner[] = { 200, 400 , 600 };
@@ -181,7 +182,7 @@ bool SceneNiveau::init(RenderWindow * const window)
 	joueur->AjouterArme(new ArmeChargee(Vector2f(0, 0)));
 	joueur->AjouterArme(new ArmeLaserPercant(Vector2f(0, 0)));
 	joueur->AjouterArme(new ArmeFusilAPompe(Vector2f(0, 0)));
-	bonus.push_back(FabriqueBonus::FabriquerUnBonus(Bonus::BouclierVert, Vector2f(LONGUEUR_VUE / 2, LARGEUR_VUE / 2)));
+	/*bonus.push_back(FabriqueBonus::FabriquerUnBonus(Bonus::BouclierVert, Vector2f(LONGUEUR_VUE / 2, LARGEUR_VUE / 2))); // test bonus
 	bonus.push_back(FabriqueBonus::FabriquerUnBonus(Bonus::BouclierJaune, Vector2f(LONGUEUR_VUE / 2 + 100, LARGEUR_VUE / 2)));
 	bonus.push_back(FabriqueBonus::FabriquerUnBonus(Bonus::BouclierRouge, Vector2f(LONGUEUR_VUE / 2 - 100, LARGEUR_VUE / 2)));
 	bonus.push_back(FabriqueBonus::FabriquerUnBonus(Bonus::ArmeSpecialeSurpuissante, Vector2f(LONGUEUR_VUE / 2, LARGEUR_VUE / 2 + 100)));
@@ -189,7 +190,7 @@ bool SceneNiveau::init(RenderWindow * const window)
 	bonus.push_back(FabriqueBonus::FabriquerUnBonus(Bonus::ArmeSpecialeRayonLaser, Vector2f(LONGUEUR_VUE / 2 - 100, LARGEUR_VUE / 2 + 100)));
 	bonus.push_back(FabriqueBonus::FabriquerUnBonus(Bonus::BombeExplosive, Vector2f(LONGUEUR_VUE / 2, LARGEUR_VUE / 2 - 100)));
 	bonus.push_back(FabriqueBonus::FabriquerUnBonus(Bonus::BombeElectromagnetique, Vector2f(LONGUEUR_VUE / 2 + 100, LARGEUR_VUE / 2 - 100)));
-	bonus.push_back(FabriqueBonus::FabriquerUnBonus(Bonus::MultiplicateurDePoints, Vector2f(LONGUEUR_VUE / 2 - 100, LARGEUR_VUE / 2 - 100)));
+	bonus.push_back(FabriqueBonus::FabriquerUnBonus(Bonus::MultiplicateurDePoints, Vector2f(LONGUEUR_VUE / 2 - 100, LARGEUR_VUE / 2 - 100)));*/
 	vieJoueur.setFont(font);
 	vieJoueur.setString("Vie joueur: " + std::to_string(joueur->GetVie()));
 	vieJoueur.setPosition(0, 0);
@@ -396,6 +397,13 @@ void SceneNiveau::update()
 						}
 						if (enemy->IsDead())
 						{
+							joueur->SetScore((*iter)->GetValeurPoints());
+							if ((*iter)->SpawnBonus())
+							{
+								int newIndex = rand() % 9;
+								nextBonusType = (Bonus::BonusType)newIndex;
+								bonus.push_back(FabriqueBonus::FabriquerUnBonus(nextBonusType, (*iter)->getPosition()));
+							}
 							delete *iterC;
 							(*iter)->GetComposites().erase(iterC);
 						}
@@ -415,6 +423,12 @@ void SceneNiveau::update()
 		if ((*iter)->IsDead())
 		{
 			joueur->SetScore((*iter)->GetValeurPoints());
+			if((*iter)->SpawnBonus())
+			{
+				int newIndex = rand()% 9;
+				nextBonusType = (Bonus::BonusType)newIndex;
+				bonus.push_back(FabriqueBonus::FabriquerUnBonus(nextBonusType, (*iter)->getPosition()));
+			}
 			auto temp = iter;
 			++iter;
 			delete *temp;
@@ -488,10 +502,10 @@ void SceneNiveau::update()
 				(*iterB)->retirerObservateur(enemy);
 
 			joueur->AjouterBonus(*iterB);
+
 			auto temp = iterB;
 			++iterB;
 			delete *temp;
-
 			bonus.erase(temp);
 		}
 		else
@@ -535,11 +549,10 @@ void SceneNiveau::update()
 		isRunning = false;
 		transitionVersScene = GameOver;
 	}
-	if (enemies.is_empty() && enemiesQueue.empty())
+	else if (enemies.is_empty() && enemiesQueue.empty())
 	{
 		isRunning = false;
 		transitionVersScene = Victoire;
-		scoreFinal = joueur->GetScore();
 	}
 }
 

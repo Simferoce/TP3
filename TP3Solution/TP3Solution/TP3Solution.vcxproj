@@ -113,6 +113,7 @@
     <ClCompile Include="SceneGameOver.cpp" />
     <ClCompile Include="SceneNiveau.cpp" />
     <ClCompile Include="SceneTitre.cpp" />
+    <ClCompile Include="SceneVictoire.cpp" />
     <ClCompile Include="Spawner.cpp" />
     <ClCompile Include="Sujet.cpp" />
     <ClCompile Include="Transporter.cpp" />
@@ -146,6 +147,7 @@
     <ClInclude Include="ProjectileLaserPercant.h" />
     <ClInclude Include="SceneGameOver.h" />
     <ClInclude Include="SceneTitre.h" />
+    <ClInclude Include="SceneVictoire.h" />
     <ClInclude Include="Spawner.h" />
     <ClInclude Include="Transporter.h" />
     <ClInclude Include="TypeWeapon.h" />

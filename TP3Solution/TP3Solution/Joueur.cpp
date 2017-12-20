@@ -58,9 +58,9 @@ Personnage::ElementToModify Joueur::Collisionner(const Personnage& other)
 Joueur::Joueur() : Personnage(texture, textureRectBase[animationDeBase], pointsVieDeBase, GetArmeDefaut(), vitesseDeBase,modificateurVitesseReculDebase, projectileTypeDeBase), score{0}
 {
 	setOrigin(getGlobalBounds().width / 2, getGlobalBounds().height / 2);
-	boucliers.push(new Bouclier(2, Bonus::BouclierRouge, getPosition(),true));
+	/*boucliers.push(new Bouclier(2, Bonus::BouclierRouge, getPosition(),true));  // test bouclier
 	boucliers.push(new Bouclier(2, Bonus::BouclierJaune, getPosition(), true));
-	boucliers.push(new Bouclier(2, Bonus::BouclierVert, getPosition(), true));
+	boucliers.push(new Bouclier(2, Bonus::BouclierVert, getPosition(), true));*/
 	multiplicateurActif = false;
 	delaisEntreActivationBonus.restart();
 	dernierBonusActif = delaisEntreActivationBonus.getElapsedTime();

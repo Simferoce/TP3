@@ -26,5 +26,6 @@ public:
 	int GetValeurPoints() const;
 
 	bool BombeElectriqueActive();
+	bool SpawnBonus();
 };
 

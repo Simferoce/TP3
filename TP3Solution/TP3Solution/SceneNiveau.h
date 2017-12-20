@@ -40,6 +40,8 @@ private:
 	Text boucliersText;
 	Text scoreText;
 	Joueur* joueur;
+
+	Bonus::BonusType nextBonusType;
 	
 	StructuresDonnees::list<Projectile*> projectiles;
 	StructuresDonnees::list<Enemy*> enemies;

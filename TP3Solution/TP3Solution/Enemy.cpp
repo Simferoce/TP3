@@ -97,5 +97,15 @@ bool Enemy::BombeElectriqueActive()
 		return bombeElectriqueActive = false;
 }
 
+bool Enemy::SpawnBonus()
+{
+	int chanceApparition = rand() % 100;
+	if (chanceApparition < 10)
+		return true;
+	else
+		return false;
+}
+
+
 
 
